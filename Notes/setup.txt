@@ -1,0 +1,4 @@
+Step 1: pull the project from github
+Step 2: create a venv
+Step 3: install requirements.txt
+Step 4: setup your .env file
