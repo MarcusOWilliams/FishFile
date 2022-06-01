@@ -6,4 +6,4 @@ from app.main import bp
 @bp.route('/')
 @bp.route('/index')
 def index():
-    render_template('home.html')
+    return render_template('home.html')

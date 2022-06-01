@@ -6,7 +6,5 @@ from app.auth.forms import LoginForm
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Login requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember_me.data))
         return redirect('/')
     return render_template('auth/login.html', title='Sign In', form=form)
