@@ -1,0 +1,8 @@
+form.hidden_tag() - this is seen on most forms, it is used to protect against CSRF atttacks by including a token in a hidden field, using the secret key which is declared in the configuration
+
+form.validate_on_submit() - this method is run when a form is submitted, it checks all of the validation requirements for the form, if they pass then it runs the code in the following if block, likley to retrieve the information from the form
+
+render_template() - this takes the name of a template and any arguments that the template needs and is responsible for displaying the template on the screen
+
+redirect() - this redirects the user to a specified url
+
