@@ -1,0 +1,12 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - DanioDB</title>
+      {% else %}
+      <title>DanioDB</title>
+      {% endif %}
+    </head>
+    <body>
+        {% block content %}{% endblock %}
+    </body>
+</html>

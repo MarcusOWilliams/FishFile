@@ -1,5 +1,11 @@
+import re
 from flask import Flask
+from config import Config
 
-app = Flask(__name__)
 
-from app import routes
+def create_app(config_Class = Config):
+    app = Flask(__name__)
+    app.config.from_object(config_Class)
+
+
+    return app
