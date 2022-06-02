@@ -8,4 +8,4 @@ from flask_login import login_required
 @bp.route('/index')
 @login_required
 def index():
-    return render_template('home.html')
+    return render_template('index.html', title ="Home Page")

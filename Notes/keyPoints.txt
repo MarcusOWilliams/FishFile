@@ -1,0 +1,3 @@
+Made changes to the security algorithms
+    THe most common way to salt using in a flask app is using werkzeug security, this uses SHA256
+    SHA256 is not ideal for password hashes, so for password I implements bcrypt which is musch better for passwords, with 12 log rounds and using version 2b

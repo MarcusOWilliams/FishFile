@@ -1,7 +1,7 @@
 #This is the main folder for the database
 #This folder contains a class for each table in the database
 
-from app import db, bcrypt
+from app import db, bcrypt, login
 from flask_login import UserMixin
 
 
@@ -24,3 +24,9 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
+
+#flask_login keeps track of logged in users, the users ID is loaded into memeory each time the load a new page
+#flask_login doesn't know about the database so this function gives it the user ID
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))

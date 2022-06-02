@@ -2,3 +2,6 @@ Step 1: pull the project from github
 Step 2: create a venv
 Step 3: install requirements.txt
 Step 4: setup your .env file
+Step 4: setup your .env file
+Step 5: Run flask db init to create the database migration
+Step 6: run a migration to add the structure to the database

@@ -1,0 +1,3 @@
+Make emails only validate UoB
+
+Implement flash messages

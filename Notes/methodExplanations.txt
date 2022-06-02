@@ -6,3 +6,4 @@ render_template() - this takes the name of a template and any arguments that the
 
 redirect() - this redirects the user to a specified url
 
+current_user.is_authenticated - takes the current user from flask_login and checks if they are logged in, returns True if they are

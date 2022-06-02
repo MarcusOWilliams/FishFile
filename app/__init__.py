@@ -24,7 +24,7 @@ def create_app(config_Class = Config):
 
     #add the database and migration
     db.init_app(app)
-    migrate.init_app(app)
+    migrate.init_app(app,db)
 
     #add the login manager
     login.init_app(app)
@@ -39,14 +39,5 @@ def create_app(config_Class = Config):
 
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
-
-    #this part allows you to run a python interpreter session in the context of the flask app using the 'flask shell' command
-    @app.shell_context_processor
-    def make_shell_context():
-        return {'db': db}
-
-    @login.user_loader
-    def load_user(id):
-        return User.query.get(int(id))
 
     return app
