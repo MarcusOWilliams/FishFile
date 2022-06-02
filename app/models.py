@@ -3,6 +3,9 @@
 
 from app import db, bcrypt, login
 from flask_login import UserMixin
+from time import time
+import jwt
+from flask import current_app
 
 
 
@@ -23,6 +26,22 @@ class User(UserMixin, db.Model):
     #takes a password and a hash and checks if the match
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
+
+    #this creates a secure signed payload using SHA256 to act as the verification for resetting a password it expires after 10 minutes
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            current_app.config['SECRET_KEY'], algorithm='HS256')
+
+    #this is used to verify a password reset token, it decodes the link and checks the id of the user exists
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, current_app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return User.query.get(id)
 
 
 #flask_login keeps track of logged in users, the users ID is loaded into memeory each time the load a new page

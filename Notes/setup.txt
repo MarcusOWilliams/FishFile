@@ -2,6 +2,13 @@ Step 1: pull the project from github
 Step 2: create a venv
 Step 3: install requirements.txt
 Step 4: setup your .env file
-Step 4: setup your .env file
+    FLASK_APP = danioDB.py
+    FLASK_ENV = production
+    SECRET_KEY = random secure sequence of letters numbers and symbols
+    MAIL_SERVER = smtp.googlemail.com
+    MAIL_PORT = 587
+    MAIL_USE_TLS = 1
+    MAIL_USERNAME = the email you want to send from, make sure u have the email configure to allow emails to be sent from less secure apps
+    MAIL_PASSWORD = password for above email
 Step 5: Run flask db init to create the database migration
 Step 6: run a migration to add the structure to the database

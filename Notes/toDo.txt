@@ -1,3 +1,15 @@
 Make emails only validate UoB
 
 Implement flash messages
+
+Fix Templates
+    index
+    login
+    register
+    request pasword request
+    reset_password
+
+
+Test emails
+
+Fix request password reset

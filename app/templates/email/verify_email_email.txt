@@ -1,0 +1,11 @@
+Dear {{ user.username }},
+
+To reset your password click on the following link:
+
+{{ url_for('auth.verify_email', token=token, _external=True) }}
+
+If you were not expecting this email simply ignore this message.
+
+Sincerely,
+
+The Pitch Your Path Team

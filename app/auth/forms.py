@@ -28,3 +28,12 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter(User.email.ilike(email.data)).first()
         if user is not None:
             raise ValidationError('There is already an account associated with this email address.')
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Reset')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')
