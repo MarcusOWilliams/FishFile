@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, 'environmentVariables.env'))
+load_dotenv(os.path.join(basedir, '.env'))
 
 #this is the main configuration class which sets all of the variables needed to create the app, this class is used in the main app __init__ file
 class Config(object):
