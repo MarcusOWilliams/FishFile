@@ -17,12 +17,19 @@ def login():
 
     if form.validate_on_submit():
 
-        user = User.query.filter_by(username = form.username.data).first()
+        
+        user = User.query.filter_by(email=form.username.data).first()
+        #check if they have entered an email that is in the db
         if user is None or not user.check_password(form.password.data):
-            return redirect(url_for('auth.login'))
+            user = User.query.filter_by(username=form.username.data).first()
+
+            #check if they have entered a username that is in the db
+            if user is None or not user.check_password(form.password.data):
+                flash('Invalid username/email or password')
+                return redirect(url_for('auth.login'))
 
         login_user(user, remember=form.remember_me.data)
-
+        
         #once the user is loged in they are redirected to the page they tried to visit, if they came straight to the login page they are just redirected to the home page
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
