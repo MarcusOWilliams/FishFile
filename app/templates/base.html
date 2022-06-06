@@ -17,6 +17,11 @@
         <title>DanioDB</title>
       {% endif %}
 
+      <script>
+        {{ moment.include_moment() }}
+      </script>
+      {%block scripts%}
+      {%endblock%}
     </head>
     <body>
         <!-- NAVBAR -->
