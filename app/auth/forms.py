@@ -5,7 +5,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
 
 class LoginForm(FlaskForm):
-    email = StringField(validators=[DataRequired()])
+    email = StringField(validators=[DataRequired(), Email()])
     password = PasswordField(validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
@@ -29,6 +29,10 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter(User.email.ilike(email.data)).first()
         if user is not None:
             raise ValidationError('There is already an account associated with this email address.')
+
+        if not email.endswith("@bath.ac.uk"):
+            raise ValidationError('You must use a University of Bath email address, ending in @bath.ac.uk')
+        
 
 class ResetPasswordRequestForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
