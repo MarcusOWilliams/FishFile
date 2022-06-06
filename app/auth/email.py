@@ -1,6 +1,6 @@
 
 from flask import render_template, current_app
-from app.email import send_email, send_async_email
+from app.email import send_email
 
 #this takes a user, generates a secure password token and sends an email to them to reset their password
 def send_password_reset_email(user):

@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    is_verified = db.Column(db.Boolean(), default=False)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -30,11 +31,18 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
-    #this creates a secure signed payload using SHA256 to act as the verification for resetting a password it expires after 10 minutes
-    def get_reset_password_token(self, expires_in=600):
+    #this creates a secure signed payload using SHA256 to act as the verification for resetting a password it expires after 5 minutes
+    def get_reset_password_token(self, expires_in=300):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
+
+    #this works similar to above, but is used for email validation
+    def get_email_verification_token(self, expires_in=300):
+        return jwt.encode(
+            {'verify_email': self.id, 'exp': time() + expires_in},
+            current_app.config['SECRET_KEY'], algorithm='HS256')
+
 
     #this is used to verify a password reset token, it decodes the link and checks the id of the user exists
     @staticmethod
@@ -42,6 +50,15 @@ class User(UserMixin, db.Model):
         try:
             id = jwt.decode(token, current_app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return User.query.get(id)
+        
+    @staticmethod
+    def verify_email_token(token):
+        try:
+            id = jwt.decode(token, current_app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['verify_email']
         except:
             return
         return User.query.get(id)

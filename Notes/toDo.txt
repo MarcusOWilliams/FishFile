@@ -1,18 +1,19 @@
  / Make emails only validate UoB
 
-Implement flash messages
+ / Implement flash messages
 
 Fix Templates:
-    base
-    index
-    login
-    register
-    request pasword request
-    reset_password
+    / base
+    / index
+    / login
+    / register
+    / request pasword request
+    / reset_password
 
 
-Change emails, use
+/ Change emails
+
+
+/ Fix request password reset
 
 Implement email validation
-
-Fix request password reset

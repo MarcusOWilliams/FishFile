@@ -2,11 +2,11 @@ from app import db
 from app.auth import bp
 from flask import render_template, redirect, url_for, flash, request
 from app.auth.forms import LoginForm, RegistrationForm, ResetPasswordForm, ResetPasswordRequestForm
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from werkzeug.urls import url_parse
-from app.auth.email import send_password_reset_email
-import os
+from app.auth.email import send_password_reset_email, send_email_verification_email
+
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -24,9 +24,19 @@ def login():
             flash('Invalid email or password')
             return redirect(url_for('auth.login'))
 
+
+        #if the user is not verified they are sent a verification email
+        if not user.is_verified:
+            send_email_verification_email(user)
+            flash(f"To login you must verify your email address, a verification link has been sent to {user.email}, don't forget to check your spam folder!")
+            return redirect(url_for('auth.login'))
+
+
         login_user(user, remember=form.remember_me.data)
         
-        #once the user is loged in they are redirected to the page they tried to visit, if they came straight to the login page they are just redirected to the home page
+
+
+        #once the user is logged in and verified they are redirected to the page they tried to visit, if they came straight to the login page they are just redirected to the home page
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('main.index')
@@ -90,3 +100,16 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
+
+
+
+@bp.route('/verify_email/<token>', methods=['GET'])
+def verify_email(token):
+    user = User.verify_email_token(token)
+    if not user:
+        flash('The email verification link you used was either invalid or has expired.')
+        return redirect(url_for('auth.login'))
+    user.is_verified = True
+    db.session.commit()
+    flash('Your email has been verified')
+    return redirect(url_for('auth.login'))

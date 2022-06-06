@@ -1,4 +1,4 @@
-<p>Dear {{ user.username }},</p>
+<p>Dear {{ user.first_name }},</p>
 <p>
     To verify your email:
     <a href="{{ url_for('auth.verify_email', token=token, _external=True) }}">
@@ -9,4 +9,4 @@
 <p>{{ url_for('auth.verify_email', token=token, _external=True) }}</p>
 <p>If you were not expecting this email, please ignore it</p>
 <p>Sincerely,</p>
-<p>The Pitch Your Path Team</p>
+<p>DanioDB</p>
