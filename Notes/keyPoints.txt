@@ -1,3 +1,8 @@
 Made changes to the security algorithms
     THe most common way to salt using in a flask app is using werkzeug security, this uses SHA256
     SHA256 is not ideal for password hashes, so for password I implements bcrypt which is musch better for passwords, with 12 log rounds and using version 2b
+
+email
+    I originally used a basic google mail flask-mail implementation, but this had security risks as I would have to have a google account that allowed less secure apps
+    Instead I changed it to using the sendgrid api, which was more secure
+    I can currently only send 100 emails per day, so need to make sure that is enough, also need an email to send email from permanantly

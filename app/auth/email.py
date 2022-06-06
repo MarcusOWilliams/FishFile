@@ -6,7 +6,7 @@ from app.email import send_email, send_async_email
 def send_password_reset_email(user):
     token = user.get_reset_password_token()
     send_email(('[DanioDB] Reset Your Password'),
-               sender=current_app.config['MAIL_USERNAME'],
+               sender=current_app.config['MAIL_DEFAULT_SENDER'],
                recipients=[user.email],
                text_body=render_template('email/reset_password_email.txt',
                                          user=user, token=token),
@@ -16,8 +16,8 @@ def send_password_reset_email(user):
 #
 def send_email_verification_email(user):
     token = user.get_email_verification_token()
-    send_email(('[Pitch Your Path] Verify Your Email'),
-               sender=current_app.config['ADMINS'][0],
+    send_email(('[DanioDB] Verify Your Email'),
+               sender=current_app.config['MAIL_DEFAULT_SENDER'],
                recipients=[user.email],
                text_body=render_template('email/verify_email_email.txt',
                                          user=user, token=token),
