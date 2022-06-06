@@ -6,16 +6,13 @@
         {{ form.hidden_tag() }}
         <p>
             <p>
-                {{ form.username(size=32, placeholder='Username/Email') }}
+                {{ form.email(size=32, placeholder='Email') }}
             </p>
             <p>
-                {% for error in form.username.errors %}
+                {% for error in form.email.errors %}
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </p>
-            {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
         </p>
         <p>
             <p>

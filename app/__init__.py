@@ -24,7 +24,7 @@ bcrypt = Bcrypt()
 #For sending emails
 mail = Mail()
 
-#For nice datetime formatiing
+#For nice datetime formatiing using moment.js
 moment = Moment()
 
 def create_app(config_Class = Config):
