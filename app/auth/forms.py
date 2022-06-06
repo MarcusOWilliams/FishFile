@@ -10,8 +10,10 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
+
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Surname', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()]) #The Email() validator from WTForms requires an external dependency to be installed. email-validator
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
@@ -30,7 +32,7 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('There is already an account associated with this email address.')
 
-        if not email.endswith("@bath.ac.uk"):
+        if not email.data.endswith("@bath.ac.uk"):
             raise ValidationError('You must use a University of Bath email address, ending in @bath.ac.uk')
         
 

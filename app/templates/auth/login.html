@@ -19,7 +19,7 @@
                 {{ form.password(size=32,placeholder='Password') }}
             </p>
             {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </p>
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
