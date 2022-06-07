@@ -16,4 +16,4 @@ Fix Templates:
 
 / Fix request password reset
 
-Implement email validation
+/ Implement email validation
