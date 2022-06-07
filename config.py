@@ -4,13 +4,13 @@ from dotenv import load_dotenv
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 
-#this is the main configuration class which sets all of the variables needed to create the app, this class is used in the main app __init__ file
+# this is the main configuration class which sets all of the variables needed to create the app, this class is used in the main app __init__ file
 class Config(object):
 
-    #secret key
+    # secret key
     SECRET_KEY = os.environ.get('SECRET_KEY')
 
-    #Linking the database
+    # Linking the database
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_POOL_RECYCLE = 299
@@ -22,4 +22,3 @@ class Config(object):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
-

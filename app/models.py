@@ -1,5 +1,5 @@
-#This is the main folder for the database
-#This folder contains a class for each table in the database
+# This is the main folder for the database
+# This folder contains a class for each table in the database
 
 from app import db, bcrypt, login
 from flask_login import UserMixin, current_user
@@ -8,7 +8,6 @@ import jwt
 from flask import current_app, abort
 from datetime import datetime
 from functools import wraps
-
 
 
 class User(UserMixin, db.Model):
@@ -24,29 +23,28 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {} {}>'.format(self.first_name, self.last_name)
 
-    #takes a password and returns its hash
+    # takes a password and returns its hash
     def set_password(self, password):
-        #I implemented generate_password hash using the bcrypt hashing algorithm, uses bcrypt hash + salt
+        # I implemented generate_password hash using the bcrypt hashing algorithm, uses bcrypt hash + salt
         self.password_hash = bcrypt.generate_password_hash(password)
 
-    #takes a password and a hash and checks if the match
+    # takes a password and a hash and checks if the match
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
-    #this creates a secure signed payload using SHA256 to act as the verification for resetting a password it expires after 5 minutes
+    # this creates a secure signed payload using SHA256 to act as the verification for resetting a password it expires after 5 minutes
     def get_reset_password_token(self, expires_in=300):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
 
-    #this works similar to above, but is used for email validation
+    # this works similar to above, but is used for email validation
     def get_email_verification_token(self, expires_in=300):
         return jwt.encode(
             {'verify_email': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
 
-
-    #this is used to verify a password reset token, it decodes the link and checks the id of the user exists
+    # this is used to verify a password reset token, it decodes the link and checks the id of the user exists
     @staticmethod
     def verify_reset_password_token(token):
         try:
@@ -55,7 +53,7 @@ class User(UserMixin, db.Model):
         except:
             return
         return User.query.get(id)
-        
+
     @staticmethod
     def verify_email_token(token):
         try:
@@ -66,15 +64,15 @@ class User(UserMixin, db.Model):
         return User.query.get(id)
 
 
-#METHODS ASSOCIATED WITH USERS ---------------------------------------------
+# METHODS ASSOCIATED WITH USERS ---------------------------------------------
 
-#flask_login keeps track of logged in users, the users ID is loaded into memeory each time the load a new page
-#flask_login doesn't know about the database so this function gives it the user ID
+# flask_login keeps track of logged in users, the users ID is loaded into memeory each time the load a new page
+# flask_login doesn't know about the database so this function gives it the user ID
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
-#This method creates a wrapper, allowing the use of @required_roles in routes, allowing certain links to only be accessible for accounts with a certain role, e.g. admins
+# This method creates a wrapper, allowing the use of @required_roles in routes, allowing certain links to only be accessible for accounts with a certain role, e.g. admins
 def requires_roles(*roles):
     def wrapper(f):
         @wraps(f)
@@ -86,4 +84,4 @@ def requires_roles(*roles):
         return wrapped
     return wrapper
 
-#--------------------------------
+# --------------------------------

@@ -1,11 +1,13 @@
 from app import db
 from app.auth import bp
-from flask import render_template, redirect, url_for, flash, request
-from app.auth.forms import LoginForm, RegistrationForm, ResetPasswordForm, ResetPasswordRequestForm
-from flask_login import current_user, login_user, logout_user, login_required
+from app.auth.email import (send_email_verification_email,
+                            send_password_reset_email)
+from app.auth.forms import (LoginForm, RegistrationForm, ResetPasswordForm,
+                            ResetPasswordRequestForm)
 from app.models import User
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
-from app.auth.email import send_password_reset_email, send_email_verification_email
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -16,42 +18,39 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        
+
         user = User.query.filter_by(email=form.email.data).first()
 
-        #check if they have entered an email that is in the db
+        # check if they have entered an email that is in the db
         if user is None or not user.check_password(form.password.data):
             flash('Invalid email or password')
             return redirect(url_for('auth.login'))
 
-
-        #if the user is not verified they are sent a verification email
+        # if the user is not verified they are sent a verification email
         if not user.is_verified:
             send_email_verification_email(user)
-            flash(f"To login you must verify your email address, a verification link has been sent to {user.email}, don't forget to check your spam folder!")
+            flash(
+                f"To login you must verify your email address, a verification link has been sent to {user.email}, don't forget to check your spam folder!")
             return redirect(url_for('auth.login'))
 
-
         login_user(user, remember=form.remember_me.data)
-        
 
-
-        #once the user is logged in and verified they are redirected to the page they tried to visit, if they came straight to the login page they are just redirected to the home page
+        # once the user is logged in and verified they are redirected to the page they tried to visit, if they came straight to the login page they are just redirected to the home page
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('main.index')
 
         return redirect(next_page)
-       
+
     return render_template('auth/login.html', title='Sign In', form=form)
 
-#If the user logs out they are simply directed to this url, logged out, then returned to the index page
+# If the user logs out they are simply directed to this url, logged out, then returned to the index page
 @bp.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
 
-#The url for account registration
+# The url for account registration
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -60,17 +59,18 @@ def register():
 
     if form.validate_on_submit():
 
-        user = User(first_name = form.first_name.data, last_name = form.last_name.data, email=form.email.data)
+        user = User(first_name=form.first_name.data,
+                    last_name=form.last_name.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
 
         return redirect(url_for('auth.login'))
 
-    return render_template('auth/register.html', title='Register', form=form)   
+    return render_template('auth/register.html', title='Register', form=form)
 
-#this url is for someone to request a reset of their password by submiting their email
-# If there is an account associated with the email they will recieve a password reset email    
+# this url is for someone to request a reset of their password by submiting their email
+# If there is an account associated with the email they will recieve a password reset email
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
@@ -82,9 +82,9 @@ def reset_password_request():
             send_password_reset_email(user)
         flash('If there is an email associated with the an account an email will be sent with instructions on how to reset your password, please check your junk/spam folder!')
         return redirect(url_for('auth.login'))
-    return render_template('auth/reset_password_request.html',title='Reset Password', form=form)
+    return render_template('auth/reset_password_request.html', title='Reset Password', form=form)
 
-#this is the url which is visted to set the new password, it takes the token (from an email), checks it then allows password reset
+# this is the url which is visted to set the new password, it takes the token (from an email), checks it then allows password reset
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     if current_user.is_authenticated:
@@ -100,7 +100,6 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
-
 
 
 @bp.route('/verify_email/<token>', methods=['GET'])

@@ -7,48 +7,49 @@ from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 from flask_moment import Moment
 
-#The database is run using SQLAlchemy
+# The database is run using SQLAlchemy
 db = SQLAlchemy()
 
-#Allows migration of database changes
+# Allows migration of database changes
 migrate = Migrate()
 
-#For login manager
+# For login manager
 login = LoginManager()
 login.login_view = 'auth.login'
 login.login_message = ('You must be signed in to access this page.')
 
-#For password hashing
+# For password hashing
 bcrypt = Bcrypt()
 
-#For sending emails
+# For sending emails
 mail = Mail()
 
-#For nice datetime formatiing using moment.js
+# For nice datetime formatiing using moment.js
 moment = Moment()
 
-def create_app(config_Class = Config):
-    #generate the app with the specified configurations
+
+def create_app(config_Class=Config):
+    # generate the app with the specified configurations
     app = Flask(__name__)
     app.config.from_object(config_Class)
 
-    #add the database and migration
+    # add the database and migration
     db.init_app(app)
-    migrate.init_app(app,db)
+    migrate.init_app(app, db)
 
-    #add the login manager
+    # add the login manager
     login.init_app(app)
 
-    #add bcypt hashing capabilities
+    # add bcypt hashing capabilities
     bcrypt.init_app(app)
 
-    #add email support
+    # add email support
     mail.init_app(app)
 
-    #Link moment for datetime 
+    # Link moment for datetime
     moment.init_app(app)
 
-    #link the bluebrints
+    # link the bluebrints
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
