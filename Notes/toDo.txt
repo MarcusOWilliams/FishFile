@@ -17,3 +17,5 @@ Fix Templates:
 / Fix request password reset
 
 / Implement email validation
+
+Add permissions

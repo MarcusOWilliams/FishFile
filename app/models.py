@@ -2,11 +2,12 @@
 #This folder contains a class for each table in the database
 
 from app import db, bcrypt, login
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from time import time
 import jwt
-from flask import current_app
+from flask import current_app, abort
 from datetime import datetime
+from functools import wraps
 
 
 
@@ -18,9 +19,10 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_verified = db.Column(db.Boolean(), default=False)
+    role = db.Column(db.String(64), default='User')
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<User {} {}>'.format(self.first_name, self.last_name)
 
     #takes a password and returns its hash
     def set_password(self, password):
@@ -64,8 +66,24 @@ class User(UserMixin, db.Model):
         return User.query.get(id)
 
 
+#METHODS ASSOCIATED WITH USERS ---------------------------------------------
+
 #flask_login keeps track of logged in users, the users ID is loaded into memeory each time the load a new page
 #flask_login doesn't know about the database so this function gives it the user ID
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+#This method creates a wrapper, allowing the use of @required_roles in routes, allowing certain links to only be accessible for accounts with a certain role, e.g. admins
+def requires_roles(*roles):
+    def wrapper(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if current_user.role not in roles:
+                # Redirect the user to an unauthorized notice!
+                abort(403)
+            return f(*args, **kwargs)
+        return wrapped
+    return wrapper
+
+#--------------------------------
