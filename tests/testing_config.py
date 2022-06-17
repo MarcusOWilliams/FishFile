@@ -27,3 +27,4 @@ class Testing_config(object):
 
     TESTING = True
     LOGIN_DISABLED = True
+    MAIL_SUPPRESS_SEND = True

@@ -1,7 +1,7 @@
 
 from flask import url_for,request
 
-def test_home_page(test_client_normal):
+def test_home_page(client):
     """
     GIVEN a Flask application configured for testing
     WHEN the '/' page is requested (GET) 
@@ -10,11 +10,11 @@ def test_home_page(test_client_normal):
     """
 
     #check for a redirect response
-    response = test_client_normal.get('/')
+    response = client.get('/')
     assert response.status_code == 302
 
     #check the redirect goes to the login page
-    response = test_client_normal.get('/', follow_redirects=True)
+    response = client.get('/', follow_redirects=True)
     assert request.path == url_for('auth.login')
 
 def test_home_page(test_client):

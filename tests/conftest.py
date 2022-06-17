@@ -9,7 +9,7 @@ from app import create_app
 
 
 @pytest.fixture(scope='module')
-def test_client_normal():
+def client():
     """
     This is used to help with testing in all the view functions of the project
     This method uses the normal configurartions files

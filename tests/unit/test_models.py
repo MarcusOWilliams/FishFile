@@ -18,7 +18,7 @@ def new_user():
 
 
 
-def test_new_user_with_fixture(new_user):
+def test_new_user(new_user):
     """
     GIVEN a User model
     WHEN a new User is created

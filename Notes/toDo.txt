@@ -19,3 +19,5 @@ Fix Templates:
 / Implement email validation
 
 Add permissions
+
+Test emails
