@@ -85,3 +85,19 @@ def requires_roles(*roles):
     return wrapper
 
 # --------------------------------
+
+
+class Fish(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fish_id = db.Column(db.String(64), index=True, unique=True)
+    birthday = db.Column(db.DateTime, index=True)
+    date_of_arrival = db.Column(db.DateTime, index=True)
+    stock = db.Column(db.String(64), index=True)
+    project_license = db.Column(db.String(64), index=True)
+    status = db.Column(db.String(64), index=True, default = "Alive")
+    allele = db.Column(db.String(64), index=True)
+    mutant_gene = db.Column(db.String(64), index=True)
+    transgenes = db.Column(db.String(64), index=True)
+    protocol = db.Column(db.Integer, index=True)
+    comments = db.Column(db.String(1000))
+
