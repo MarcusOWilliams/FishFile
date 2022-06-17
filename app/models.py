@@ -96,8 +96,14 @@ class Fish(db.Model):
     project_license = db.Column(db.String(64), index=True)
     status = db.Column(db.String(64), index=True, default = "Alive")
     allele = db.Column(db.String(64), index=True)
+    sex = db.Column(db.String(64))
     mutant_gene = db.Column(db.String(64), index=True)
     transgenes = db.Column(db.String(64), index=True)
     protocol = db.Column(db.Integer, index=True)
     comments = db.Column(db.String(1000))
+    # fathered = db.relationship("Fish", backref="father")
+    # mothered = db.relationship("Fish", backref="mother")
+    # father_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
+    # mother_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
+    
 

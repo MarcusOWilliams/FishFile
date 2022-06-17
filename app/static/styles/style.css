@@ -1,3 +1,23 @@
 #mainContainer{
     text-align: center;
 }
+
+#homeTable{
+    margin:auto;
+    text-align: center;
+}
+
+#introParagraph{
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+
+#quickLinksMenu li{
+    display: inline;
+    padding: 5px;
+    margin-top: 15px;
+    word-wrap: break-word;
+    white-space: nowrap;
+    
+}

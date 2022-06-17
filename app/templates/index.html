@@ -2,6 +2,17 @@
 
 {% block content %}
 
-    <h1>Hi, {{ current_user.first_name }}!</h1>
-
+    <h1>Hi {{ current_user.first_name }}, Welcome to DanioDB!</h1>
+    <br>
+    <p id="introParagraph">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod, temporibus ducimus. Placeat blanditiis consequatur nulla consectetur, eligendi fugiat aliquid magni sunt dolorem soluta, quidem omnis amet voluptates repellendus nesciunt ex?</p>
+    <br>
+    <p style="font-weight:bold;">Quick Links:</p>
+    <ul id="quickLinksMenu"> 
+        <li><a href="#" class="quickLinksItem">Add a new fish to the database</a></li>
+        <li><a href="#" class="quickLinksItem">Update details of an existing fish</a></li>
+        <li><a href="#" class="quickLinksItem">View the genetic history of an exitsing fish</a></li>
+        <li><a href="#" class="quickLinksItem">Download or print data</a></li>
+    </ul>   
+           
+      
 {% endblock %}

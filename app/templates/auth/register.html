@@ -43,5 +43,6 @@
         {% endfor %}
     </p>
     <p>{{ form.submit() }}</p>
+    <p>Already have an account? <a href="{{url_for('auth.login')}}"> Login</a></p>
 </form>
 {% endblock %}

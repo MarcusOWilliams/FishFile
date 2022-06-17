@@ -27,5 +27,5 @@ def test_home_page(test_client):
     response = test_client.get('/')
     assert response.status_code == 200
 
-    assert b"Hi," in response.data
+    assert b"Welcome to DanioDB" in response.data
     assert b"incorrect" not in response.data
