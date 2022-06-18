@@ -6,7 +6,7 @@
     
     {% if fish_list|length > 0 %}
         {%for fish in fish_list%}
-                <p> Fish: {{ fish.fish_id }}</p>
+            {% include 'subtemplates/_fish.html'%}
         {%endfor%}
     {% else %}
         <p>No fish match your search...</p>
