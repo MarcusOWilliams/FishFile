@@ -4,7 +4,7 @@ from turtle import title
 
 from app import db
 from app.main import bp
-from app.models import Fish, User, requires_roles
+from app.models import Change, Fish, User, requires_roles
 from flask import flash, redirect, render_template, url_for, g
 from flask_login import current_user, login_required
 from app.main.forms import SearchForm
@@ -31,8 +31,8 @@ def search():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     title = user.username
-
-    return render_template('user.html', user=user, title=title)
+    changes = Change.query.filter_by(user=user).all()
+    return render_template('user.html', user=user, changes=changes, title=title)
 
 
 @bp.route('/fish/<fish_id>/')
