@@ -19,6 +19,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_verified = db.Column(db.Boolean(), default=False)
     role = db.Column(db.String(64), default='User')
+    changes = db.relationship('Change', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return '<User {} {}>'.format(self.first_name, self.last_name)
@@ -107,8 +108,20 @@ class Fish(db.Model):
     fathered = db.relationship("Fish", backref=db.backref("father", remote_side=[id]), foreign_keys = [father_id])
     mothered = db.relationship("Fish", backref=db.backref("mother", remote_side=[id]), foreign_keys= [mother_id])
 
+    changes = db.relationship("Change", backref='fish', lazy='dynamic')
 
     def __repr__(self):
         return f'<Fish: id = {self.fish_id}>'
     
+
+class Change(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    fish_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
+    action = db.Column(db.String(64))
+    contents = db.Column(db.String(64))
+    time = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Change by User:{self.user_id} on Fish: {self.fish_id}'
 
