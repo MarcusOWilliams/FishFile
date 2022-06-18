@@ -1,0 +1,15 @@
+DB questions
+    What is mandatory?
+    Is id unique to each fish? If not what is?
+    Should the following be select field? What options?
+        ID
+        Allele
+        Mutant gene
+        User Code
+        Transgenes
+        Project License allocated
+        Source
+        Protocol?
+    What format is each input?
+    Where does source go? Tank or fish?
+    Would you always know the ID of the father? Or would you sometimes just know the stock?

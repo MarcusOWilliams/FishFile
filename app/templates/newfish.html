@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="" method="post">
+        {{form.hidden_tag()}}
+        <table>
+            <tr>
+                <td>{{form.fish_id.label}}{{form.fish_id(placeholder="Fish ID")}}</td>
+                <td>{{form.stock.label}}{{form.stock(placeholder="Stock #")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.birthday.label}}{{form.birthday(placeholder=form.birthday.label)}}</td>
+                <td>{{form.date_of_arrival.label}}{{form.date_of_arrival(placeholder=form.date_of_arrival.label)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.tank_id.label}}{{form.tank_id(placeholder=form.tank_id.label)}}</td>
+                <td>{{form.status.label}}{{form.status(placeholder=form.status.label)}}</td>   
+            </tr>
+        </table>
+
+    </form>
+
+{%endblock%}

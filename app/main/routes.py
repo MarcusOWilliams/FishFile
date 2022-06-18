@@ -47,6 +47,8 @@ def fish(fish_id):
 @login_required
 def newfish():
     form = NewFish()
+    
+    return render_template('newfish.html', title = "New Fish")
 
 
 # This function is used to update the users Last seen time when they go to a new page
