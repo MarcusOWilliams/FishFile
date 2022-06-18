@@ -101,9 +101,14 @@ class Fish(db.Model):
     transgenes = db.Column(db.String(64), index=True)
     protocol = db.Column(db.Integer, index=True)
     comments = db.Column(db.String(1000))
-    # fathered = db.relationship("Fish", backref="father")
-    # mothered = db.relationship("Fish", backref="mother")
-    # father_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
-    # mother_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
+
+    father_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
+    mother_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
+    fathered = db.relationship("Fish", backref=db.backref("father", remote_side=[id]), foreign_keys = [father_id])
+    mothered = db.relationship("Fish", backref=db.backref("mother", remote_side=[id]), foreign_keys= [mother_id])
+
+
+    def __repr__(self):
+        return f'<Fish: id = {self.fish_id}>'
     
 
