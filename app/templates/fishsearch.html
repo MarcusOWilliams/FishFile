@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <p>Search Results:</p>
+    
+    {% if fish_list|length > 0 %}
+        {%for fish in fish_list%}
+                <p> Fish: {{ fish.fish_id }}</p>
+        {%endfor%}
+    {% else %}
+        <p>No fish match your search...</p>
+    {% endif %}
+
+{% endblock %}
