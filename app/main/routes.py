@@ -7,7 +7,7 @@ from app.main import bp
 from app.models import Change, Fish, User, requires_roles
 from flask import flash, redirect, render_template, url_for, g
 from flask_login import current_user, login_required
-from app.main.forms import SearchForm
+from app.main.forms import SearchForm, NewFish
 
 #this route defines the homepage of the website
 @bp.route('/', methods=['GET', 'POST'])
@@ -42,7 +42,12 @@ def fish(fish_id):
     title = fish.fish_id
 
     return render_template('fish.html', fish=fish, title=title)
-    
+
+@bp.route('/newfish/')
+@login_required
+def newfish():
+    form = NewFish()
+
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request
