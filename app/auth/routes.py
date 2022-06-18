@@ -1,3 +1,4 @@
+from msilib.schema import Error
 from app import db
 from app.auth import bp
 from app.auth.email import (send_email_verification_email,
@@ -62,6 +63,7 @@ def register():
         user = User(first_name=form.first_name.data,
                     last_name=form.last_name.data, email=form.email.data)
         user.set_password(form.password.data)
+        user.username = user.email.split("@")[0]
         db.session.add(user)
         db.session.commit()
 

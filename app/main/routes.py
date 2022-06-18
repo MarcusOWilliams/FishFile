@@ -1,9 +1,10 @@
 
 from datetime import datetime
+from turtle import title
 
 from app import db
 from app.main import bp
-from app.models import Fish, requires_roles
+from app.models import Fish, User, requires_roles
 from flask import flash, redirect, render_template, url_for, g
 from flask_login import current_user, login_required
 from app.main.forms import SearchForm
@@ -23,8 +24,15 @@ def search():
     if fish is None:
         return render_template('fishsearch.html')
 
-    return render_template('fishsearch.html', fish_list = fish)
+    return render_template('fishsearch.html', fish_list = fish, title="Search")
 
+@bp.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    title = user.username
+
+    return render_template('user.html', user=user, title=title)
     
 
 # This function is used to update the users Last seen time when they go to a new page

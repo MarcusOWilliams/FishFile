@@ -23,3 +23,5 @@ Add permissions
 Test emails
 
 change from sqlLite
+
+flash message catagories
