@@ -111,14 +111,28 @@ class Fish(db.Model):
 
     changes = db.relationship("Change", backref='fish', lazy='dynamic')
 
+    tank_id =  db.Column(db.Integer, db.ForeignKey('tank.id'))
+
     def __repr__(self):
         return f'<Fish: id = {self.fish_id}>'
     
+
+class Tank(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tank_id = db.Column(db.String(64), index=True, unique=True)
+    males = db.Column(db.Integer)
+    females = db.Column(db.Integer)
+    unsexed = db.Column(db.Integer)
+    carriers = db.Column(db.Integer)
+    total = db.Column(db.Integer)
+
+    fish = db.relationship("Fish", backref = "tank", lazy='dynamic')
 
 class Change(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     fish_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
+    tank_id =  db.Column(db.Integer, db.ForeignKey('tank.id'))
     action = db.Column(db.String(64))
     contents = db.Column(db.String(64))
     time = db.Column(db.DateTime, default=datetime.utcnow)
