@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p>user.</p>
+    <h2>{{user.first_name}} {{user.last_name}}</h2>
+    <p>Email: <a href="mailto:{{user.email}}">{{user.email}}</p>
 {%endblock%}

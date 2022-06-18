@@ -17,7 +17,7 @@ def index():
     return render_template('index.html', title="Home Page")
 
 
-@bp.route("/search")
+@bp.route("/search/")
 @login_required
 def search():
     fish = Fish.query.filter_by(fish_id = g.search_form.search.data).all()
@@ -26,7 +26,7 @@ def search():
 
     return render_template('fishsearch.html', fish_list = fish, title="Search")
 
-@bp.route('/user/<username>')
+@bp.route('/user/<username>/')
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
