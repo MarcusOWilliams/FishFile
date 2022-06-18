@@ -33,6 +33,15 @@ def user(username):
     title = user.username
 
     return render_template('user.html', user=user, title=title)
+
+
+@bp.route('/fish/<fish_id>/')
+@login_required
+def fish(fish_id):
+    fish = Fish.query.filter_by(fish_id=fish_id).first_or_404()
+    title = fish.fish_id
+
+    return render_template('fish.html', fish=fish, title=title)
     
 
 # This function is used to update the users Last seen time when they go to a new page
