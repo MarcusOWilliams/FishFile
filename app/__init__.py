@@ -35,7 +35,7 @@ def create_app(config_Class=Config):
 
     # add the database and migration
     db.init_app(app)
-    migrate.init_app(app, db, render_as_batch=True)
+    migrate.init_app(app, db)
 
     # add the login manager
     login.init_app(app)
