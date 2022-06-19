@@ -49,7 +49,7 @@ def login():
 @bp.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.landing'))
 
 # The url for account registration
 @bp.route('/register', methods=['GET', 'POST'])
@@ -68,7 +68,7 @@ def register():
 
         settings = Settings(user_id = user.id)
         db.session.add(settings)
-        
+
         db.session.commit()
 
         return redirect(url_for('auth.login'))

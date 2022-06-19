@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True)
     password_hash = db.Column(db.String(128))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    is_verified = db.Column(db.Boolean(), default=False)
+    is_verified = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(64), default='User')
     changes = db.relationship('Change', backref='user', lazy='dynamic')
     settings =db.relationship('Settings', backref='user', lazy='dynamic')
@@ -145,6 +145,7 @@ class Change(db.Model):
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    emails = db.Column(db.Boolean, default = True)
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)

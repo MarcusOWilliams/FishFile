@@ -9,8 +9,16 @@ from flask import flash, redirect, render_template, url_for, g
 from flask_login import current_user, login_required
 from app.main.forms import SearchForm, NewFish
 
-#this route defines the homepage of the website
+#this route defines the landing page of the website
 @bp.route('/', methods=['GET', 'POST'])
+def landing():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+        
+    return render_template('landing.html')
+
+#this route defines the homepage of the website
+@bp.route('/home', methods=['GET', 'POST'])
 @login_required
 def index():
     
