@@ -5,7 +5,7 @@ from app.auth.email import (send_email_verification_email,
                             send_password_reset_email)
 from app.auth.forms import (LoginForm, RegistrationForm, ResetPasswordForm,
                             ResetPasswordRequestForm)
-from app.models import User
+from app.models import Settings, User
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
@@ -65,6 +65,10 @@ def register():
         user.set_password(form.password.data)
         user.username = user.email.split("@")[0]
         db.session.add(user)
+
+        settings = Settings(user_id = user.id)
+        db.session.add(settings)
+        
         db.session.commit()
 
         return redirect(url_for('auth.login'))

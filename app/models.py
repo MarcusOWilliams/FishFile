@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
     role = db.Column(db.String(64), default='User')
     changes = db.relationship('Change', backref='user', lazy='dynamic')
     settings =db.relationship('Settings', backref='user', lazy='dynamic')
-    notification = db.relationship('Notifiaction', backref='user', lazy='dynamic')
+    notification = db.relationship('Notification', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return '<User {} {}>'.format(self.first_name, self.last_name)
