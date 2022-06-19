@@ -21,6 +21,8 @@ class User(UserMixin, db.Model):
     is_verified = db.Column(db.Boolean(), default=False)
     role = db.Column(db.String(64), default='User')
     changes = db.relationship('Change', backref='user', lazy='dynamic')
+    settings =db.relationship('Settings', backref='user', lazy='dynamic')
+    notification = db.relationship('Notifiaction', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return '<User {} {}>'.format(self.first_name, self.last_name)
@@ -139,4 +141,15 @@ class Change(db.Model):
 
     def __repr__(self):
         return f'<Change by User:{self.user_id} on Fish: {self.fish_id}'
+
+class Settings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    time = db.Column(db.DateTime, default=datetime.utcnow)
+    category = db.Column(db.String(64))
+    contents = db.Column(db.String(64))
 
