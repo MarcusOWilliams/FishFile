@@ -21,7 +21,6 @@ class User(UserMixin, db.Model):
     is_verified = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(64), default='User')
     changes = db.relationship('Change', backref='user', lazy='dynamic')
-    settings =db.relationship('Settings', backref='user', lazy='dynamic')
     notification = db.relationship('Notification', backref='user', lazy='dynamic')
 
     def __repr__(self):
@@ -144,8 +143,14 @@ class Change(db.Model):
 
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    #one-to-one relationship
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship("User", backref = db.backref("settings", uselist=False))
+
     emails = db.Column(db.Boolean, default = True)
+
+    def __repr__(self):
+        return f'<Settings for User:{self.user.username}'
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)

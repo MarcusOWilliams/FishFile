@@ -3,7 +3,11 @@
 {% block content %}
     <h2>{{user.first_name}} {{user.last_name}}</h2>
     <p>Email: <a href="mailto:{{user.email}}">{{user.email}}</a></p>
-    
+
+    {%if user == current_user %}
+        <p><a href="{{url_for('main.settings')}}">Account settings</a></p>
+    {%endif%}
+
     {% if changes %}
         <p>Changes made by {{user.first_name}}:</p>
             {%for change in changes%}

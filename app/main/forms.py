@@ -1,6 +1,6 @@
 from flask import request
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DateTimeField, IntegerField, SelectField
+from wtforms import StringField, SubmitField, DateTimeField, IntegerField, SelectField, BooleanField
 from wtforms.validators import DataRequired, ValidationError
 from app.models import Fish
 
@@ -32,6 +32,7 @@ class NewFish(FlaskForm):
     mother_id = StringField("Mother's ID")
     tank_id = StringField("Tank #")
     source = StringField("Source")
+    submit = SubmitField('Add Fish')
     
     def validate_father_id(self, father_id):
         fish = Fish.query.filter_by(fish_id = father_id).first()
@@ -44,3 +45,6 @@ class NewFish(FlaskForm):
         if fish is None:
             raise ValidationError('The mother_id does not match any fish currently in the database.')
         
+class SettingsForm(FlaskForm):
+    emails = BooleanField('Email notifications:')
+    submit = SubmitField('Apply')

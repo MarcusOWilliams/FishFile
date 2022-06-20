@@ -7,7 +7,7 @@ from app.main import bp
 from app.models import Change, Fish, User, requires_roles
 from flask import flash, redirect, render_template, url_for, g
 from flask_login import current_user, login_required
-from app.main.forms import SearchForm, NewFish
+from app.main.forms import SearchForm, NewFish, SettingsForm
 
 #this route defines the landing page of the website
 @bp.route('/', methods=['GET', 'POST'])
@@ -51,12 +51,25 @@ def fish(fish_id):
 
     return render_template('fish.html', fish=fish, title=title)
 
-@bp.route('/newfish/')
+@bp.route('/newfish/', methods=['GET', 'POST'])
 @login_required
 def newfish():
     form = NewFish()
     
     return render_template('newfish.html', title = "New Fish")
+
+@bp.route('/settings/', methods=['GET', 'POST'])
+@login_required
+def settings():
+    form = SettingsForm()
+    current_settings = current_user.settings
+    if form.validate_on_submit():
+        current_user.settings.emails = form.emails.data
+        db.session.commit()
+        flash("Settings Applied")
+        return redirect(url_for('main.user', username = current_user.username))
+
+    return render_template('settings.html', form = form, current_settings = current_settings)
 
 
 # This function is used to update the users Last seen time when they go to a new page
@@ -66,4 +79,6 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
         g.search_form = SearchForm()
+
+
 
