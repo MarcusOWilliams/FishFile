@@ -66,7 +66,7 @@ def settings():
     if form.validate_on_submit():
         current_user.settings.emails = form.emails.data
         db.session.commit()
-        flash("Settings Applied")
+        flash("Settings Applied", 'info')
         return redirect(url_for('main.user', username = current_user.username))
 
     return render_template('settings.html', form = form, current_settings = current_settings)

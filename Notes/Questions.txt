@@ -13,7 +13,10 @@ DB questions
     What format is each input?
     Where does source go? Tank or fish?
     Would you always know the ID of the father? Or would you sometimes just know the stock?
+
 What wuold you want notifaictions about?
     How old should a fish be?
     When a fish changes what things?
     Who to tell?
+
+Admins?

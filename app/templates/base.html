@@ -124,10 +124,24 @@
     </nav>
     <!-- APP CONTENT -->
     <div id="mainContainer">
-      {% with messages = get_flashed_messages() %} {% if messages %} {% for
-      message in messages %}
-      <div class="alert alert-info" role="alert">{{ message }}</div>
-      {% endfor %} {% endif %} {%endwith%} {% block content %}{% endblock %}
+      {% with messages = get_flashed_messages(with_categories=true) %} 
+        {% if messages %}
+         {% for category, message in messages %}
+          {%if category == 'message'%}
+            <div class="alert alert-secondary alert-dismissible" role="alert">
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              {{ message }}
+            </div>
+            
+          {%else%}
+            <div class="alert alert-{{category}} alert-dismissible" role="alert">
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              {{ message }}
+
+            </div>
+            
+
+      {%endif%}{% endfor %} {% endif %} {%endwith%} {% block content %}{% endblock %}
     </div>
 
     <!-- More scripts to allow functionality of bootstrap components -->

@@ -24,14 +24,14 @@ def login():
 
         # check if they have entered an email that is in the db
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid email or password')
+            flash('Invalid email or password', 'danger')
             return redirect(url_for('auth.login'))
 
         # if the user is not verified they are sent a verification email
         if not user.is_verified:
             send_email_verification_email(user)
             flash(
-                f"To login you must verify your email address, a verification link has been sent to {user.email}, don't forget to check your spam folder!")
+                f"To login you must verify your email address, a verification link has been sent to {user.email}, don't forget to check your spam folder!", 'info')
             return redirect(url_for('auth.login'))
 
         login_user(user, remember=form.remember_me.data)
@@ -86,7 +86,7 @@ def reset_password_request():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             send_password_reset_email(user)
-        flash('If there is an email associated with the an account an email will be sent with instructions on how to reset your password, please check your junk/spam folder!')
+        flash('If there is an email associated with the an account an email will be sent with instructions on how to reset your password, please check your junk/spam folder!', 'info')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password_request.html', title='Reset Password', form=form)
 
@@ -97,13 +97,13 @@ def reset_password(token):
         return redirect(url_for('main.index'))
     user = User.verify_reset_password_token(token)
     if not user:
-        flash('The password reset link you used was either invalid or has expired.')
+        flash('The password reset link you used was either invalid or has expired.', 'danger')
         return redirect(url_for('main.index'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user.set_password(form.password.data)
         db.session.commit()
-        flash('Your password has been reset.')
+        flash('Your password has been reset.','success')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
 
@@ -112,7 +112,7 @@ def reset_password(token):
 def verify_email(token):
     user = User.verify_email_token(token)
     if not user:
-        flash('The email verification link you used was either invalid or has expired.')
+        flash('The email verification link you used was either invalid or has expired.','danger')
         return redirect(url_for('auth.login'))
     user.is_verified = True
     db.session.commit()
@@ -127,12 +127,12 @@ def change_password():
 
     if form.validate_on_submit():
         if not current_user.check_password(form.old_password.data):
-            flash("The current password you entered is incorrect. If you have forgotten your password, logout and use the 'forgoten password' link on the login page.")
+            flash("The current password you entered is incorrect. If you have forgotten your password, logout and use the 'forgoten password' link on the login page.", 'danger')
             return redirect(url_for('auth.change_password'))
 
         current_user.set_password(form.new_password.data)
         db.session.commit()
-        flash("Your password has been changed.")
+        flash("Your password has been changed.", 'success')
         return redirect(url_for('main.settings'))
 
     return render_template('auth/change_password.html', title = "Change Password", form = form)

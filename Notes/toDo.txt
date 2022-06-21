@@ -24,4 +24,4 @@ Test emails
 
 change from sqlLite
 
-flash message catagories
+/ flash message catagories
