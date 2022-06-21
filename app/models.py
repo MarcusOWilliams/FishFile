@@ -93,8 +93,8 @@ def requires_roles(*roles):
 class Fish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.String(64), index=True, unique=True)
-    birthday = db.Column(db.DateTime, index=True)
-    date_of_arrival = db.Column(db.DateTime, index=True)
+    birthday = db.Column(db.Date, index=True)
+    date_of_arrival = db.Column(db.Date, index=True)
     stock = db.Column(db.String(64), index=True)
     project_license = db.Column(db.String(64), index=True)
     status = db.Column(db.String(64), index=True, default = "Alive")
