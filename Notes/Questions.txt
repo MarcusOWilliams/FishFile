@@ -20,3 +20,5 @@ What wuold you want notifaictions about?
     Who to tell?
 
 Admins?
+
+WHat are users associated with? fish? tanks?

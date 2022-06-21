@@ -159,3 +159,6 @@ class Notification(db.Model):
     category = db.Column(db.String(64))
     contents = db.Column(db.String(64))
 
+    def __repr__(self):
+        return f'<Notification for User:{self.user.username}'
+

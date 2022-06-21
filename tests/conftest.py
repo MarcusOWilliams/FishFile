@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+from unicodedata import category
 import pytest
 import os
 import sys
@@ -7,7 +8,7 @@ from tests.testing_config import Testing_config
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'../../'))
 from app import create_app
-from app.models import User, Fish
+from app.models import *
 
 
 #TO RUN ALL TESTS USE THE 'python -m pytest' COMMAND
@@ -61,8 +62,8 @@ def new_fish():
     """
     fish = Fish(
         fish_id = "1a2b4c",
-        birthday = datetime.datetime(2020, 5, 17),
-        date_of_arrival = datetime.datetime(2021, 5, 17),
+        birthday = datetime(2016,4,30,3,20,6),
+        date_of_arrival =datetime(2016,4,30,3,20,6),
         stock = "ABC123",
         project_license = "QWERTY",
         status = "Alive",
@@ -72,3 +73,56 @@ def new_fish():
         ) 
 
     return fish
+@pytest.fixture(scope='module')
+def new_tank():
+    """
+    THIS IS USED TO CREATE A TANK FOR OTHER TESTS USING PYTEST
+    """
+    tank = Tank(
+        tank_id = 1,
+        males = 1,
+        females = 1,
+        total = 2
+        ) 
+
+    return tank
+
+@pytest.fixture(scope='module')
+def new_change():
+    """
+    THIS IS USED TO CREATE A CHANGE FOR OTHER TESTS USING PYTEST
+    """
+    change = Change(
+        user_id = 1,
+        fish_id = 1,
+        tank_id = 1,
+        action = "test",
+        contents = "this is a test"
+        ) 
+
+    return change
+
+@pytest.fixture(scope='module')
+def new_notification():
+    """
+    THIS IS USED TO CREATE A NOTIFICATION FOR OTHER TESTS USING PYTEST
+    """
+    notification = Notification(
+        user_id = 1,
+        category = "test",
+        contents = "this is a test"
+        ) 
+
+    return notification
+
+@pytest.fixture(scope='module')
+def new_setting():
+    """
+    THIS IS USED TO CREATE A SETTING FOR OTHER TESTS USING PYTEST
+    """
+    setting = Settings(
+        user_id = 1,
+        emails = False
+        ) 
+
+    return setting

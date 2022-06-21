@@ -1,4 +1,6 @@
-import datetime
+from datetime import datetime
+
+from tests.conftest import new_notification
 
 
 def test_new_user(new_user):
@@ -33,8 +35,51 @@ def test_new_fish(new_fish):
     THEN check the properties are defined correctly
     """
     assert new_fish.fish_id == "1a2b4c"
-    assert new_fish.birthday == datetime.datetime(2020, 5, 17)
-    assert new_fish.date_of_arrival == datetime.datetime(2021, 5, 17)
+    assert new_fish.birthday == datetime(2016,4,30,3,20,6)
+    assert new_fish.date_of_arrival == datetime(2016,4,30,3,20,6)
     assert new_fish.stock == "ABC123"
     assert new_fish.transgenes == None
     assert new_fish.comments == "Its a fish..."
+
+def test_new_(new_tank):
+    """
+    GIVEN a Tank  model
+    WHEN a new Tank is created
+    THEN check the properties are defined correctly
+    """
+    assert new_tank.tank_id == 1
+    assert new_tank.males == 1
+    assert new_tank.females == 1
+    assert new_tank.total == 2
+    
+
+def test_new_change(new_change):
+    """
+    GIVEN a Change model
+    WHEN a new Change is created
+    THEN check the properties are defined correctly
+    """
+    assert new_change.user_id == 1
+    assert new_change.fish_id == 1
+    assert new_change.tank_id == 1
+    assert new_change.action == "test"
+    assert new_change.contents == "this is a test"
+
+def test_new_notification(new_notification):
+    """
+    GIVEN a Notification model
+    WHEN a new Notification is created
+    THEN check the properties are defined correctly
+    """
+    assert new_notification.user_id == 1
+    assert new_notification.category == "test"
+    assert new_notification.contents == "this is a test"
+
+def test_new_setting(new_setting):
+    """
+    GIVEN a Setting model
+    WHEN a new Setting is created
+    THEN check the properties are defined correctly
+    """
+    assert new_setting.user_id == 1
+    assert new_setting.emails == False
