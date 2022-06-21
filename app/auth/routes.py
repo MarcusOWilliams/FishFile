@@ -4,7 +4,7 @@ from app.auth import bp
 from app.auth.email import (send_email_verification_email,
                             send_password_reset_email)
 from app.auth.forms import (LoginForm, RegistrationForm, ResetPasswordForm,
-                            ResetPasswordRequestForm)
+                            ResetPasswordRequestForm, ChangePasswordForm)
 from app.models import Settings, User
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
@@ -118,3 +118,21 @@ def verify_email(token):
     db.session.commit()
     flash('Your email has been verified')
     return redirect(url_for('auth.login'))
+
+
+@bp.route('/change_password/', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+        if not current_user.check_password(form.old_password.data):
+            flash("The current password you entered is incorrect. If you have forgotten your password, logout and use the 'forgoten password' link on the login page.")
+            return redirect(url_for('auth.change_password'))
+
+        current_user.set_password(form.new_password.data)
+        db.session.commit()
+        flash("Your password has been changed.")
+        return redirect(url_for('main.settings'))
+
+    return render_template('auth/change_password.html', title = "Change Password", form = form)
