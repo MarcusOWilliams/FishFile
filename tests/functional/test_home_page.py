@@ -10,7 +10,7 @@ def test_home_page(client):
     """
 
     #check for a redirect response
-    response = client.get('/')
+    response = client.get(url_for('/home'))
     assert response.status_code == 302
 
     #check the redirect goes to the login page
@@ -24,7 +24,7 @@ def test_home_page(test_client):
     AND the user authentication is bypassed
     THEN check that the response is valid
     """
-    response = test_client.get('/')
+    response = test_client.get('/home')
     assert response.status_code == 200
 
     assert b"Welcome to DanioDB" in response.data
