@@ -4,11 +4,11 @@ from turtle import title
 
 from app import db
 from app.main import bp
-from app.models import Change, Fish, User, requires_roles
+from app.models import Change, Fish, Notification, User, requires_roles
 from flask import flash, redirect, render_template, url_for, g
 from flask_login import current_user, login_required
 from app.main.forms import SearchForm, NewFish, SettingsForm
-
+from app.main.email import send_notification_email
 #this route defines the landing page of the website
 @bp.route('/', methods=['GET', 'POST'])
 def landing():
@@ -67,6 +67,9 @@ def settings():
         current_user.settings.emails = form.emails.data
         db.session.commit()
         flash("Settings Applied", 'info')
+        n = Notification(category = "Updated", user = current_user)
+        send_notification_email(current_user, n)
+
         return redirect(url_for('main.user', username = current_user.username))
 
     return render_template('settings.html', form = form, current_settings = current_settings)

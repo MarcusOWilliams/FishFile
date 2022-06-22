@@ -1,0 +1,5 @@
+Dear {{ user.first_name }},
+
+You have recieved a notification from DanioDB
+
+<p>To view this notification log in here: {{url_for('auth.login', _external=True)}}

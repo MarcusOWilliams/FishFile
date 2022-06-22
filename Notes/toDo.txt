@@ -18,10 +18,12 @@ Fix Templates:
 
 / Implement email validation
 
-Add permissions
+/ Add permissions
 
 Test emails
 
 change from sqlLite
 
 / flash message catagories
+
+make family tree
