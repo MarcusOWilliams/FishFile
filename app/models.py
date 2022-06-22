@@ -9,7 +9,12 @@ from flask import current_app, abort
 from datetime import datetime
 from functools import wraps
 
-
+"""
+This is the class for the User table  of the SQL database
+Each user row contains a unique id, names, email, username, hashed_password, last seen time, verification check, role 
+This table has relationships to: Changes, Notification, Settings, Fish
+It also contains the methods required for the user
+"""
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(64), index=True)
@@ -90,6 +95,14 @@ def requires_roles(*roles):
 # --------------------------------
 
 
+
+
+"""
+This is the class for the Fish table of the SQL database
+Each user row contains a ...
+This table has relationships to: Itself, User, Change, Tank
+It also contains the methods required for the fish
+"""
 class Fish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.String(64), index=True, unique=True)
@@ -117,7 +130,12 @@ class Fish(db.Model):
     def __repr__(self):
         return f'<Fish: id = {self.fish_id}>'
     
-
+"""
+This is the class for the Tank table of the SQL database
+Each user row contains a ...
+This table has relationships to: Fish
+It also contains the methods required for the tank
+"""
 class Tank(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tank_id = db.Column(db.String(64), index=True, unique=True)
@@ -129,6 +147,13 @@ class Tank(db.Model):
 
     fish = db.relationship("Fish", backref = "tank", lazy='dynamic')
 
+
+"""
+This is the class for the Change table of the SQL database, which is used to record changes to the database
+Each user row contains a ...
+This table has relationships to: Fish, User, Tank
+It also contains the methods required for the change
+"""
 class Change(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -141,6 +166,13 @@ class Change(db.Model):
     def __repr__(self):
         return f'<Change by User:{self.user_id} on Fish: {self.fish_id}'
 
+
+"""
+This is the class for the Setting table of the SQL database
+Each user row contains a ...
+This table has a one-to-one relationships to User
+It also contains the methods required for the Settings
+"""
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     #one-to-one relationship
@@ -152,6 +184,13 @@ class Settings(db.Model):
     def __repr__(self):
         return f'<Settings for User:{self.user.username}'
 
+
+"""
+This is the class for the Notifiaction table of the SQL database
+Each user row contains a ...
+This table has relationships to: User
+It also contains the methods required for the notifiaction
+"""
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
