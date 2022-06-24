@@ -1,8 +1,8 @@
-"""make fishtank
+"""fix typo
 
-Revision ID: f5289aa45280
+Revision ID: f19bf66759f4
 Revises: 
-Create Date: 2022-06-24 10:19:37.002758
+Create Date: 2022-06-24 11:11:17.370286
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f5289aa45280'
+revision = 'f19bf66759f4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,14 +27,14 @@ def upgrade():
     sa.Column('password_hash', sa.String(length=128), nullable=True),
     sa.Column('last_seen', sa.DateTime(), nullable=True),
     sa.Column('is_verified', sa.Boolean(), nullable=True),
-    sa.Column('project_licence', sa.String(length=120), nullable=True),
+    sa.Column('project_license', sa.String(length=120), nullable=True),
     sa.Column('role', sa.String(length=64), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
     op.create_index(op.f('ix_user_first_name'), 'user', ['first_name'], unique=False)
     op.create_index(op.f('ix_user_last_name'), 'user', ['last_name'], unique=False)
-    op.create_index(op.f('ix_user_project_licence'), 'user', ['project_licence'], unique=False)
+    op.create_index(op.f('ix_user_project_license'), 'user', ['project_license'], unique=False)
     op.create_index(op.f('ix_user_username'), 'user', ['username'], unique=False)
     op.create_table('fish',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -42,11 +42,9 @@ def upgrade():
     sa.Column('tank_id', sa.String(length=64), nullable=True),
     sa.Column('status', sa.String(length=64), nullable=True),
     sa.Column('stock', sa.String(length=64), nullable=True),
-    sa.Column('project_licence_holder_id', sa.Integer(), nullable=True),
     sa.Column('protocol', sa.Integer(), nullable=True),
     sa.Column('birthday', sa.Date(), nullable=True),
     sa.Column('date_of_arrival', sa.Date(), nullable=True),
-    sa.Column('user_code_id', sa.Integer(), nullable=True),
     sa.Column('allele', sa.String(length=64), nullable=True),
     sa.Column('mutant_gene', sa.String(length=64), nullable=True),
     sa.Column('transgenes', sa.String(length=64), nullable=True),
@@ -54,6 +52,8 @@ def upgrade():
     sa.Column('comments', sa.String(length=1000), nullable=True),
     sa.Column('father_id', sa.Integer(), nullable=True),
     sa.Column('mother_id', sa.Integer(), nullable=True),
+    sa.Column('project_license_holder_id', sa.Integer(), nullable=True),
+    sa.Column('user_code_id', sa.Integer(), nullable=True),
     sa.Column('males', sa.Integer(), nullable=True),
     sa.Column('females', sa.Integer(), nullable=True),
     sa.Column('unsexed', sa.Integer(), nullable=True),
@@ -61,7 +61,7 @@ def upgrade():
     sa.Column('total', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['father_id'], ['fish.id'], ),
     sa.ForeignKeyConstraint(['mother_id'], ['fish.id'], ),
-    sa.ForeignKeyConstraint(['project_licence_holder_id'], ['user.project_licence'], ),
+    sa.ForeignKeyConstraint(['project_license_holder_id'], ['user.project_license'], ),
     sa.ForeignKeyConstraint(['user_code_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -124,7 +124,7 @@ def downgrade():
     op.drop_index(op.f('ix_fish_allele'), table_name='fish')
     op.drop_table('fish')
     op.drop_index(op.f('ix_user_username'), table_name='user')
-    op.drop_index(op.f('ix_user_project_licence'), table_name='user')
+    op.drop_index(op.f('ix_user_project_license'), table_name='user')
     op.drop_index(op.f('ix_user_last_name'), table_name='user')
     op.drop_index(op.f('ix_user_first_name'), table_name='user')
     op.drop_index(op.f('ix_user_email'), table_name='user')

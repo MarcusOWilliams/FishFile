@@ -21,3 +21,11 @@
     white-space: nowrap;
     
 }
+
+.formError{
+    color: red;
+}
+
+#addFishTable{
+    margin:auto;
+}

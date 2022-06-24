@@ -9,7 +9,7 @@
     </p>
     <p>
         {% for error in form.email.errors %}
-        <span style="color: red;">{{ error }}</span>
+        <span class = "formError">{{ error }}</span>
         {% endfor %}
     </p>
     </p>
@@ -18,7 +18,7 @@
         {{ form.password(size=32,placeholder='Password') }}
     </p>
     {% for error in form.password.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class = "formError">{{ error }}</span>
     {% endfor %}
     </p>
     <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>

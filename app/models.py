@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_verified = db.Column(db.Boolean, default=False)
-    project_licence = db.Column(db.String(120), index=True)
+    project_license = db.Column(db.String(120), index=True)
     role = db.Column(db.String(64), default='User')
 
     changes = db.relationship('Change', backref='user', lazy='dynamic')
@@ -135,10 +135,10 @@ class Fish(db.Model):
         "mother", remote_side=[id]), foreign_keys=[mother_id])
 
 
-    project_licence_holder_id = db.Column(
-        db.Integer, db.ForeignKey('user.project_licence'))
-    project_licence_holder =  db.relationship('User', foreign_keys=[
-                                      project_licence_holder_id], backref='fish_on_licence')
+    project_license_holder_id = db.Column(
+        db.Integer, db.ForeignKey('user.project_license'))
+    project_license_holder =  db.relationship('User', foreign_keys=[
+                                      project_license_holder_id], backref='fish_on_license')
 
     user_code_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user_code = db.relationship('User', foreign_keys=[

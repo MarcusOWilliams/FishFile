@@ -61,8 +61,11 @@ def fish(fish_id):
 @login_required
 def newfish():
     form = NewFish()
+    if form.validate_on_submit():
+        flash("Yup", 'warning')
+        return render_template('newfish.html',form=form, title="New Fish")
 
-    return render_template('newfish.html', title="New Fish")
+    return render_template('newfish.html',form=form, title="New Fish")
 
 
 @bp.route('/settings/', methods=['GET', 'POST'])

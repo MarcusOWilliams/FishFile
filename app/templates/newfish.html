@@ -3,21 +3,64 @@
 {% block content %}
     <form action="" method="post">
         {{form.hidden_tag()}}
-        <table>
+        <table id="addFishTable">
             <tr>
-                <td>{{form.fish_id.label}}{{form.fish_id(placeholder="Fish ID")}}</td>
-                <td>{{form.stock.label}}{{form.stock(placeholder="Stock #")}}</td>
+                <td>
+                    {{form.fish_id.label}} {{form.fish_id(placeholder="Fish ID")}} 
+                </td>
+                <td>{{form.tank_id.label}} {{form.tank_id(placeholder="Tank ID")}}</td>
             </tr>
             <tr>
-                <td>{{form.birthday.label}}{{form.birthday(placeholder=form.birthday.label)}}</td>
-                <td>{{form.date_of_arrival.label}}{{form.date_of_arrival(placeholder=form.date_of_arrival.label)}}</td>
+                <td>{{form.stock.label}} {{form.stock(placeholder="Stock")}}</td>
+                <td>{{form.status.label}} {{form.status()}}</td>
             </tr>
             <tr>
-                <td>{{form.tank_id.label}}{{form.tank_id(placeholder=form.tank_id.label)}}</td>
-                <td>{{form.status.label}}{{form.status(placeholder=form.status.label)}}</td>   
+                <td>{{form.project_license.label}} {{form.project_license(placeholder="Project License")}}</td>
+                <td>{{form.user_code.label}} {{form.user_code(placeholder="User Code")}}</td>
             </tr>
-        </table>
+            <tr>
+                <td>{{form.birthday.label}} {{form.birthday()}}</td>
+                <td>{{form.date_of_arrival.label}} {{form.date_of_arrival()}}</td>
+            </tr>
+            <tr>
+                <td>{{form.protocol.label}} {{form.protocol()}}</td>
+                <td>{{form.source.label}} {{form.source()}}</td>
+            </tr>
+            <tr>
+                <td>{{form.mutant_gene.label}} {{form.mutant_gene(placeholder="Mutant Gene")}}</td>
+                <td>{{form.transgenes.label}} {{form.transgenes(placeholder="Transgenes")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.allele.label}} {{form.allele(placeholder="allele")}}</td>
+                <td>{{form.cross_type.label}} {{form.cross_type(placeholder="Cross Type")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.father_id.label}} {{form.father_id(placeholder="Father's ID")}}</td>
+                <td>{{form.father_stock.label}} {{form.father_stock(placeholder="Father's Stock")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.mother_id.label}} {{form.mother_id(placeholder="Mother's ID")}}</td>
+                <td>{{form.mother_stock.label}} {{form.mother_stock(placeholder="Mother's Stock")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.males.label}} {{form.males()}}</td>
+                <td>{{form.females.label}} {{form.females()}}</td>
+            </tr>
+            <tr>
+                <td>{{form.unsexed.label}} {{form.unsexed()}}</td>
+                <td>{{form.carriers.label}} {{form.carriers()}}</td>
+            </tr>
+            <tr>
+                <td>{{form.total.label}} {{form.total()}}</td>
 
+                <td>{{form.comments.label}} {{form.comments(placeholder="Comments...")}}</td>   
+            </tr> 
+        </table>
+        {% for field, errors in form.errors.items() %}
+                <div class = "formError">{{ form[field].label }}: {{ ', '.join(errors) }}</div>
+        {% endfor %}
+        {{form.submit()}}
+        
     </form>
 
 {%endblock%}
