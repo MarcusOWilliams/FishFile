@@ -1,18 +1,17 @@
 DB questions
-    What is mandatory?
+   
+    For each field?
+        What format is the input? Text? Number? Dropdown? Date?
+        Is it mandatory or can it be blank?
+        Is it unique?
+        What is it associated with? an individual fish? or tank?
+
     Is id unique to each fish? If not what is?
-    Should the following be select field? What options?
-        ID
-        Allele
-        Mutant gene
-        User Code
-        Transgenes
-        Project License allocated
-        Source
-        Protocol?
-    What format is each input?
     Where does source go? Tank or fish?
     Would you always know the ID of the father? Or would you sometimes just know the stock?
+    Should there be a sex field?
+    Any other fields that could be useful?
+    WHat are users associated with? fish? tanks?
 
 What wuold you want notifaictions about?
     How old should a fish be?
@@ -21,6 +20,10 @@ What wuold you want notifaictions about?
 
 Admins?
 
-WHat are users associated with? fish? tanks?
+Suggestions for what should be on the home page
+    A list of most recent changes? By everyone or by just you?
+    A list of all the fish? most recently added? Oldest alive?
 
 What would you want to see for genetic history? 
+
+WHat changes to track?

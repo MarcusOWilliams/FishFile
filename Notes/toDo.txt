@@ -13,7 +13,6 @@ Fix Templates:
 
 / Change emails
 
-
 / Fix request password reset
 
 / Implement email validation
