@@ -1,3 +1,5 @@
+from app.models import *
+from app import create_app
 from datetime import datetime
 from unicodedata import category
 import pytest
@@ -6,12 +8,10 @@ import sys
 
 from tests.testing_config import Testing_config
 
-sys.path.append(os.path.join(os.path.dirname(__file__),'../../'))
-from app import create_app
-from app.models import *
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
 
 
-#TO RUN ALL TESTS USE THE 'python -m pytest' COMMAND
+# TO RUN ALL TESTS USE THE 'python -m pytest' COMMAND
 
 @pytest.fixture(scope='module')
 def client():
@@ -48,11 +48,10 @@ def new_user():
     """
     THIS IS USED TO CREATE USERS FOR OTHER TESTS USING PYTEST
     """
-    user = User(first_name="John", last_name = "Smith" ,email = "testing@bath.ac.uk")
+    user = User(first_name="John", last_name="Smith",
+                email="testing@bath.ac.uk")
     user.set_password("examplePassword123")
     return user
-
-
 
 
 @pytest.fixture(scope='module')
@@ -61,31 +60,34 @@ def new_fish():
     THIS IS USED TO CREATE A FISH FOR OTHER TESTS USING PYTEST
     """
     fish = Fish(
-        fish_id = "1a2b4c",
-        birthday = datetime(2016,4,30,3,20,6),
-        date_of_arrival =datetime(2016,4,30,3,20,6),
-        stock = "ABC123",
-        project_license = "QWERTY",
-        status = "Alive",
-        allele = "aa",
-        protocol = 1,
-        comments = "Its a fish..."
-        ) 
+        fish_id="1a2b4c",
+        birthday=datetime(2016, 4, 30, 3, 20, 6),
+        date_of_arrival=datetime(2016, 4, 30, 3, 20, 6),
+        stock="ABC123",
+        project_license="QWERTY",
+        status="Alive",
+        allele="aa",
+        protocol=1,
+        comments="Its a fish..."
+    )
 
     return fish
+
+
 @pytest.fixture(scope='module')
 def new_tank():
     """
     THIS IS USED TO CREATE A TANK FOR OTHER TESTS USING PYTEST
     """
     tank = Tank(
-        tank_id = 1,
-        males = 1,
-        females = 1,
-        total = 2
-        ) 
+        tank_id=1,
+        males=1,
+        females=1,
+        total=2
+    )
 
     return tank
+
 
 @pytest.fixture(scope='module')
 def new_change():
@@ -93,14 +95,15 @@ def new_change():
     THIS IS USED TO CREATE A CHANGE FOR OTHER TESTS USING PYTEST
     """
     change = Change(
-        user_id = 1,
-        fish_id = 1,
-        tank_id = 1,
-        action = "test",
-        contents = "this is a test"
-        ) 
+        user_id=1,
+        fish_id=1,
+        tank_id=1,
+        action="test",
+        contents="this is a test"
+    )
 
     return change
+
 
 @pytest.fixture(scope='module')
 def new_notification():
@@ -108,12 +111,13 @@ def new_notification():
     THIS IS USED TO CREATE A NOTIFICATION FOR OTHER TESTS USING PYTEST
     """
     notification = Notification(
-        user_id = 1,
-        category = "test",
-        contents = "this is a test"
-        ) 
+        user_id=1,
+        category="test",
+        contents="this is a test"
+    )
 
     return notification
+
 
 @pytest.fixture(scope='module')
 def new_setting():
@@ -121,8 +125,8 @@ def new_setting():
     THIS IS USED TO CREATE A SETTING FOR OTHER TESTS USING PYTEST
     """
     setting = Settings(
-        user_id = 1,
-        emails = False
-        ) 
+        user_id=1,
+        emails=False
+    )
 
     return setting

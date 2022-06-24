@@ -15,6 +15,8 @@ Each user row contains a unique id, names, email, username, hashed_password, las
 This table has relationships to: Changes, Notification, Settings, Fish
 It also contains the methods required for the user
 """
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(64), index=True)
@@ -24,9 +26,12 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_verified = db.Column(db.Boolean, default=False)
+    project_licence = db.Column(db.String(120), index=True)
     role = db.Column(db.String(64), default='User')
+
     changes = db.relationship('Change', backref='user', lazy='dynamic')
-    notification = db.relationship('Notification', backref='user', lazy='dynamic')
+    notification = db.relationship(
+        'Notification', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return '<User {} {}>'.format(self.first_name, self.last_name)
@@ -81,6 +86,8 @@ def load_user(id):
     return User.query.get(int(id))
 
 # This method creates a wrapper, allowing the use of @required_roles in routes, allowing certain links to only be accessible for accounts with a certain role, e.g. admins
+
+
 def requires_roles(*roles):
     def wrapper(f):
         @wraps(f)
@@ -95,57 +102,58 @@ def requires_roles(*roles):
 # --------------------------------
 
 
-
-
 """
 This is the class for the Fish table of the SQL database
 Each user row contains a ...
 This table has relationships to: Itself, User, Change, Tank
 It also contains the methods required for the fish
 """
+
+
 class Fish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.String(64), index=True, unique=True)
+    tank_id = db.Column(db.String(64), index=True, unique=True)
+    status = db.Column(db.String(64), index=True, default="Alive")
+    stock = db.Column(db.String(64), index=True)
+
+    protocol = db.Column(db.Integer, index=True)
     birthday = db.Column(db.Date, index=True)
     date_of_arrival = db.Column(db.Date, index=True)
-    stock = db.Column(db.String(64), index=True)
-    project_license = db.Column(db.String(64), index=True)
-    status = db.Column(db.String(64), index=True, default = "Alive")
+    
     allele = db.Column(db.String(64), index=True)
-    sex = db.Column(db.String(64))
     mutant_gene = db.Column(db.String(64), index=True)
     transgenes = db.Column(db.String(64), index=True)
-    protocol = db.Column(db.Integer, index=True)
+    cross_type = db.Column(db.String(64), index=True)
     comments = db.Column(db.String(1000))
 
     father_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
     mother_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
-    fathered = db.relationship("Fish", backref=db.backref("father", remote_side=[id]), foreign_keys = [father_id])
-    mothered = db.relationship("Fish", backref=db.backref("mother", remote_side=[id]), foreign_keys= [mother_id])
+    fathered = db.relationship("Fish", backref=db.backref(
+        "father", remote_side=[id]), foreign_keys=[father_id])
+    mothered = db.relationship("Fish", backref=db.backref(
+        "mother", remote_side=[id]), foreign_keys=[mother_id])
 
-    changes = db.relationship("Change", backref='fish', lazy='dynamic')
 
-    tank_id =  db.Column(db.Integer, db.ForeignKey('tank.id'))
+    project_licence_holder_id = db.Column(
+        db.Integer, db.ForeignKey('user.project_licence'))
+    project_licence_holder =  db.relationship('User', foreign_keys=[
+                                      project_licence_holder_id], backref='fish_on_licence')
 
-    def __repr__(self):
-        return f'<Fish: id = {self.fish_id}>'
-    
-"""
-This is the class for the Tank table of the SQL database
-Each user row contains a ...
-This table has relationships to: Fish
-It also contains the methods required for the tank
-"""
-class Tank(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    tank_id = db.Column(db.String(64), index=True, unique=True)
+    user_code_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_code = db.relationship('User', foreign_keys=[
+                                user_code_id], backref='users_fish')
+
     males = db.Column(db.Integer)
     females = db.Column(db.Integer)
     unsexed = db.Column(db.Integer)
     carriers = db.Column(db.Integer)
     total = db.Column(db.Integer)
 
-    fish = db.relationship("Fish", backref = "tank", lazy='dynamic')
+    changes = db.relationship("Change", backref='fish', lazy='dynamic')
+
+    def __repr__(self):
+        return f'<Fish: id = {self.fish_id}>'
 
 
 """
@@ -154,11 +162,12 @@ Each user row contains a ...
 This table has relationships to: Fish, User, Tank
 It also contains the methods required for the change
 """
+
+
 class Change(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    fish_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
-    tank_id =  db.Column(db.Integer, db.ForeignKey('tank.id'))
+    fishtank_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
     action = db.Column(db.String(64))
     contents = db.Column(db.String(64))
     time = db.Column(db.DateTime, default=datetime.utcnow)
@@ -173,13 +182,16 @@ Each user row contains a ...
 This table has a one-to-one relationships to User
 It also contains the methods required for the Settings
 """
+
+
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    #one-to-one relationship
+    # one-to-one relationship
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship("User", backref = db.backref("settings", uselist=False))
+    user = db.relationship(
+        "User", backref=db.backref("settings", uselist=False))
 
-    emails = db.Column(db.Boolean, default = True)
+    emails = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f'<Settings for User:{self.user.username}'
@@ -191,6 +203,8 @@ Each user row contains a ...
 This table has relationships to: User
 It also contains the methods required for the notifiaction
 """
+
+
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -200,6 +214,3 @@ class Notification(db.Model):
 
     def __repr__(self):
         return f'<Notification for User:{self.user.username}'
-
-
-

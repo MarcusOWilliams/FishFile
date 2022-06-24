@@ -4,6 +4,7 @@ from wtforms import StringField, SubmitField, DateTimeField, IntegerField, Selec
 from wtforms.validators import DataRequired, ValidationError
 from app.models import Fish
 
+
 class SearchForm(FlaskForm):
     search = StringField('Search by fish id', validators=[DataRequired()])
     submit = SubmitField('Search')
@@ -15,6 +16,7 @@ class SearchForm(FlaskForm):
             kwargs['csrf_enabled'] = False
         super(SearchForm, self).__init__(*args, **kwargs)
 
+
 class NewFish(FlaskForm):
     fish_id = StringField('Fish ID', validators=[DataRequired()])
     birthday = DateTimeField("Birthday")
@@ -23,7 +25,7 @@ class NewFish(FlaskForm):
     project_license = StringField()
     status = SelectField("Status", choices=["Alive", "Dead"])
     allele = StringField("Allele")
-    sex = SelectField("Sex", choices=["Male","Female","Unassigned"])
+    sex = SelectField("Sex", choices=["Male", "Female", "Unassigned"])
     mutant_gene = StringField("Mutant Gene")
     transgenes = StringField("Transgenes")
     protocol = SelectField("Protocol")
@@ -33,18 +35,20 @@ class NewFish(FlaskForm):
     tank_id = StringField("Tank #")
     source = StringField("Source")
     submit = SubmitField('Add Fish')
-    
+
     def validate_father_id(self, father_id):
-        fish = Fish.query.filter_by(fish_id = father_id).first()
+        fish = Fish.query.filter_by(fish_id=father_id).first()
         if fish is None:
-             raise ValidationError('The father_id does not match any fish currently in the database.')
-        
-    
+            raise ValidationError(
+                'The father_id does not match any fish currently in the database.')
+
     def validate_mother_id(self, mother_id):
-        fish = Fish.query.filter_by(fish_id = mother_id).first()
+        fish = Fish.query.filter_by(fish_id=mother_id).first()
         if fish is None:
-            raise ValidationError('The mother_id does not match any fish currently in the database.')
-        
+            raise ValidationError(
+                'The mother_id does not match any fish currently in the database.')
+
+
 class SettingsForm(FlaskForm):
     emails = BooleanField('Email notifications:')
     submit = SubmitField('Apply')
