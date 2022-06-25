@@ -51,29 +51,18 @@ class NewFish(FlaskForm):
 
     submit = SubmitField('Add Fish')
 
-    def validate_father_id(self, father_id):
-        fish = Fish.query.filter_by(fish_id=father_id.data).first()
-        if fish is None:
-            raise ValidationError(
-                'The father_id does not match any fish currently in the database.')
-
-    def validate_mother_id(self, mother_id):
-        fish = Fish.query.filter_by(fish_id=mother_id.data).first()
-        if fish is None:
-            raise ValidationError(
-                'The mother_id does not match any fish currently in the database.')
 
     def validate_father_stock(self, father_stock):
-        fish = Fish.query.filter_by(stock=father_stock.data).first()
+        fish = Fish.query.filter_by(fish_id = self.father_id.data, stock=father_stock.data).first()
         if fish is None:
             raise ValidationError(
-                'The father stock does not match any fish currently in the database.')
+                f'There are no fish in the database that match ID = {self.father_id.data} and Stock = {father_stock.data}')
 
     def validate_mother_stock(self, mother_stock):
-        fish = Fish.query.filter_by(stock=mother_stock.data).first()
+        fish = Fish.query.filter_by(fish_id = self.mother_id.data, stock=mother_stock.data).first()
         if fish is None:
             raise ValidationError(
-                'The mother stock does not match any fish currently in the database.')
+                f'There are no fish in the database that match ID = {self.mother_id.data} and Stock = {mother_stock.data}')
 
     def validate_males(self, males):
         if males.data<0:
