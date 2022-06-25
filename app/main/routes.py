@@ -4,6 +4,7 @@ from datetime import datetime
 
 from app import db
 from app.main import bp
+from app.main import email
 from app.models import Change, Fish, Notification, User, requires_roles
 from flask import flash, redirect, render_template, url_for, g
 from flask_login import current_user, login_required
@@ -45,25 +46,68 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     title = user.username
     changes = Change.query.filter_by(user=user).all()
-    return render_template('user.html', user=user, changes=changes, title=title)
+    user_fish = user.users_fish
+    return render_template('user.html', user=user, changes=changes, user_fish = user_fish, title=title)
 
 
-@bp.route('/fish/<fish_id>/')
+@bp.route('/fish/<id>')
 @login_required
-def fish(fish_id):
-    fish = Fish.query.filter_by(fish_id=fish_id).first_or_404()
-    title = fish.fish_id
+def fish(id):
+    fish = Fish.query.filter_by(id=id).first_or_404()
+    title = "Fish"
 
     return render_template('fish.html', fish=fish, title=title)
 
+@bp.route('/allfish')
+@login_required
+def allfish():
+    all_fish = Fish.query.all()
+
+    return render_template('allfish.html', all_fish=all_fish, title="All Fish")
 
 @bp.route('/newfish/', methods=['GET', 'POST'])
 @login_required
 def newfish():
     form = NewFish()
     if form.validate_on_submit():
-        flash("Yup", 'warning')
-        return render_template('newfish.html',form=form, title="New Fish")
+        father = Fish.query.filter_by(fish_id = form.father_id.data, stock = form.father_stock.data).first()
+        mother = Fish.query.filter_by(fish_id = form.mother_id.data, stock = form.mother_stock.data).first()
+        fish_user = User.query.filter_by(email = form.user_code.data).first()
+        license_holder = User.query.filter_by(project_license = form.project_license.data).first()
+        
+        newfish = Fish(
+            fish_id = form.fish_id.data,
+            tank_id = form.tank_id.data,
+            status = form.status.data,
+            stock = form.stock.data,
+            protocol = form.protocol.data,
+            birthday = form.birthday.data,
+            date_of_arrival = form.date_of_arrival.data,
+            allele = form.allele.data,
+            mutant_gene = form.mutant_gene.data,
+            transgenes = form.transgenes.data,
+            cross_type = form.cross_type.data,
+            comments = form.comments.data,
+            males = form.males.data,
+            females = form.females.data,
+            unsexed = form.unsexed.data,
+            carriers = form.carriers.data,
+            total = form.total.data,
+            source = form.source.data,
+
+            father_id = father.id,
+            mother_id = mother.id,
+            user_code_id = fish_user.id,
+            project_license_holder_id = license_holder.id
+        )
+        db.session.add(newfish)
+
+        change = Change(user = current_user, fish = newfish, action = "Added")
+        db.session.add(change)
+
+        db.session.commit()
+        flash("The new fish has been added to the database", 'info')
+        return redirect(url_for('main.fish', id = newfish.id))
 
     return render_template('newfish.html',form=form, title="New Fish")
 

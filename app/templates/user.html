@@ -14,4 +14,15 @@
                 {%include 'subtemplates/_change.html'%}
             {%endfor%}
     {%endif%}
+
+    {% if user_fish %}
+        <p>Fish {{user.first_name}} is working on:</p>
+            {%for fish in user_fish%}
+                {%include 'subtemplates/_fish.html'%}
+            {%endfor%}
+    {%endif%}
+
+    
+
+
 {%endblock%}

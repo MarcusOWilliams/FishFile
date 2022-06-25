@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {%for fish in all_fish%}
+        {% include 'subtemplates/_fish.html'%}
+    {%endfor%}
+{%endblock%}

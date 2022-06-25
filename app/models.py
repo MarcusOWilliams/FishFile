@@ -112,10 +112,11 @@ It also contains the methods required for the fish
 
 class Fish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fish_id = db.Column(db.String(64), index=True, unique=True)
-    tank_id = db.Column(db.String(64), index=True, unique=True)
+    fish_id = db.Column(db.String(64), index=True)
+    tank_id = db.Column(db.String(64), index=True)
     status = db.Column(db.String(64), index=True, default="Alive")
     stock = db.Column(db.String(64), index=True)
+    source = db.Column(db.String(64))
 
     protocol = db.Column(db.Integer, index=True)
     birthday = db.Column(db.Date, index=True)
@@ -150,7 +151,7 @@ class Fish(db.Model):
     carriers = db.Column(db.Integer)
     total = db.Column(db.Integer)
 
-    changes = db.relationship("Change", backref='fish', lazy='dynamic')
+    changes = db.relationship("Change", backref='fish', lazy='dynamic', cascade = "all, delete")
 
     def __repr__(self):
         return f'<Fish: id = {self.fish_id}>'
@@ -167,7 +168,7 @@ It also contains the methods required for the change
 class Change(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    fishtank_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
+    fish_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
     action = db.Column(db.String(64))
     contents = db.Column(db.String(64))
     time = db.Column(db.DateTime, default=datetime.utcnow)

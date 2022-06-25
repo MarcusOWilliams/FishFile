@@ -1,3 +1,13 @@
+Does each project license only have one user, can one user have more than one?
+
+
+
+
+
+
+
+ANSWERED:
+
 DB questions
    
     For each field?

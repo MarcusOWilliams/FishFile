@@ -1,8 +1,8 @@
-"""fix typo
+"""add source
 
-Revision ID: f19bf66759f4
+Revision ID: 4e8990660c56
 Revises: 
-Create Date: 2022-06-24 11:11:17.370286
+Create Date: 2022-06-25 09:32:14.693525
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f19bf66759f4'
+revision = '4e8990660c56'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,6 +42,7 @@ def upgrade():
     sa.Column('tank_id', sa.String(length=64), nullable=True),
     sa.Column('status', sa.String(length=64), nullable=True),
     sa.Column('stock', sa.String(length=64), nullable=True),
+    sa.Column('source', sa.String(length=64), nullable=True),
     sa.Column('protocol', sa.Integer(), nullable=True),
     sa.Column('birthday', sa.Date(), nullable=True),
     sa.Column('date_of_arrival', sa.Date(), nullable=True),
@@ -95,11 +96,11 @@ def upgrade():
     op.create_table('change',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('fishtank_id', sa.Integer(), nullable=True),
+    sa.Column('fish_id', sa.Integer(), nullable=True),
     sa.Column('action', sa.String(length=64), nullable=True),
     sa.Column('contents', sa.String(length=64), nullable=True),
     sa.Column('time', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['fishtank_id'], ['fish.id'], ),
+    sa.ForeignKeyConstraint(['fish_id'], ['fish.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

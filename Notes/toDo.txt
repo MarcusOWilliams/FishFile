@@ -33,4 +33,4 @@ make father and mother information required on form
 
 add dates till turnover required
 
-add validation on new fish form
+add validation on new fish form, e.g. check if certain fields exists already (tank/stock)
