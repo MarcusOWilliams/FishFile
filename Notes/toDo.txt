@@ -28,9 +28,12 @@ change from sqlLite
 make family tree
 
 make user code and project licenece select field of all options
+ NEED TO MAKE THIS JUS VERIFIED/ USERS OF CERTAIN ROLES
 
 make father and mother information required on form
 
 add dates till turnover required
 
 add validation on new fish form, e.g. check if certain fields exists already (tank/stock)
+
+add update fish details, may need multple routes depending on privlidges

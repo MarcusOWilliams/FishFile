@@ -111,6 +111,13 @@ def newfish():
 
     return render_template('newfish.html',form=form, title="New Fish")
 
+@bp.route('/updatefish/<id>/')
+@login_required
+def updatefish(id):
+    fish = Fish.query.filter_by(id=id).first_or_404()
+    title = f"Update Fish ({fish.stock})"
+    
+    return render_template("updatefish.html", title=title)
 
 @bp.route('/settings/', methods=['GET', 'POST'])
 @login_required
