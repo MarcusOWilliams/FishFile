@@ -29,3 +29,17 @@
 #addFishTable{
     margin:auto;
 }
+
+.fishSummaryTable{
+    text-align: center;
+    margin:auto;
+    border-collapse: collapse;
+    border-radius: 1em;
+    overflow: hidden;
+}
+
+.fishSummaryTable td{
+    padding: 1em;
+    background: #ddd;
+    border-bottom: 2px solid white;
+}

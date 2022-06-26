@@ -1,4 +1,21 @@
-<p>Fish ID:{{fish.fish_id}}</p>
-<p>Stock:{{fish.stock}}</p>
-<p>Tank ID: {{fish.tank_id}}</p>
+<table class="fishSummaryTable">
+    <tr>
+        <td colspan="3">Fish ID: {{fish.fish_id}}</td>
+    </tr>
+    <tr>
+        <td>Tank ID: {{fish.tank_id}}</td>
+        <td>Stock: {{fish.stock}}</td>
+        <td>Status: {{fish.status}}</td>
+    </tr>
+    <tr>
+        <td>Protocol: {{fish.protocol}}</td>
+        <td>Total #: {{fish.total}}</td>
+        <td>User Code: <a href = "{{url_for('main.user', username = fish.user_code.username)}}">{{fish.user_code.first_name[0]}}{{fish.user_code.last_name[0]}}</a></td>
+    </tr>
+    <tr>
+        <td colspan="3"><a href = "{{url_for('main.fish', id=fish.id)}}">See More Details...</a></td>
+    </tr>
+</table>
 <br>
+
+
