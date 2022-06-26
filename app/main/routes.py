@@ -54,7 +54,7 @@ def user(username):
 @login_required
 def fish(id):
     fish = Fish.query.filter_by(id=id).first_or_404()
-    title = "Fish"
+    title = f"Fish ({fish.stock})"
 
     return render_template('fish.html', fish=fish, title=title)
 
@@ -97,8 +97,8 @@ def newfish():
 
             father_id = father.id,
             mother_id = mother.id,
-            user_code_id = fish_user.id,
-            project_license_holder_id = license_holder.id
+            user_code= fish_user,
+            project_license_holder = license_holder
         )
         db.session.add(newfish)
 

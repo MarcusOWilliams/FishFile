@@ -43,3 +43,20 @@
     background: #ddd;
     border-bottom: 2px solid white;
 }
+
+#fishInformation{
+    text-align: left;
+    padding-left:20px;
+}
+
+.fishInfoPoint{
+    padding-left: 20px;
+}
+
+.fishInfoBlock{
+    border-bottom: 1px lightgrey solid;
+}
+
+.pointHeader{
+    font-weight: bold;
+}

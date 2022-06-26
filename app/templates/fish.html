@@ -1,5 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Fish ID: {{fish.fish_id}}</h2>
+<div id="fishInformation">
+    <div class="fishInfoBlock">
+        <h2>Fish</h2>
+        <p class = "fishInfoPoint"><span class="pointHeader">Fish ID: </span>{{fish.fish_id}}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Tank ID: </span>{{fish.tank_id}}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Stock#: </span>{{fish.stock}}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Status: </span>{{fish.status}}</p>
+        {%if fish.protocol != None and fish.protocol != ""%}
+            <P class = "fishInfoPoint"><span class="pointHeader">Protocol: </span>{{fish.protocol}}</P>
+        {%endif%}
+        <p class = "fishInfoPoint"><span class="pointHeader">Birthday: </span>{{fish.Birthday}}</p>
+        {%if fish.date_of_arrival != None and fish.date_of_arrival != ""%}
+            <p class = "fishInfoPoint"><span class="pointHeader">Date of Arrival: </span>{{fish.date_of_arrival}}</p>
+        {%endif%}
+        <p class = "fishInfoPoint"><span class="pointHeader">Source: </span>{{fish.source}}</p>
+    </div>
+    <div class="fishInfoBlock">
+        <h2>Users</h2>
+        <p class = "fishInfoPoint"><span class="pointHeader">Project License Allocated: </span><a href="{{url_for('main.user', username = fish.project_license_holder.username)}}" target=”_blank”>{{fish.project_license_holder.project_license}}</a></p>
+        <p class = "fishInfoPoint"><span class="pointHeader">User Code: </span><a href = "{{url_for('main.user', username = fish.user_code.username)}}" target=”_blank”>{{fish.user_code.first_name[0]}}{{fish.user_code.last_name[0]}}</a></p>
+    </div>
+    <div class="fishInfoBlock">
+        <h2>Genetics</h2>
+        <p class = "fishInfoPoint"><span class="pointHeader">Mutant Gene: </span>{{fish.mutant_gene}}</p>
+        {%if fish.transgenes != None and fish.transgene != ""%}
+            <p class = "fishInfoPoint"><span class="pointHeader">Transgenes: </span>{{fish.transgenes}}</p>
+        {%endif%}
+        {%if fish.allele != None and fish.allele != ""%}
+            <p class = "fishInfoPoint"><span class="pointHeader">Allele: </span>{{fish.allele}}</p>
+        {%endif%}
+        <p class = "fishInfoPoint"><span class="pointHeader">Type of Cross: </span>{{fish.cross_type}}</p>
+        {%if fish.father != None%}
+            <p class = "fishInfoPoint"><a href="{{url_for('main.fish', id=fish.father.id)}}" target=”_blank”><span class="pointHeader">Father</span></a> ID: {{fish.father.id}}, Stock: {{fish.father.stock}}</p>
+        {%endif%}
+        {%if fish.mother != None%}
+            <p class = "fishInfoPoint"><a href="{{url_for('main.fish', id=fish.mother.id)}}" target=”_blank”><span class="pointHeader">Mother</span></a> ID: {{fish.mother.id}}, Stock: {{fish.mother.stock}}</p>
+        {%endif%}
+    </div>
+    <div class="fishInfoBlock">
+        <h2>Tank Count</h2>
+        <p class = "fishInfoPoint"><span class="pointHeader">Males: </span>{{fish.males}}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Females: </span>{{fish.females}}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Unsexed: </span>{{fish.unsexed}}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Carriers: </span>{{fish.carriers}}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Total: </span>{{fish.total}}</p>
+    </div>
+    <div class="fishInfoBlock">
+        <h2>Comments</h2>
+        {%if fish.comments != None%}
+            <p class = "fishInfoPoint">{{fish.comments}}</p>
+        {%else%}
+            <p class = "fishInfoPoint">No comments...</p>
+        {%endif%}
+    </div>
+</div>
 {%endblock%}
