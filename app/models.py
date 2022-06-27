@@ -28,7 +28,7 @@ class User(UserMixin, db.Model):
     is_verified = db.Column(db.Boolean, default=False)
     project_license = db.Column(db.String(120), index=True)
     role = db.Column(db.String(64), default='User')
-
+    code = db.Column(db.String(64), index=True)
     changes = db.relationship('Change', backref='user', lazy='dynamic')
     notification = db.relationship(
         'Notification', backref='user', lazy='dynamic')
@@ -154,7 +154,7 @@ class Fish(db.Model):
     changes = db.relationship("Change", backref='fish', lazy='dynamic', cascade = "all, delete")
 
     def __repr__(self):
-        return f'<Fish: id = {self.fish_id}>'
+        return f'Fish - ID: {self.fish_id}, Stock: {self.stock}, Tank: {self.tank_id}'
 
 
 """
@@ -171,6 +171,8 @@ class Change(db.Model):
     fish_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
     action = db.Column(db.String(64))
     contents = db.Column(db.String(64))
+    old = db.Column(db.String(64))
+    new = db.Column(db.String(64))
     time = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):

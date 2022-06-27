@@ -64,6 +64,7 @@ def register():
                     last_name=form.last_name.data, email=form.email.data)
         user.set_password(form.password.data)
         user.username = user.email.split("@")[0]
+        user.code = f"{user.first_name[0]}{user.last_name[0]} ({user.username})"
         db.session.add(user)
 
         settings = Settings(user_id = user.id)
