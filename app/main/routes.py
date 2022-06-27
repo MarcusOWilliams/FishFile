@@ -45,7 +45,7 @@ def search():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     title = user.username
-    changes = Change.query.filter_by(user=user).all()
+    changes = Change.query.filter_by(user=user).order_by(Change.time.desc()).all()
     user_fish = user.users_fish
     return render_template('user.html', user=user, changes=changes, user_fish = user_fish, title=title)
 
@@ -57,6 +57,15 @@ def fish(id):
     title = f"Fish ({fish.stock})"
 
     return render_template('fish.html', fish=fish, title=title)
+
+@bp.route('/fish/<id>/changes/')
+@login_required
+def fishchange(id):
+    fish = Fish.query.filter_by(id=id).first_or_404()
+    changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
+    title = f"Fish History ({fish.stock})"
+
+    return render_template('fishchanges.html', fish=fish, changes = changes, title = title)
 
 @bp.route('/allfish')
 @login_required

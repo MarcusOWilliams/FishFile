@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if changes %}
+        <p>Changes made on {{fish}}:</p>
+            {%for change in changes%}
+                {%include 'subtemplates/_fishchange.html'%}
+            {%endfor%}
+    {%endif%}
+{%endblock%}

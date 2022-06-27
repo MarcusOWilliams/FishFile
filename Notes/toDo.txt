@@ -37,3 +37,5 @@ add dates till turnover required
 add validation on new fish form, e.g. check if certain fields exists already (tank/stock)
 
 add update fish details, may need multple routes depending on privlidges
+
+add filter to fish changes
