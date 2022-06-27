@@ -1,16 +1,17 @@
 
 {%if change.action == "Added"%}
-<table>
-    <tr>
-        <td><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> added the fish to the database</td>
+<table class="fishChange" >
+    <tr class="fishChangeRow">
+        <td class = "fishChangeDetails"><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> added the fish to the database</td>
         <td> - {{ moment(change.time).fromNow() }} </td>
     </tr>
 </table>
 
 {%elif change.action == "Updated"%}
-<table>
-    <tr>
-        <td><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> updated the {{change.contents}} of the fish from {{change.old}} to {{change.new}}</td>
+<table class="fishChange">
+    <tr class="fishChangeRow">
+        <td class = "fishChangeDetails"><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> updated the {{change.contents}} of the fish <b>from {{change.old}} to {{change.new}}</b></td>
         <td> - {{ moment(change.time).fromNow() }} </td>
     </tr>
-</table>{%endif%}
+</table>
+{%endif%}
