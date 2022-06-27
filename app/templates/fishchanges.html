@@ -2,15 +2,19 @@
 
 {% block content %}
     <div id="filterChangeForm">
-        <b>Filter changes:</b>
+        <b>Filter results based on altered fields:</b>
+        
         <form action="", method = "post">
             {{form.hidden_tag()}}
-            
             {%for field in form%}
                 <tr>
                 {% if field.type == "BooleanField" %}
-
-                    <span class="filterChangeOption">{{ field.label }} {{ field }}</span>
+                    {% if field.id in filters%}
+                        <span class="filterChangeOption">{{ field.label }} {{ field(checked=True) }}</span>
+                    {%else%}
+                        <span class="filterChangeOption">{{ field.label }} {{ field }}</span>
+                    {%endif%}
+                    
                 {% elif field.type == "SubmitField"%}
                     <div id="filterChangesSubmit">{{ field }}</div>
                 {% endif %}

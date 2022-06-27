@@ -171,6 +171,7 @@ class Change(db.Model):
     fish_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
     action = db.Column(db.String(64))
     contents = db.Column(db.String(64))
+    field =  db.Column(db.String(64))
     old = db.Column(db.String(64))
     new = db.Column(db.String(64))
     time = db.Column(db.DateTime, default=datetime.utcnow)

@@ -1,6 +1,7 @@
 
 from datetime import datetime
 from xmlrpc.client import Boolean
+from attr import field
 
 from sqlalchemy import subquery
 
@@ -78,19 +79,32 @@ def fishchange(id, filters = "all"):
             filters.append("all")
         return redirect(url_for('main.fishchange', id= fish.id, filters = " ".join(filters)))
 
+
+    filter_list = filters.split(" ")
     if filters == "all":
         changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
     else:
-        filter_list = filters.split(" ")
-        changes = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).subquery()
+        changes = []
         for filter in filter_list:
-            changes = Change.query.select_entity_from(changes).filter_by(contents = filter).subquery()
+            changes += Change.query.filter_by(field = filter).all()
 
-        changes = Change.query.select_entity_from(changes).all()
+        #sort the list back into decending time order
+        changes.sort(key=lambda x: x.time, reverse=True)
+
+
+    # if filters == "all":
+    #     changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
+    # else:
+    #     filter_list = filters.split(" ")
+    #     changes = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).subquery()
+    #     for filter in filter_list:
+    #         changes = Change.query.select_entity_from(changes).filter_by(contents = filter).subquery()
+
+    #     changes = Change.query.select_entity_from(changes).all()
     
 
             
-    return render_template('fishchanges.html', fish=fish, changes = changes, form=form, title = title)
+    return render_template('fishchanges.html', fish=fish, changes = changes, filters = filter_list, form=form, title = title)
 
 @bp.route('/allfish')
 @login_required
@@ -162,7 +176,8 @@ def updatefish(id):
     
         if fish.fish_id != form.fish_id.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "fish ID", 
+             contents = "fish ID",
+             field = "fish_id",
              old = fish.fish_id, 
              new = form.fish_id.data)
             db.session.add(change)
@@ -171,7 +186,8 @@ def updatefish(id):
 
         if fish.tank_id != form.tank_id.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "tank ID", 
+             contents = "tank ID",
+             field = "tank_id", 
              old = fish.tank_id, 
              new = form.tank_id.data)
             db.session.add(change)
@@ -180,7 +196,8 @@ def updatefish(id):
 
         if fish.status != form.status.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "status", 
+             contents = "status",
+             field = "status", 
              old =fish.status, 
              new =form.status.data)
             db.session.add(change)
@@ -189,7 +206,8 @@ def updatefish(id):
 
         if fish.stock != form.stock.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "stock", 
+             contents = "stock",
+             field = "stock", 
              old =fish.stock , 
              new =form.stock.data)
             db.session.add(change)
@@ -198,7 +216,8 @@ def updatefish(id):
 
         if fish.protocol != form.protocol.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "protocol", 
+             contents = "protocol",
+             field = "protocol", 
              old = fish.protocol, 
              new =form.protocol.data)
             db.session.add(change)
@@ -207,7 +226,8 @@ def updatefish(id):
 
         if fish.birthday != form.birthday.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "birthday", 
+             contents = "birthday",
+             field = "birthday", 
              old = fish.birthday, 
              new =form.birthday.data)
             db.session.add(change)
@@ -217,6 +237,7 @@ def updatefish(id):
         if fish.date_of_arrival != form.date_of_arrival.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
              contents = "date of arrival", 
+             field = "date_of_arrival",
              old = fish.date_of_arrival, 
              new =form.date_of_arrival.data)
             db.session.add(change)
@@ -226,6 +247,7 @@ def updatefish(id):
         if fish.allele != form.allele.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
              contents = "allele", 
+             field = "allele",
              old = fish.allele, 
              new =form.allele.data)
             db.session.add(change)
@@ -234,7 +256,8 @@ def updatefish(id):
 
         if fish.mutant_gene != form.mutant_gene.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "mutant gene", 
+             contents = "mutant gene",
+             field = "mutant_gene", 
              old = fish.mutant_gene, 
              new =form.mutant_gene.data)
             db.session.add(change)
@@ -243,7 +266,8 @@ def updatefish(id):
 
         if fish.transgenes != form.transgenes.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "transgenes", 
+             contents = "transgenes",
+             field = "transgenes", 
              old = fish.transgenes, 
              new =form.transgenes.data)
             db.session.add(change)
@@ -252,7 +276,8 @@ def updatefish(id):
 
         if fish.cross_type != form.cross_type.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "cross type", 
+             contents = "cross type",
+             field = "cross_type", 
              old = fish.cross_type, 
              new =form.cross_type.data)
             db.session.add(change)
@@ -261,7 +286,8 @@ def updatefish(id):
 
         if fish.comments != form.comments.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "comments", 
+             contents = "comments",
+             field = "comments", 
              old = fish.comments, 
              new =form.comments.data)
             db.session.add(change)
@@ -270,7 +296,8 @@ def updatefish(id):
 
         if fish.males != form.males.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "number of males", 
+             contents = "number of males",
+             field = "males", 
              old = fish.males, 
              new =form.males.data)
             db.session.add(change)
@@ -279,7 +306,8 @@ def updatefish(id):
 
         if fish.females != form.females.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "number of females", 
+             contents = "number of females",
+             field = "females", 
              old = fish.females , 
              new =form.females.data)
             db.session.add(change)
@@ -288,7 +316,8 @@ def updatefish(id):
 
         if fish.unsexed != form.unsexed.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "number of unsexed fish", 
+             contents = "number of unsexed fish",
+             field = "unsexed", 
              old = fish.unsexed, 
              new =form.unsexed.data)
             db.session.add(change)
@@ -298,6 +327,7 @@ def updatefish(id):
         if fish.carriers != form.carriers.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
              contents = "number of carriers", 
+             field = "carriers",
              old = fish.carriers, 
              new =form.carriers.data)
             db.session.add(change)
@@ -306,7 +336,8 @@ def updatefish(id):
 
         if fish.total != form.total.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "number of total fish", 
+             contents = "number of total fish",
+             field = "total", 
              old = fish.total, 
              new =form.total.data)
             db.session.add(change)
@@ -315,32 +346,54 @@ def updatefish(id):
 
         if fish.source != form.source.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "source", 
+             contents = "source",
+             field = "source", 
              old = fish.source, 
              new =form.source.data)
             db.session.add(change)
 
             fish.source = form.source.data
 
-        if fish.father!= father:
+        if fish.father.fish_id != form.father_id.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "father", 
-             old = f"ID:{fish.father.stock}, Stock: {fish.father.stock}", 
-             new =  f"ID:{father.stock}, Stock: {father.stock}",)
+             contents = "father ID", 
+             field = "father_id",
+             old = f"{fish.father.fish_id}", 
+             new =  f"{father.fish_id}",)
             db.session.add(change)
             fish.father = father
 
-        if fish.mother != mother:
+        if fish.father.stock!= form.father_stock.data:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "mother", 
-             old = f"ID:{fish.mother.stock}, Stock: {fish.mother.stock}", 
-             new =  f"ID:{mother.stock}, Stock: {mother.stock}",)
+             contents = "father stock", 
+             field = "father_stock",
+             old = f"{fish.father.stock}", 
+             new =  f"{father.stock}",)
+            db.session.add(change)
+            fish.father = father
+
+        if fish.mother.fish_id != form.mother_id.data:
+            change = Change(user = current_user, fish = fish, action = "Updated",
+             contents = "mother ID", 
+             field = "mother_id",
+             old = f"{fish.mother.fish_id}", 
+             new =  f"{mother.fish_id}",)
             db.session.add(change)
             fish.mother = mother
 
+        if fish.mother.stock!= form.mother_stock.data:
+            change = Change(user = current_user, fish = fish, action = "Updated",
+             contents = "mother stock", 
+             field = "mother_stock",
+             old = f"{fish.mother.stock}", 
+             new =  f"{mother.stock}",)
+            db.session.add(change)
+            fish.father = mother
+
         if fish.user_code != fish_user:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "user code", 
+             contents = "user code",
+             field = "user_code", 
              old = fish.user_code.code, 
              new = fish_user.code)
             db.session.add(change)
@@ -349,7 +402,8 @@ def updatefish(id):
 
         if fish.project_license_holder != license_holder:
             change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "project license", 
+             contents = "project license",
+             field = "project_license",
              old =fish.project_license_holder.project_license, 
              new =license_holder.project_license)
             db.session.add(change)

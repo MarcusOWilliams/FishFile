@@ -113,6 +113,7 @@ class FilterChanges(FlaskForm):
     unsexed = BooleanField("# Unsexed")
     carriers = BooleanField("# Carriers/Licenced")
     total = BooleanField("Total #")
+    comments = BooleanField("Comments")
     submit = SubmitField('Apply')
 
 class SettingsForm(FlaskForm):
