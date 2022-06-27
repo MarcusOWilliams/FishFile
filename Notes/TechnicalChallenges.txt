@@ -1,1 +1,4 @@
 Making the self reference using fathered and father_id (also mother) in the Fish Database
+
+Making subqueries work
+    Subquery, selcet from etc.

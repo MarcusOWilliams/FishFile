@@ -13,6 +13,7 @@ from flask import flash, redirect, render_template, url_for, g
 from flask_login import current_user, login_required
 from app.main.forms import SearchForm, NewFish, SettingsForm, FilterChanges
 from app.main.email import send_notification_email
+import sys
 # this route defines the landing page of the website
 
 
@@ -61,14 +62,10 @@ def fish(id):
 
     return render_template('fish.html', fish=fish, title=title)
 
-@bp.route('/fish/<id>/changes/', methods=['GET', 'POST'])
+@bp.route('/fish/<id>/changes/<filters>', methods=['GET', 'POST'])
 @login_required
 def fishchange(id, filters = "all"):
     fish = Fish.query.filter_by(id=id).first_or_404()
-    if filters == "all":
-        changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
-    else:
-        changes = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
     form = FilterChanges()
     title = f"Fish History ({fish.stock})"
     if form.validate_on_submit():
@@ -79,9 +76,17 @@ def fishchange(id, filters = "all"):
 
         if len(filters)<1:
             filters.append("all")
-        flash( ", ".join(filters))
-        return redirect(url_for('main.fishchange', id= fish.id))
+        return redirect(url_for('main.fishchange', id= fish.id, filters = " ".join(filters)))
 
+    if filters == "all":
+        changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
+    else:
+        filter_list = filters.split(" ")
+        changes = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).subquery()
+        for filter in filter_list:
+            changes = Change.query.select_entity_from(changes).filter_by(contents = filter).subquery()
+
+        changes = Change.query.select_entity_from(changes).all()
     
 
             
