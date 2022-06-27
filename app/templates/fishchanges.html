@@ -1,10 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div id="filterChangeForm">
+        <b>Filter changes:</b>
+        <form action="", method = "post">
+            {{form.hidden_tag()}}
+            
+            {%for field in form%}
+                <tr>
+                {% if field.type == "BooleanField" %}
+
+                    <span class="filterChangeOption">{{ field.label }} {{ field }}</span>
+                {% elif field.type == "SubmitField"%}
+                    <div id="filterChangesSubmit">{{ field }}</div>
+                {% endif %}
+                </tr>
+            {%endfor%}
+        </form> 
+    </div>
+    
     {% if changes %}
-        <h2>Changes made on {{fish}}</h2>
+        <h4>Changes made on {{fish}}</h4>
             {%for change in changes%}
                 {%include 'subtemplates/_fishchange.html'%}
             {%endfor%}
+    {%else%}
+        <p>There are no changes to show...</p>
     {%endif%}
 {%endblock%}

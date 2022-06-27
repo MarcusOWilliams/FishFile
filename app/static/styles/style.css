@@ -83,4 +83,19 @@
     width:85%;
 }
 
+#filterChangeForm{
+    margin: auto;
+    width:80%;
+    border: 1px gray solid;
+    border-radius: 1em;
+}
+
+.filterChangeOption{
+    padding: 5px;
+}
+
+#filterChangesSubmit{
+    padding: 5px;
+    border-top:1px solid lightgray ;
+}
 

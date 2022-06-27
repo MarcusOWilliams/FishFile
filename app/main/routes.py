@@ -8,7 +8,7 @@ from app.main import email
 from app.models import Change, Fish, Notification, User, requires_roles
 from flask import flash, redirect, render_template, url_for, g
 from flask_login import current_user, login_required
-from app.main.forms import SearchForm, NewFish, SettingsForm
+from app.main.forms import SearchForm, NewFish, SettingsForm, FilterChanges
 from app.main.email import send_notification_email
 # this route defines the landing page of the website
 
@@ -63,9 +63,10 @@ def fish(id):
 def fishchange(id):
     fish = Fish.query.filter_by(id=id).first_or_404()
     changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
+    form = FilterChanges()
     title = f"Fish History ({fish.stock})"
 
-    return render_template('fishchanges.html', fish=fish, changes = changes, title = title)
+    return render_template('fishchanges.html', fish=fish, changes = changes, form=form, title = title)
 
 @bp.route('/allfish')
 @login_required

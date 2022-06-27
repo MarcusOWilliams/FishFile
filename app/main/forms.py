@@ -88,7 +88,32 @@ class NewFish(FlaskForm):
 
         
 
-
+class FilterChanges(FlaskForm):
+    fish_id = BooleanField('Fish ID')
+    tank_id = BooleanField('Tank ID')
+    status = BooleanField("Status")
+    stock = BooleanField("Stock #")
+    protocol = BooleanField("Protocol #")
+    comments = BooleanField("Comments")
+    source = BooleanField("Source")
+    cross_type = BooleanField("Cross Type")
+    birthday = BooleanField("Birthday")
+    date_of_arrival = BooleanField("Date of Arrival")
+    user_code = BooleanField("User Code")
+    project_license = BooleanField("Project License")
+    allele = BooleanField("Allele")
+    mutant_gene = BooleanField("Mutant Gene")
+    transgenes = BooleanField("Transgenes")
+    father_id = BooleanField("Father's ID")
+    mother_id = BooleanField("Mother's ID")
+    father_stock = BooleanField("Father's Stock #")
+    mother_stock = BooleanField("Mother's Stock #")
+    males = BooleanField("# Males")
+    females = BooleanField("# Females")
+    unsexed = BooleanField("# Unsexed")
+    carriers = BooleanField("# Carriers/Licenced")
+    total = BooleanField("Total #")
+    submit = SubmitField('Apply')
 
 class SettingsForm(FlaskForm):
     emails = BooleanField('Email notifications:')
