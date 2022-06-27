@@ -18,9 +18,9 @@
             {%endfor%}
         </form> 
     </div>
-    
+    <br>
     {% if changes %}
-        <h4>Changes made on {{fish}}</h4>
+        <h4>All changes made on {{fish}}</h4>
             {%for change in changes%}
                 {%include 'subtemplates/_fishchange.html'%}
             {%endfor%}

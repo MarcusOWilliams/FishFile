@@ -1,5 +1,8 @@
 
 from datetime import datetime
+from xmlrpc.client import Boolean
+
+from sqlalchemy import subquery
 
 
 from app import db
@@ -58,14 +61,30 @@ def fish(id):
 
     return render_template('fish.html', fish=fish, title=title)
 
-@bp.route('/fish/<id>/changes/')
+@bp.route('/fish/<id>/changes/', methods=['GET', 'POST'])
 @login_required
-def fishchange(id):
+def fishchange(id, filters = "all"):
     fish = Fish.query.filter_by(id=id).first_or_404()
-    changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
+    if filters == "all":
+        changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
+    else:
+        changes = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
     form = FilterChanges()
     title = f"Fish History ({fish.stock})"
+    if form.validate_on_submit():
+        filters = []
+        for fieldname, value in form.data.items():
+            if value and (fieldname != "submit" and fieldname != "csrf_token"):
+                filters.append(fieldname)
 
+        if len(filters)<1:
+            filters.append("all")
+        flash( ", ".join(filters))
+        return redirect(url_for('main.fishchange', id= fish.id))
+
+    
+
+            
     return render_template('fishchanges.html', fish=fish, changes = changes, form=form, title = title)
 
 @bp.route('/allfish')
