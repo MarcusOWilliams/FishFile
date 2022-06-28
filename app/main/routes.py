@@ -170,17 +170,24 @@ def fishchange(id, filters = "all"):
             
     return render_template('fishchanges.html', fish=fish, changes = changes, filters = filter_list, form=form, title = title)
 
-@bp.route('/allfish')
-@login_required
-def allfish():
-    all_fish = Fish.query.all()
-
-    return render_template('allfish.html', all_fish=all_fish, title="All Fish")
 
 @bp.route('/newfish/', methods=['GET', 'POST'])
 @login_required
 def newfish():
     form = NewFish()
+
+    
+    all_users = User.query.filter_by(is_verified = True).all()
+    user_codes = [""] + [ user.code for user in all_users]
+    form.user_code.choices = sorted(user_codes)
+
+    licenses_values = [""] + [user.project_license for user in all_users]
+    licenses = list(filter(None, licenses_values))
+    form.project_license.choices = sorted(licenses)
+    
+
+
+
     if form.validate_on_submit():
         father = Fish.query.filter_by(fish_id = form.father_id.data, stock = form.father_stock.data).first()
         mother = Fish.query.filter_by(fish_id = form.mother_id.data, stock = form.mother_stock.data).first()
@@ -229,6 +236,14 @@ def updatefish(id):
     form = NewFish()
     fish = Fish.query.filter_by(id=id).first_or_404()
     title = f"Update Fish ({fish.stock})"
+
+    all_users = User.query.filter_by(is_verified = True).all()
+    user_codes = [""] + [ user.code for user in all_users]
+    form.user_code.choices = sorted(user_codes)
+
+    licenses_values = [""] + [user.project_license for user in all_users]
+    licenses = list(filter(None, licenses_values))
+    form.project_license.choices = sorted(licenses)
 
     if form.validate_on_submit():
 

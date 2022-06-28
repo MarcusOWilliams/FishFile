@@ -2,8 +2,7 @@ from flask import request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateTimeField, IntegerField, SelectField, BooleanField, DateField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Optional
-from app.models import Fish
-
+from app.models import Fish, User
 
 class SimpleSearch(FlaskForm):
     search = StringField('Search by fish id', validators=[DataRequired()])
@@ -30,8 +29,8 @@ class NewFish(FlaskForm):
     birthday = DateField("Birthday", validators=[DataRequired()])
     date_of_arrival = DateField("Date of Arrival")
 
-    user_code = StringField("User Code", validators=[DataRequired()])
-    project_license = StringField("Project License", validators=[DataRequired()])
+    user_code = SelectField("User Code", validators=[DataRequired()], coerce=str)
+    project_license = SelectField("Project License", validators=[DataRequired()], coerce=str)
 
     allele = StringField("Allele")
     mutant_gene = StringField("Mutant Gene", validators=[DataRequired()])
@@ -144,4 +143,5 @@ class SearchFrom(FlaskForm):
 class SettingsForm(FlaskForm):
     emails = BooleanField('Email notifications:')
     submit = SubmitField('Apply')
+
 

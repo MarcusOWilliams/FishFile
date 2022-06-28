@@ -20,7 +20,7 @@
     <div class="fishInfoBlock">
         <h2>Users</h2>
         <p class = "fishInfoPoint"><span class="pointHeader">Project License Allocated: </span><a href="{{url_for('main.user', username = fish.project_license_holder.username)}}" target=”_blank”>{{fish.project_license_holder.project_license}}</a></p>
-        <p class = "fishInfoPoint"><span class="pointHeader">User Code: </span><a href = "{{url_for('main.user', username = fish.user_code.username)}}" target=”_blank”>{{fish.user_code.first_name[0]}}{{fish.user_code.last_name[0]}}</a></p>
+        <p class = "fishInfoPoint"><span class="pointHeader">User Code: </span><a href = "{{url_for('main.user', username = fish.user_code.username)}}" target=”_blank”>{{fish.user_code.code}}</a></p>
     </div>
     <div class="fishInfoBlock">
         <h2>Genetics</h2>

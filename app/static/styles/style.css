@@ -33,18 +33,24 @@
 #updateFishTable{
     margin:auto;
 }
-
+#fishList{
+    width:70%;
+    margin: auto;
+    margin-top:20px;
+    
+}
 .fishSummaryTable{
     text-align: center;
     margin:auto;
     border-collapse: collapse;
     border-radius: 1em;
     overflow: hidden;
+    width:100%;
 }
 
 .fishSummaryTable td{
     padding: 1em;
-    background: #ddd;
+    background: whitesmoke;
     border-bottom: 2px solid white;
 }
 
