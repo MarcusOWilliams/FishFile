@@ -39,3 +39,5 @@ add validation on new fish form, e.g. check if certain fields exists already (ta
 add update fish details, may need multple routes depending on privlidges
 
 add filter to fish changes
+
+input current search conditions into search form on page load

@@ -1,7 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div id="mainSearchForm">
+        <b>Filter Search:</b>
+        <form action="", method = "post">
+                {{form.hidden_tag()}}
+                {%for field in form%}
+                    {% if field.type != "SubmitField" and field.type != "CSRFTokenField"%}
+                        
+                        <span class="seachFormField"> <b>{{ field.label }}</b> {{ field(value = search_dict[field.id]) }}</span>
+                        
+                        
+                    {% elif field.type == "SubmitField"%}
+                        <div id="searchFormSubmit">{{ field }}</div>
+                    {% endif %}
+                {%endfor%}
 
+                {% for field, errors in form.errors.items() %}
+                    <div class = "formError">{{ form[field].label }}: {{ ', '.join(errors) }}</div>
+                {% endfor %}
+            </form>
+    </div>
     <p>Search Results:</p>
     
     {% if all_fish|length > 0 %}

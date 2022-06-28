@@ -1,9 +1,5 @@
 
 from datetime import datetime
-from xmlrpc.client import Boolean
-from attr import field
-
-from sqlalchemy import subquery
 
 
 from app import db
@@ -44,9 +40,21 @@ def index():
 
     return render_template('index.html', form = form, title="Home Page")
 
-@bp.route("/search")
+@bp.route("/search", methods=['GET', 'POST'])
 @login_required
 def search():
+    form = SearchFrom()
+
+    if form.validate_on_submit():
+        search_dict = {}
+        for fieldname, value in form.data.items():
+            if fieldname != "csrf_token" and fieldname != "submit":
+                if value != None and value != '':
+                    search_dict[fieldname] = value
+
+        session['search_dict'] = search_dict.copy() 
+        return redirect(url_for('main.search'))
+
     search_dict = session['search_dict'].copy()
     session['search_dict'] = {}
     
@@ -71,9 +79,9 @@ def search():
         elif key == "date_of_arrival":
             all_fish = Fish.query.select_entity_from(all_fish).filter_by(date_of_arrival = search_dict[key]).subquery()
         elif key == "user_code":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(user_code = search_dict[key]).subquery()
+            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.user_code.has(code = search_dict[key])).subquery()
         elif key == "project_license":
-            all_fish = Fish.query.select_entity_from(all_fish).filter( Fish.project_license_holder.has(project_license = search_dict[key])).subquery()
+            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.project_license_holder.has(project_license = search_dict[key])).subquery()
         elif key == "allele":
             all_fish = Fish.query.select_entity_from(all_fish).filter_by(allele = search_dict[key]).subquery()
         elif key == "mutant_gene":
@@ -94,27 +102,19 @@ def search():
     
     all_fish = Fish.query.select_entity_from(all_fish).all()
 
-    return render_template('search.html', all_fish=all_fish, title="Search")
 
 
- # if filters == "all":
-    #     changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
-    # else:
-    #     filter_list = filters.split(" ")
-    #     changes = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).subquery()
-    #     for filter in filter_list:
-    #         changes = Change.query.select_entity_from(changes).filter_by(contents = filter).subquery()
+    return render_template('search.html', form = form, all_fish=all_fish, search_dict = search_dict, title="Search")
 
-    #     changes = Change.query.select_entity_from(changes).all()
 
-# @bp.route("/search/")
-# @login_required
-# def search():
-#     fish = Fish.query.filter_by(fish_id=g.search_form.search.data).all()
-#     if fish is None:
-#         return render_template('fishsearch.html')
+@bp.route("/simplesearch/")
+@login_required
+def simplesearch():
+    fish = Fish.query.filter_by(stock=g.search_form.search.data).first_or_404()
+    if fish is None:
+        pass
 
-#     return render_template('fishsearch.html', fish_list=fish, title="Search")
+    return redirect(url_for('main.fish', id=fish.id))
 
 
 @bp.route('/user/<username>/')
