@@ -20,6 +20,9 @@
                 {% endif %}
                 </tr>
             {%endfor%}
+            {% for field, errors in form.errors.items() %}
+                <div class = "formError">{{ form[field].label }}: {{ ', '.join(errors) }}</div>
+            {% endfor %}
         </form> 
     </div>
     <br>

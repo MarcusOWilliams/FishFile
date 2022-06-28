@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <p>Search Results:</p>
+    
+    {% if all_fish|length > 0 %}
+        {%for fish in all_fish%}
+            {% include 'subtemplates/_fish.html'%}
+        {%endfor%}
+    {% else %}
+        <p>No fish match your search...</p>
+    {% endif %}
+{% endblock %}

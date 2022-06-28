@@ -1,11 +1,11 @@
 from flask import request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateTimeField, IntegerField, SelectField, BooleanField, DateField, TextAreaField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.validators import DataRequired, ValidationError, Optional
 from app.models import Fish
 
 
-class SearchForm(FlaskForm):
+class SimpleSearch(FlaskForm):
     search = StringField('Search by fish id', validators=[DataRequired()])
     submit = SubmitField('Search')
 
@@ -14,7 +14,7 @@ class SearchForm(FlaskForm):
             kwargs['formdata'] = request.args
         if 'csrf_enabled' not in kwargs:
             kwargs['csrf_enabled'] = False
-        super(SearchForm, self).__init__(*args, **kwargs)
+        super(SimpleSearch, self).__init__(*args, **kwargs)
 
 
 class NewFish(FlaskForm):
@@ -116,6 +116,32 @@ class FilterChanges(FlaskForm):
     comments = BooleanField("Comments")
     submit = SubmitField('Apply')
 
+
+class SearchFrom(FlaskForm):
+    fish_id = StringField('Fish ID', validators=[Optional()])
+    tank_id = StringField('Tank ID', validators=[Optional()])
+    status = SelectField("Status", choices=["","Alive", "Alive (Healthy)", "Alive (Unhealthy)", "Dead"], validators=[Optional()])
+    stock = StringField("Stock #", validators=[Optional()])
+    protocol = IntegerField("Protocol #", validators=[Optional()])
+    source = SelectField("Source", choices = ["","Home", "Imported"], validators=[Optional()])
+    cross_type = StringField("Cross Type", validators=[Optional()])
+    birthday = DateField("Birthday", validators=[Optional()])
+    date_of_arrival = DateField("Date of Arrival", validators=[Optional()])
+    user_code = StringField("User Code", validators=[Optional()])
+    project_license = StringField("Project License", validators=[Optional()])
+    allele = StringField("Allele", validators=[Optional()])
+    mutant_gene = StringField("Mutant Gene", validators=[Optional()])
+    transgenes = StringField("Transgenes", validators=[Optional()])
+    father_id = StringField("Father's ID", validators=[Optional()])
+    mother_id = StringField("Mother's ID", validators=[Optional()])
+    father_stock = StringField("Father's Stock #", validators=[Optional()])
+    mother_stock = StringField("Mother's Stock #", validators=[Optional()])
+    total = IntegerField("Total #", validators=[Optional()])
+    submit = SubmitField('Search')
+
+
+
 class SettingsForm(FlaskForm):
     emails = BooleanField('Email notifications:')
     submit = SubmitField('Apply')
+

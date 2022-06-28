@@ -33,10 +33,10 @@
         {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Type of Cross: </span>{{fish.cross_type}}</p>
         {%if fish.father != None%}
-            <p class = "fishInfoPoint"><a href="{{url_for('main.fish', id=fish.father.id)}}" target=”_blank”><span class="pointHeader">Father</span></a> ID: {{fish.father.id}}, Stock: {{fish.father.stock}}</p>
+            <p class = "fishInfoPoint"><a href="{{url_for('main.fish', id=fish.father.id)}}" target=”_blank”><span class="pointHeader">Father</span></a> ID: {{fish.father.fish_id}}, Stock: {{fish.father.stock}}</p>
         {%endif%}
         {%if fish.mother != None%}
-            <p class = "fishInfoPoint"><a href="{{url_for('main.fish', id=fish.mother.id)}}" target=”_blank”><span class="pointHeader">Mother</span></a> ID: {{fish.mother.id}}, Stock: {{fish.mother.stock}}</p>
+            <p class = "fishInfoPoint"><a href="{{url_for('main.fish', id=fish.mother.id)}}" target=”_blank”><span class="pointHeader">Mother</span></a> ID: {{fish.mother.fish_id}}, Stock: {{fish.mother.stock}}</p>
         {%endif%}
     </div>
     <div class="fishInfoBlock">

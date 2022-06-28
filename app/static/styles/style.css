@@ -99,3 +99,26 @@
     border-top:1px solid lightgray ;
 }
 
+#mainSearchForm{
+    margin: auto;
+    width:80%;
+    border: 1px gray solid;
+    border-radius: 1em;
+    padding: 5px;
+}
+
+.seachFormField{
+    white-space: nowrap;
+}
+.seachFormField input{
+    margin:5px;
+}
+.seachFormField select{
+    margin:5px;
+}
+
+#searchFormSubmit{
+    padding:5px;
+    border-top:1px solid lightgray ;
+}
+

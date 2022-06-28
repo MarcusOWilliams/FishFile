@@ -6,3 +6,5 @@ email
     I originally used a basic google mail flask-mail implementation, but this had security risks as I would have to have a google account that allowed less secure apps
     Instead I changed it to using the sendgrid api, which was more secure
     I can currently only send 100 emails per day, so need to make sure that is enough, also need an email to send email from permanantly
+
+Finding just the right fields to allow the full functionality of search and filter without an overwhelming number of options

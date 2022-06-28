@@ -10,9 +10,9 @@ from app import db
 from app.main import bp
 from app.main import email
 from app.models import Change, Fish, Notification, User, requires_roles
-from flask import flash, redirect, render_template, url_for, g
+from flask import flash, redirect, render_template, url_for, g, session
 from flask_login import current_user, login_required
-from app.main.forms import SearchForm, NewFish, SettingsForm, FilterChanges
+from app.main.forms import SimpleSearch, NewFish, SettingsForm, FilterChanges, SearchFrom
 from app.main.email import send_notification_email
 import sys
 # this route defines the landing page of the website
@@ -31,18 +31,90 @@ def landing():
 @bp.route('/home', methods=['GET', 'POST'])
 @login_required
 def index():
+    form = SearchFrom()
+    if form.validate_on_submit():
+        search_dict = {}
+        for fieldname, value in form.data.items():
+            if fieldname != "csrf_token" and fieldname != "submit":
+                if value != None and value != '':
+                    search_dict[fieldname] = value
 
-    return render_template('index.html', title="Home Page")
+        session['search_dict'] = search_dict.copy() 
+        return redirect(url_for('main.search'))
 
+    return render_template('index.html', form = form, title="Home Page")
 
-@bp.route("/search/")
+@bp.route("/search")
 @login_required
 def search():
-    fish = Fish.query.filter_by(fish_id=g.search_form.search.data).all()
-    if fish is None:
-        return render_template('fishsearch.html')
+    search_dict = session['search_dict'].copy()
+    session['search_dict'] = {}
+    
+    all_fish = Fish.query.filter(id != None).subquery()
+    for key in search_dict:
+        if key == "fish_id":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(fish_id = search_dict[key]).subquery()
+        elif key == "tank_id":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(tank_id = search_dict[key]).subquery()
+        elif key == "stock":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(stock = search_dict[key]).subquery()
+        elif key == "status":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(status = search_dict[key]).subquery()
+        elif key == "protocol":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(protocol= search_dict[key]).subquery()
+        elif key == "source":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(source = search_dict[key]).subquery()
+        elif key == "cross_type":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(cross_type = search_dict[key]).subquery()
+        elif key == "birthday":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(birthday = search_dict[key]).subquery()
+        elif key == "date_of_arrival":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(date_of_arrival = search_dict[key]).subquery()
+        elif key == "user_code":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(user_code = search_dict[key]).subquery()
+        elif key == "project_license":
+            all_fish = Fish.query.select_entity_from(all_fish).filter( Fish.project_license_holder.has(project_license = search_dict[key])).subquery()
+        elif key == "allele":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(allele = search_dict[key]).subquery()
+        elif key == "mutant_gene":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(mutant_gene = search_dict[key]).subquery()
+        elif key == "transgenes":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(transgenes = search_dict[key]).subquery()
+        elif key == "father_id":
+            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.father.has(fish_id = search_dict[key])).subquery()
+        elif key == "father_stock":
+            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.father.has(stock = search_dict[key])).subquery()
+        elif key == "mother_id":
+            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.mother.has(fish_id = search_dict[key])).subquery()
+        elif key == "mother_stock":
+            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.mother.has(stock = search_dict[key])).subquery()
+        elif key == "total":
+            all_fish = Fish.query.select_entity_from(all_fish).filter_by(total = search_dict[key]).subquery()
+       
+    
+    all_fish = Fish.query.select_entity_from(all_fish).all()
 
-    return render_template('fishsearch.html', fish_list=fish, title="Search")
+    return render_template('search.html', all_fish=all_fish, title="Search")
+
+
+ # if filters == "all":
+    #     changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
+    # else:
+    #     filter_list = filters.split(" ")
+    #     changes = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).subquery()
+    #     for filter in filter_list:
+    #         changes = Change.query.select_entity_from(changes).filter_by(contents = filter).subquery()
+
+    #     changes = Change.query.select_entity_from(changes).all()
+
+# @bp.route("/search/")
+# @login_required
+# def search():
+#     fish = Fish.query.filter_by(fish_id=g.search_form.search.data).all()
+#     if fish is None:
+#         return render_template('fishsearch.html')
+
+#     return render_template('fishsearch.html', fish_list=fish, title="Search")
 
 
 @bp.route('/user/<username>/')
@@ -92,15 +164,7 @@ def fishchange(id, filters = "all"):
         changes.sort(key=lambda x: x.time, reverse=True)
 
 
-    # if filters == "all":
-    #     changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
-    # else:
-    #     filter_list = filters.split(" ")
-    #     changes = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).subquery()
-    #     for filter in filter_list:
-    #         changes = Change.query.select_entity_from(changes).filter_by(contents = filter).subquery()
-
-    #     changes = Change.query.select_entity_from(changes).all()
+   
     
 
             
@@ -439,4 +503,4 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
-        g.search_form = SearchForm()
+        g.search_form = SimpleSearch()
