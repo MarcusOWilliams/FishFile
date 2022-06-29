@@ -2,3 +2,6 @@ Making the self reference using fathered and father_id (also mother) in the Fish
 
 Making subqueries work
     Subquery, selcet from etc.
+
+Adding pagination
+    Especially to changes because you had to start with an empty query, then union then, sort, then paginate all, nothing else works

@@ -167,9 +167,11 @@ def fishchange(id, filters = "all"):
     if filters == "all":
         changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).paginate(page, current_app.config['CHANGES_PER_PAGE'], False)
     else:
-        changes = Change.query.filter_by(id = -1)
         for filter in filter_list:
-            changes = changes.union(Change.query.filter_by(field = filter))
+            if 'changes' in locals():
+                changes = changes.union(Change.query.filter_by(field = filter))
+            else:
+                changes = Change.query.filter_by(field = filter)
 
         changes = changes.order_by(Change.time.desc()).paginate(page, current_app.config['CHANGES_PER_PAGE'], False)
 
