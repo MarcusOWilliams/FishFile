@@ -27,14 +27,13 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_verified = db.Column(db.Boolean, default=False)
     project_license = db.Column(db.String(120), index=True)
-    role = db.Column(db.String(64), default='User')
+    role = db.Column(db.String(64), default="User")
     code = db.Column(db.String(64), index=True)
-    changes = db.relationship('Change', backref='user', lazy='dynamic')
-    notification = db.relationship(
-        'Notification', backref='user', lazy='dynamic')
+    changes = db.relationship("Change", backref="user", lazy="dynamic")
+    notification = db.relationship("Notification", backref="user", lazy="dynamic")
 
     def __repr__(self):
-        return '<User {} {}>'.format(self.first_name, self.last_name)
+        return "<User {} {}>".format(self.first_name, self.last_name)
 
     # takes a password and returns its hash
     def set_password(self, password):
@@ -48,21 +47,26 @@ class User(UserMixin, db.Model):
     # this creates a secure signed payload using SHA256 to act as the verification for resetting a password it expires after 5 minutes
     def get_reset_password_token(self, expires_in=300):
         return jwt.encode(
-            {'reset_password': self.id, 'exp': time() + expires_in},
-            current_app.config['SECRET_KEY'], algorithm='HS256')
+            {"reset_password": self.id, "exp": time() + expires_in},
+            current_app.config["SECRET_KEY"],
+            algorithm="HS256",
+        )
 
     # this works similar to above, but is used for email validation
     def get_email_verification_token(self, expires_in=300):
         return jwt.encode(
-            {'verify_email': self.id, 'exp': time() + expires_in},
-            current_app.config['SECRET_KEY'], algorithm='HS256')
+            {"verify_email": self.id, "exp": time() + expires_in},
+            current_app.config["SECRET_KEY"],
+            algorithm="HS256",
+        )
 
     # this is used to verify a password reset token, it decodes the link and checks the id of the user exists
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, current_app.config['SECRET_KEY'],
-                            algorithms=['HS256'])['reset_password']
+            id = jwt.decode(
+                token, current_app.config["SECRET_KEY"], algorithms=["HS256"]
+            )["reset_password"]
         except:
             return
         return User.query.get(id)
@@ -70,8 +74,9 @@ class User(UserMixin, db.Model):
     @staticmethod
     def verify_email_token(token):
         try:
-            id = jwt.decode(token, current_app.config['SECRET_KEY'],
-                            algorithms=['HS256'])['verify_email']
+            id = jwt.decode(
+                token, current_app.config["SECRET_KEY"], algorithms=["HS256"]
+            )["verify_email"]
         except:
             return
         return User.query.get(id)
@@ -85,6 +90,7 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
+
 # This method creates a wrapper, allowing the use of @required_roles in routes, allowing certain links to only be accessible for accounts with a certain role, e.g. admins
 
 
@@ -96,8 +102,11 @@ def requires_roles(*roles):
                 # Redirect the user to an unauthorized notice!
                 abort(403)
             return f(*args, **kwargs)
+
         return wrapped
+
     return wrapper
+
 
 # --------------------------------
 
@@ -121,29 +130,33 @@ class Fish(db.Model):
     protocol = db.Column(db.Integer, index=True)
     birthday = db.Column(db.Date, index=True)
     date_of_arrival = db.Column(db.Date, index=True)
-    
+
     allele = db.Column(db.String(64), index=True)
     mutant_gene = db.Column(db.String(64), index=True)
     transgenes = db.Column(db.String(64), index=True)
     cross_type = db.Column(db.String(64), index=True)
     comments = db.Column(db.String(1000))
 
-    father_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
-    mother_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
-    fathered = db.relationship("Fish", backref=db.backref(
-        "father", remote_side=[id]), foreign_keys=[father_id])
-    mothered = db.relationship("Fish", backref=db.backref(
-        "mother", remote_side=[id]), foreign_keys=[mother_id])
-
+    father_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
+    mother_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
+    fathered = db.relationship(
+        "Fish", backref=db.backref("father", remote_side=[id]), foreign_keys=[father_id]
+    )
+    mothered = db.relationship(
+        "Fish", backref=db.backref("mother", remote_side=[id]), foreign_keys=[mother_id]
+    )
 
     project_license_holder_id = db.Column(
-        db.Integer, db.ForeignKey('user.project_license'))
-    project_license_holder =  db.relationship('User', foreign_keys=[
-                                      project_license_holder_id], backref='fish_on_license')
+        db.Integer, db.ForeignKey("user.project_license")
+    )
+    project_license_holder = db.relationship(
+        "User", foreign_keys=[project_license_holder_id], backref="fish_on_license"
+    )
 
-    user_code_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user_code = db.relationship('User', foreign_keys=[
-                                user_code_id], backref='users_fish')
+    user_code_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_code = db.relationship(
+        "User", foreign_keys=[user_code_id], backref="users_fish"
+    )
 
     males = db.Column(db.Integer)
     females = db.Column(db.Integer)
@@ -151,10 +164,12 @@ class Fish(db.Model):
     carriers = db.Column(db.Integer)
     total = db.Column(db.Integer)
 
-    changes = db.relationship("Change", backref='fish', lazy='dynamic', cascade = "all, delete")
+    changes = db.relationship(
+        "Change", backref="fish", lazy="dynamic", cascade="all, delete"
+    )
 
     def __repr__(self):
-        return f'Fish - ID: {self.fish_id}, Stock: {self.stock}, Tank: {self.tank_id}'
+        return f"Fish - ID: {self.fish_id}, Stock: {self.stock}, Tank: {self.tank_id}"
 
 
 """
@@ -167,17 +182,17 @@ It also contains the methods required for the change
 
 class Change(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    fish_id = db.Column(db.Integer, db.ForeignKey('fish.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
     action = db.Column(db.String(64))
     contents = db.Column(db.String(64))
-    field =  db.Column(db.String(64))
+    field = db.Column(db.String(64))
     old = db.Column(db.String(64))
     new = db.Column(db.String(64))
     time = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f'<Change by User:{self.user_id} on Fish: {self.fish_id}'
+        return f"<Change by User:{self.user_id} on Fish: {self.fish_id}"
 
 
 """
@@ -191,14 +206,13 @@ It also contains the methods required for the Settings
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # one-to-one relationship
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship(
-        "User", backref=db.backref("settings", uselist=False))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User", backref=db.backref("settings", uselist=False))
 
     emails = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
-        return f'<Settings for User:{self.user.username}'
+        return f"<Settings for User:{self.user.username}"
 
 
 """
@@ -211,10 +225,10 @@ It also contains the methods required for the notifiaction
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     time = db.Column(db.DateTime, default=datetime.utcnow)
     category = db.Column(db.String(64))
     contents = db.Column(db.String(64))
 
     def __repr__(self):
-        return f'<Notification for User:{self.user.username}'
+        return f"<Notification for User:{self.user.username}"

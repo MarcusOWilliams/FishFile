@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 
@@ -6,25 +5,42 @@ from app import db
 from app.main import bp
 from app.main import email
 from app.models import Change, Fish, Notification, User, requires_roles
-from flask import flash, redirect, render_template, url_for, g, session, request, current_app
+from flask import (
+    flash,
+    redirect,
+    render_template,
+    url_for,
+    g,
+    session,
+    request,
+    current_app,
+)
 from flask_login import current_user, login_required
-from app.main.forms import SimpleSearch, NewFish, SettingsForm, FilterChanges, SearchFrom
+from app.main.forms import (
+    SimpleSearch,
+    NewFish,
+    SettingsForm,
+    FilterChanges,
+    SearchFrom,
+)
 from app.main.email import send_notification_email
 import sys
+
 # this route defines the landing page of the website
 
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route("/", methods=["GET", "POST"])
 def landing():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for("main.index"))
 
-    return render_template('landing.html')
+    return render_template("landing.html")
+
 
 # this route defines the homepage of the website
 
 
-@bp.route('/home', methods=['GET', 'POST'])
+@bp.route("/home", methods=["GET", "POST"])
 @login_required
 def index():
     form = SearchFrom()
@@ -32,15 +48,16 @@ def index():
         search_dict = {}
         for fieldname, value in form.data.items():
             if fieldname != "csrf_token" and fieldname != "submit":
-                if value != None and value != '':
+                if value != None and value != "":
                     search_dict[fieldname] = value
 
-        session['search_dict'] = search_dict.copy() 
-        return redirect(url_for('main.search'))
+        session["search_dict"] = search_dict.copy()
+        return redirect(url_for("main.search"))
 
-    return render_template('index.html', form = form, title="Home Page")
+    return render_template("index.html", form=form, title="Home Page")
 
-@bp.route("/search", methods=['GET', 'POST'])
+
+@bp.route("/search", methods=["GET", "POST"])
 @login_required
 def search():
     form = SearchFrom()
@@ -49,64 +66,156 @@ def search():
         search_dict = {}
         for fieldname, value in form.data.items():
             if fieldname != "csrf_token" and fieldname != "submit":
-                if value != None and value != '':
+                if value != None and value != "":
                     search_dict[fieldname] = value
 
-        session['search_dict'] = search_dict.copy() 
-        return redirect(url_for('main.search'))
+        session["search_dict"] = search_dict.copy()
+        return redirect(url_for("main.search"))
 
-    search_dict = session['search_dict'].copy()
-    
+    search_dict = session["search_dict"].copy()
+
     all_fish = Fish.query.filter(id != None).subquery()
     for key in search_dict:
         if key == "fish_id":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(fish_id = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(fish_id=search_dict[key])
+                .subquery()
+            )
         elif key == "tank_id":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(tank_id = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(tank_id=search_dict[key])
+                .subquery()
+            )
         elif key == "stock":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(stock = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(stock=search_dict[key])
+                .subquery()
+            )
         elif key == "status":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(status = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(status=search_dict[key])
+                .subquery()
+            )
         elif key == "protocol":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(protocol= search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(protocol=search_dict[key])
+                .subquery()
+            )
         elif key == "source":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(source = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(source=search_dict[key])
+                .subquery()
+            )
         elif key == "cross_type":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(cross_type = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(cross_type=search_dict[key])
+                .subquery()
+            )
         elif key == "birthday":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(birthday = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(birthday=search_dict[key])
+                .subquery()
+            )
         elif key == "date_of_arrival":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(date_of_arrival = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(date_of_arrival=search_dict[key])
+                .subquery()
+            )
         elif key == "user_code":
-            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.user_code.has(code = search_dict[key])).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(Fish.user_code.has(code=search_dict[key]))
+                .subquery()
+            )
         elif key == "project_license":
-            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.project_license_holder.has(project_license = search_dict[key])).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(
+                    Fish.project_license_holder.has(project_license=search_dict[key])
+                )
+                .subquery()
+            )
         elif key == "allele":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(allele = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(allele=search_dict[key])
+                .subquery()
+            )
         elif key == "mutant_gene":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(mutant_gene = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(mutant_gene=search_dict[key])
+                .subquery()
+            )
         elif key == "transgenes":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(transgenes = search_dict[key]).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(transgenes=search_dict[key])
+                .subquery()
+            )
         elif key == "father_id":
-            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.father.has(fish_id = search_dict[key])).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(Fish.father.has(fish_id=search_dict[key]))
+                .subquery()
+            )
         elif key == "father_stock":
-            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.father.has(stock = search_dict[key])).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(Fish.father.has(stock=search_dict[key]))
+                .subquery()
+            )
         elif key == "mother_id":
-            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.mother.has(fish_id = search_dict[key])).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(Fish.mother.has(fish_id=search_dict[key]))
+                .subquery()
+            )
         elif key == "mother_stock":
-            all_fish = Fish.query.select_entity_from(all_fish).filter(Fish.mother.has(stock = search_dict[key])).subquery()
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(Fish.mother.has(stock=search_dict[key]))
+                .subquery()
+            )
         elif key == "total":
-            all_fish = Fish.query.select_entity_from(all_fish).filter_by(total = search_dict[key]).subquery()
-       
-    page = request.args.get('page', 1, type=int)
-    
-    all_fish = Fish.query.select_entity_from(all_fish).paginate(page, current_app.config['FISH_PER_PAGE'], False)
-    
-    next_url = url_for('main.search', page=all_fish.next_num) if all_fish.has_next else None
-    prev_url = url_for('main.search', page=all_fish.prev_num) if all_fish.has_prev else None
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(total=search_dict[key])
+                .subquery()
+            )
 
+    page = request.args.get("page", 1, type=int)
 
-    return render_template('search.html', form = form, all_fish=all_fish.items, search_dict = search_dict, title="Search", next_url=next_url,prev_url=prev_url ,pagination=all_fish)
+    all_fish = Fish.query.select_entity_from(all_fish).paginate(
+        page, current_app.config["FISH_PER_PAGE"], False
+    )
+
+    next_url = (
+        url_for("main.search", page=all_fish.next_num) if all_fish.has_next else None
+    )
+    prev_url = (
+        url_for("main.search", page=all_fish.prev_num) if all_fish.has_prev else None
+    )
+
+    return render_template(
+        "search.html",
+        form=form,
+        all_fish=all_fish.items,
+        search_dict=search_dict,
+        title="Search",
+        next_url=next_url,
+        prev_url=prev_url,
+        pagination=all_fish,
+    )
 
 
 @bp.route("/simplesearch/")
@@ -116,37 +225,59 @@ def simplesearch():
     if fish is None:
         pass
 
-    return redirect(url_for('main.fish', id=fish.id))
+    return redirect(url_for("main.fish", id=fish.id))
 
 
-@bp.route('/user/<username>/')
+@bp.route("/user/<username>/")
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     title = user.username
-    user_fish = Fish.query.filter_by(user_code = user).filter(Fish.status != "Dead").all()
+    user_fish = Fish.query.filter_by(user_code=user).filter(Fish.status != "Dead").all()
     changes = Change.query.filter_by(user=user).order_by(Change.time.desc()).all()
-    
-    page = request.args.get('page', 1, type=int)
-    changes = Change.query.filter_by(user=user).order_by(Change.time.desc()).paginate(page, current_app.config['CHANGES_PER_PAGE'], False)
 
-    next_url = url_for('main.user',username=username, page=changes.next_num) if changes.has_next else None
-    prev_url = url_for('main.user',username=username, page=changes.prev_num) if changes.has_prev else None
+    page = request.args.get("page", 1, type=int)
+    changes = (
+        Change.query.filter_by(user=user)
+        .order_by(Change.time.desc())
+        .paginate(page, current_app.config["CHANGES_PER_PAGE"], False)
+    )
 
-    return render_template('user.html', user=user, changes=changes.items, user_fish = user_fish, title=title, pagination= changes, next_url=next_url,prev_url=prev_url )
+    next_url = (
+        url_for("main.user", username=username, page=changes.next_num)
+        if changes.has_next
+        else None
+    )
+    prev_url = (
+        url_for("main.user", username=username, page=changes.prev_num)
+        if changes.has_prev
+        else None
+    )
+
+    return render_template(
+        "user.html",
+        user=user,
+        changes=changes.items,
+        user_fish=user_fish,
+        title=title,
+        pagination=changes,
+        next_url=next_url,
+        prev_url=prev_url,
+    )
 
 
-@bp.route('/fish/<id>')
+@bp.route("/fish/<id>")
 @login_required
 def fish(id):
     fish = Fish.query.filter_by(id=id).first_or_404()
     title = f"Fish ({fish.stock})"
 
-    return render_template('fish.html', fish=fish, title=title)
+    return render_template("fish.html", fish=fish, title=title)
 
-@bp.route('/fish/<id>/changes/<filters>', methods=['GET', 'POST'])
+
+@bp.route("/fish/<id>/changes/<filters>", methods=["GET", "POST"])
 @login_required
-def fishchange(id, filters = "all"):
+def fishchange(id, filters="all"):
     fish = Fish.query.filter_by(id=id).first_or_404()
     form = FilterChanges()
     title = f"Fish History ({fish.stock})"
@@ -156,371 +287,491 @@ def fishchange(id, filters = "all"):
             if value and (fieldname != "submit" and fieldname != "csrf_token"):
                 filters.append(fieldname)
 
-        if len(filters)<1:
+        if len(filters) < 1:
             filters.append("all")
 
-        return redirect(url_for('main.fishchange', id= fish.id, filters = " ".join(filters)))
+        return redirect(
+            url_for("main.fishchange", id=fish.id, filters=" ".join(filters))
+        )
 
-    page = request.args.get('page', 1, type=int)
+    page = request.args.get("page", 1, type=int)
 
     filter_list = filters.split(" ")
     if filters == "all":
-        changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).paginate(page, current_app.config['CHANGES_PER_PAGE'], False)
+        changes = (
+            Change.query.filter_by(fish_id=id)
+            .order_by(Change.time.desc())
+            .paginate(page, current_app.config["CHANGES_PER_PAGE"], False)
+        )
     else:
         for filter in filter_list:
-            if 'changes' in locals():
-                changes = changes.union(Change.query.filter_by(field = filter))
+            if "changes" in locals():
+                changes = changes.union(Change.query.filter_by(field=filter))
             else:
-                changes = Change.query.filter_by(field = filter)
+                changes = Change.query.filter_by(field=filter)
 
-        changes = changes.order_by(Change.time.desc()).paginate(page, current_app.config['CHANGES_PER_PAGE'], False)
+        changes = changes.order_by(Change.time.desc()).paginate(
+            page, current_app.config["CHANGES_PER_PAGE"], False
+        )
+
+    next_url = (
+        url_for("main.fishchange", id=fish.id, filters=filters, page=changes.next_num)
+        if changes.has_next
+        else None
+    )
+    prev_url = (
+        url_for("main.fishchange", id=fish.id, filters=filters, page=changes.prev_num)
+        if changes.has_prev
+        else None
+    )
+
+    return render_template(
+        "fishchanges.html",
+        fish=fish,
+        changes=changes.items,
+        filters=filter_list,
+        form=form,
+        title=title,
+        pagination=changes,
+        next_url=next_url,
+        prev_url=prev_url,
+    )
 
 
-
-    
-    
-    next_url = url_for('main.fishchange',id=fish.id, filters=filters, page=changes.next_num) if changes.has_next else None
-    prev_url = url_for('main.fishchange',id=fish.id, filters=filters, page=changes.prev_num) if changes.has_prev else None
-            
-    return render_template('fishchanges.html', fish=fish, changes = changes.items, filters = filter_list, form=form, title = title, pagination= changes, next_url=next_url,prev_url=prev_url )
-
-
-@bp.route('/newfish/', methods=['GET', 'POST'])
+@bp.route("/newfish/", methods=["GET", "POST"])
 @login_required
 def newfish():
     form = NewFish()
 
-    
-    all_users = User.query.filter_by(is_verified = True).all()
-    user_codes = [""] + [ user.code for user in all_users]
+    all_users = User.query.filter_by(is_verified=True).all()
+    user_codes = [""] + [user.code for user in all_users]
     form.user_code.choices = sorted(user_codes)
 
     licenses_values = [""] + [user.project_license for user in all_users]
     licenses = list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
-    
-
-
 
     if form.validate_on_submit():
-        father = Fish.query.filter_by(fish_id = form.father_id.data, stock = form.father_stock.data).first()
-        mother = Fish.query.filter_by(fish_id = form.mother_id.data, stock = form.mother_stock.data).first()
-        fish_user = User.query.filter_by(email = form.user_code.data).first()
-        license_holder = User.query.filter_by(project_license = form.project_license.data).first()
-        
-        newfish = Fish(
-            fish_id = form.fish_id.data,
-            tank_id = form.tank_id.data,
-            status = form.status.data,
-            stock = form.stock.data,
-            protocol = form.protocol.data,
-            birthday = form.birthday.data,
-            date_of_arrival = form.date_of_arrival.data,
-            allele = form.allele.data,
-            mutant_gene = form.mutant_gene.data,
-            transgenes = form.transgenes.data,
-            cross_type = form.cross_type.data,
-            comments = form.comments.data,
-            males = form.males.data,
-            females = form.females.data,
-            unsexed = form.unsexed.data,
-            carriers = form.carriers.data,
-            total = form.total.data,
-            source = form.source.data,
+        father = Fish.query.filter_by(
+            fish_id=form.father_id.data, stock=form.father_stock.data
+        ).first()
+        mother = Fish.query.filter_by(
+            fish_id=form.mother_id.data, stock=form.mother_stock.data
+        ).first()
+        fish_user = User.query.filter_by(email=form.user_code.data).first()
+        license_holder = User.query.filter_by(
+            project_license=form.project_license.data
+        ).first()
 
-            father = father,
-            mother = mother,
-            user_code= fish_user,
-            project_license_holder = license_holder
+        newfish = Fish(
+            fish_id=form.fish_id.data,
+            tank_id=form.tank_id.data,
+            status=form.status.data,
+            stock=form.stock.data,
+            protocol=form.protocol.data,
+            birthday=form.birthday.data,
+            date_of_arrival=form.date_of_arrival.data,
+            allele=form.allele.data,
+            mutant_gene=form.mutant_gene.data,
+            transgenes=form.transgenes.data,
+            cross_type=form.cross_type.data,
+            comments=form.comments.data,
+            males=form.males.data,
+            females=form.females.data,
+            unsexed=form.unsexed.data,
+            carriers=form.carriers.data,
+            total=form.total.data,
+            source=form.source.data,
+            father=father,
+            mother=mother,
+            user_code=fish_user,
+            project_license_holder=license_holder,
         )
         db.session.add(newfish)
 
-        change = Change(user = current_user, fish = newfish, action = "Added")
+        change = Change(user=current_user, fish=newfish, action="Added")
         db.session.add(change)
 
         db.session.commit()
-        flash("The new fish has been added to the database", 'info')
-        return redirect(url_for('main.fish', id = newfish.id))
+        flash("The new fish has been added to the database", "info")
+        return redirect(url_for("main.fish", id=newfish.id))
 
-    return render_template('newfish.html',form=form, title="New Fish")
+    return render_template("newfish.html", form=form, title="New Fish")
 
-@bp.route('/updatefish/<id>/', methods=['GET', 'POST'])
+
+@bp.route("/updatefish/<id>/", methods=["GET", "POST"])
 @login_required
 def updatefish(id):
     form = NewFish()
     fish = Fish.query.filter_by(id=id).first_or_404()
     title = f"Update Fish ({fish.stock})"
 
-    all_users = User.query.filter_by(is_verified = True).all()
-    user_codes = [""] + [ user.code for user in all_users]
+    all_users = User.query.filter_by(is_verified=True).all()
+    user_codes = [""] + [user.code for user in all_users]
     form.user_code.choices = sorted(user_codes)
-    
 
     licenses_values = [user.project_license for user in all_users]
-    licenses =[""] + list(filter(None, licenses_values))
+    licenses = [""] + list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
-
 
     if form.validate_on_submit():
 
-        father = Fish.query.filter_by(fish_id = form.father_id.data, stock = form.father_stock.data).first()
-        mother = Fish.query.filter_by(fish_id = form.mother_id.data, stock = form.mother_stock.data).first()
-        fish_user = User.query.filter_by(code = form.user_code.data).first()
-        license_holder = User.query.filter_by(project_license = form.project_license.data).first()
+        father = Fish.query.filter_by(
+            fish_id=form.father_id.data, stock=form.father_stock.data
+        ).first()
+        mother = Fish.query.filter_by(
+            fish_id=form.mother_id.data, stock=form.mother_stock.data
+        ).first()
+        fish_user = User.query.filter_by(code=form.user_code.data).first()
+        license_holder = User.query.filter_by(
+            project_license=form.project_license.data
+        ).first()
 
-    
         if fish.fish_id != form.fish_id.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "fish ID",
-             field = "fish_id",
-             old = fish.fish_id, 
-             new = form.fish_id.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="fish ID",
+                field="fish_id",
+                old=fish.fish_id,
+                new=form.fish_id.data,
+            )
             db.session.add(change)
 
             fish.fish_id = form.fish_id.data
 
         if fish.tank_id != form.tank_id.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "tank ID",
-             field = "tank_id", 
-             old = fish.tank_id, 
-             new = form.tank_id.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="tank ID",
+                field="tank_id",
+                old=fish.tank_id,
+                new=form.tank_id.data,
+            )
             db.session.add(change)
 
             fish.tank_id = form.tank_id.data
 
         if fish.status != form.status.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "status",
-             field = "status", 
-             old =fish.status, 
-             new =form.status.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="status",
+                field="status",
+                old=fish.status,
+                new=form.status.data,
+            )
             db.session.add(change)
 
             fish.status = form.status.data
 
         if fish.stock != form.stock.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "stock",
-             field = "stock", 
-             old =fish.stock , 
-             new =form.stock.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="stock",
+                field="stock",
+                old=fish.stock,
+                new=form.stock.data,
+            )
             db.session.add(change)
 
             fish.stock = form.stock.data
 
         if fish.protocol != form.protocol.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "protocol",
-             field = "protocol", 
-             old = fish.protocol, 
-             new =form.protocol.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="protocol",
+                field="protocol",
+                old=fish.protocol,
+                new=form.protocol.data,
+            )
             db.session.add(change)
 
             fish.protocol = form.protocol.data
 
         if fish.birthday != form.birthday.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "birthday",
-             field = "birthday", 
-             old = fish.birthday, 
-             new =form.birthday.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="birthday",
+                field="birthday",
+                old=fish.birthday,
+                new=form.birthday.data,
+            )
             db.session.add(change)
 
             fish.birthday = form.birthday.data
 
         if fish.date_of_arrival != form.date_of_arrival.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "date of arrival", 
-             field = "date_of_arrival",
-             old = fish.date_of_arrival, 
-             new =form.date_of_arrival.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="date of arrival",
+                field="date_of_arrival",
+                old=fish.date_of_arrival,
+                new=form.date_of_arrival.data,
+            )
             db.session.add(change)
 
             fish.date_of_arrival = form.date_of_arrival.data
 
         if fish.allele != form.allele.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "allele", 
-             field = "allele",
-             old = fish.allele, 
-             new =form.allele.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="allele",
+                field="allele",
+                old=fish.allele,
+                new=form.allele.data,
+            )
             db.session.add(change)
 
             fish.allele = form.allele.data
 
         if fish.mutant_gene != form.mutant_gene.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "mutant gene",
-             field = "mutant_gene", 
-             old = fish.mutant_gene, 
-             new =form.mutant_gene.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="mutant gene",
+                field="mutant_gene",
+                old=fish.mutant_gene,
+                new=form.mutant_gene.data,
+            )
             db.session.add(change)
 
             fish.mutant_gene = form.mutant_gene.data
 
         if fish.transgenes != form.transgenes.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "transgenes",
-             field = "transgenes", 
-             old = fish.transgenes, 
-             new =form.transgenes.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="transgenes",
+                field="transgenes",
+                old=fish.transgenes,
+                new=form.transgenes.data,
+            )
             db.session.add(change)
 
             fish.transgenes = form.transgenes.data
 
         if fish.cross_type != form.cross_type.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "cross type",
-             field = "cross_type", 
-             old = fish.cross_type, 
-             new =form.cross_type.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="cross type",
+                field="cross_type",
+                old=fish.cross_type,
+                new=form.cross_type.data,
+            )
             db.session.add(change)
 
             fish.cross_type = form.cross_type.data
 
         if fish.comments != form.comments.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "comments",
-             field = "comments", 
-             old = fish.comments, 
-             new =form.comments.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="comments",
+                field="comments",
+                old=fish.comments,
+                new=form.comments.data,
+            )
             db.session.add(change)
 
             fish.comments = form.comments.data
 
         if fish.males != form.males.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "number of males",
-             field = "males", 
-             old = fish.males, 
-             new =form.males.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="number of males",
+                field="males",
+                old=fish.males,
+                new=form.males.data,
+            )
             db.session.add(change)
 
             fish.males = form.males.data
 
         if fish.females != form.females.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "number of females",
-             field = "females", 
-             old = fish.females , 
-             new =form.females.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="number of females",
+                field="females",
+                old=fish.females,
+                new=form.females.data,
+            )
             db.session.add(change)
 
             fish.females = form.females.data
 
         if fish.unsexed != form.unsexed.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "number of unsexed fish",
-             field = "unsexed", 
-             old = fish.unsexed, 
-             new =form.unsexed.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="number of unsexed fish",
+                field="unsexed",
+                old=fish.unsexed,
+                new=form.unsexed.data,
+            )
             db.session.add(change)
 
             fish.unsexed = form.unsexed.data
 
         if fish.carriers != form.carriers.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "number of carriers", 
-             field = "carriers",
-             old = fish.carriers, 
-             new =form.carriers.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="number of carriers",
+                field="carriers",
+                old=fish.carriers,
+                new=form.carriers.data,
+            )
             db.session.add(change)
 
             fish.carriers = form.carriers.data
 
         if fish.total != form.total.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "number of total fish",
-             field = "total", 
-             old = fish.total, 
-             new =form.total.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="number of total fish",
+                field="total",
+                old=fish.total,
+                new=form.total.data,
+            )
             db.session.add(change)
 
             fish.total = form.total.data
 
         if fish.source != form.source.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "source",
-             field = "source", 
-             old = fish.source, 
-             new =form.source.data)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="source",
+                field="source",
+                old=fish.source,
+                new=form.source.data,
+            )
             db.session.add(change)
 
             fish.source = form.source.data
 
         if fish.father.fish_id != form.father_id.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "father ID", 
-             field = "father_id",
-             old = f"{fish.father.fish_id}", 
-             new =  f"{father.fish_id}",)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="father ID",
+                field="father_id",
+                old=f"{fish.father.fish_id}",
+                new=f"{father.fish_id}",
+            )
             db.session.add(change)
             fish.father = father
 
-        if fish.father.stock!= form.father_stock.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "father stock", 
-             field = "father_stock",
-             old = f"{fish.father.stock}", 
-             new =  f"{father.stock}",)
+        if fish.father.stock != form.father_stock.data:
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="father stock",
+                field="father_stock",
+                old=f"{fish.father.stock}",
+                new=f"{father.stock}",
+            )
             db.session.add(change)
             fish.father = father
 
         if fish.mother.fish_id != form.mother_id.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "mother ID", 
-             field = "mother_id",
-             old = f"{fish.mother.fish_id}", 
-             new =  f"{mother.fish_id}",)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="mother ID",
+                field="mother_id",
+                old=f"{fish.mother.fish_id}",
+                new=f"{mother.fish_id}",
+            )
             db.session.add(change)
             fish.mother = mother
 
-        if fish.mother.stock!= form.mother_stock.data:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "mother stock", 
-             field = "mother_stock",
-             old = f"{fish.mother.stock}", 
-             new =  f"{mother.stock}",)
+        if fish.mother.stock != form.mother_stock.data:
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="mother stock",
+                field="mother_stock",
+                old=f"{fish.mother.stock}",
+                new=f"{mother.stock}",
+            )
             db.session.add(change)
             fish.father = mother
 
         if fish.user_code != fish_user:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "user code",
-             field = "user_code", 
-             old = fish.user_code.code, 
-             new = fish_user.code)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="user code",
+                field="user_code",
+                old=fish.user_code.code,
+                new=fish_user.code,
+            )
             db.session.add(change)
 
             fish.user_code = fish_user
 
         if fish.project_license_holder != license_holder:
-            change = Change(user = current_user, fish = fish, action = "Updated",
-             contents = "project license",
-             field = "project_license",
-             old =fish.project_license_holder.project_license, 
-             new =license_holder.project_license)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="project license",
+                field="project_license",
+                old=fish.project_license_holder.project_license,
+                new=license_holder.project_license,
+            )
             db.session.add(change)
             fish.project_license_holder = license_holder
-        
-        
+
         db.session.commit()
-        flash("Fish updated", 'info')
-        return redirect(url_for('main.fish', id = fish.id))
-    
+        flash("Fish updated", "info")
+        return redirect(url_for("main.fish", id=fish.id))
 
-
-
-    form.project_license.data= fish.project_license_holder.project_license
+    form.project_license.data = fish.project_license_holder.project_license
     form.user_code.data = fish.user_code.code
-    form.status.data=fish.status
-    form.source.data=fish.source
+    form.status.data = fish.status
+    form.source.data = fish.source
     form.comments.data = fish.comments
 
     return render_template("updatefish.html", fish=fish, form=form, title=title)
 
-@bp.route('/settings/', methods=['GET', 'POST'])
+
+@bp.route("/settings/", methods=["GET", "POST"])
 @login_required
 def settings():
     form = SettingsForm()
@@ -528,13 +779,15 @@ def settings():
     if form.validate_on_submit():
         current_user.settings.emails = form.emails.data
         db.session.commit()
-        flash("Settings Applied", 'info')
+        flash("Settings Applied", "info")
         n = Notification(category="Updated", user=current_user)
         send_notification_email(current_user, n)
 
-        return redirect(url_for('main.user', username=current_user.username))
+        return redirect(url_for("main.user", username=current_user.username))
 
-    return render_template('settings.html', form=form, current_settings=current_settings)
+    return render_template(
+        "settings.html", form=form, current_settings=current_settings
+    )
 
 
 # This function is used to update the users Last seen time when they go to a new page

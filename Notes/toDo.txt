@@ -42,10 +42,10 @@ add validation on new fish form, e.g. check if certain fields exists already (ta
 
 / input current search conditions into search form on page load
 
-/ implement privledges
+ implement privledges
     upload
     edit
     filter
     view any
 
-add pagination
+/ add pagination
