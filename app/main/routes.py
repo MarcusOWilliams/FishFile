@@ -6,7 +6,7 @@ from app import db
 from app.main import bp
 from app.main import email
 from app.models import Change, Fish, Notification, User, requires_roles
-from flask import flash, redirect, render_template, url_for, g, session
+from flask import flash, redirect, render_template, url_for, g, session, request, current_app
 from flask_login import current_user, login_required
 from app.main.forms import SimpleSearch, NewFish, SettingsForm, FilterChanges, SearchFrom
 from app.main.email import send_notification_email
@@ -56,7 +56,6 @@ def search():
         return redirect(url_for('main.search'))
 
     search_dict = session['search_dict'].copy()
-    session['search_dict'] = {}
     
     all_fish = Fish.query.filter(id != None).subquery()
     for key in search_dict:
@@ -99,12 +98,15 @@ def search():
         elif key == "total":
             all_fish = Fish.query.select_entity_from(all_fish).filter_by(total = search_dict[key]).subquery()
        
+    page = request.args.get('page', 1, type=int)
     
-    all_fish = Fish.query.select_entity_from(all_fish).all()
+    all_fish = Fish.query.select_entity_from(all_fish).paginate(page, current_app.config['ITEMS_PER_PAGE'], False)
+    
+    next_url = url_for('main.search', page=all_fish.next_num) if all_fish.has_next else None
+    prev_url = url_for('main.search', page=all_fish.prev_num) if all_fish.has_prev else None
 
 
-
-    return render_template('search.html', form = form, all_fish=all_fish, search_dict = search_dict, title="Search")
+    return render_template('search.html', form = form, all_fish=all_fish.items, search_dict = search_dict, title="Search", next_url=next_url,prev_url=prev_url ,pagination=all_fish)
 
 
 @bp.route("/simplesearch/")
