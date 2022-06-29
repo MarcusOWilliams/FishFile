@@ -31,6 +31,38 @@
             {%for change in changes%}
                 {%include 'subtemplates/_fishchange.html'%}
             {%endfor%}
+
+            <div id="pageNavigation">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class=" page-item {% if not prev_url %} disabled{% endif %}">
+                            <a class=" page-link" href="{{ prev_url or '#' }}">
+                                <span aria-hidden="true">&larr;</span> Page
+                            </a>
+                        </li>
+                        {% for page in pagination.iter_pages(1,2,3,1) %}
+                            {% if page %}
+                                {% if page != pagination.page %}
+                                    {%if filters == ["all"]%}
+                                        <li class = "page-item"><a class = "page-link" href="{{url_for('main.fishchange',id=fish.id,filters = ' '.join(filters), page=page)}}">{{ page }}</a></li>
+                                    {%else%}
+                                        <li class = "page-item"><a class = "page-link" href="{{url_for('main.fishchange',id=fish.id, filters = ' '.join(filters), page=page)}}">{{ page }}</a></li>
+                                    {%endif%}
+                                {% else %}
+                                    <li class="page-item active"><a class = "page-link">{{ page }}</a></li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item disabled"><a class = "page-link" >…</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li class="page-item {% if not next_url %} disabled{% endif %}">
+                            <a class=" page-link" href="{{ next_url or '#' }}">
+                                Next<span aria-hidden="true">&rarr;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
     {%else%}
         <p>There are no changes to show...</p>
     {%endif%}

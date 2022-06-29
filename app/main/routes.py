@@ -100,7 +100,7 @@ def search():
        
     page = request.args.get('page', 1, type=int)
     
-    all_fish = Fish.query.select_entity_from(all_fish).paginate(page, current_app.config['ITEMS_PER_PAGE'], False)
+    all_fish = Fish.query.select_entity_from(all_fish).paginate(page, current_app.config['FISH_PER_PAGE'], False)
     
     next_url = url_for('main.search', page=all_fish.next_num) if all_fish.has_next else None
     prev_url = url_for('main.search', page=all_fish.prev_num) if all_fish.has_prev else None
@@ -124,9 +124,16 @@ def simplesearch():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     title = user.username
+    user_fish = Fish.query.filter_by(user_code = user).filter(Fish.status != "Dead").all()
     changes = Change.query.filter_by(user=user).order_by(Change.time.desc()).all()
-    user_fish = user.users_fish
-    return render_template('user.html', user=user, changes=changes, user_fish = user_fish, title=title)
+    
+    page = request.args.get('page', 1, type=int)
+    changes = Change.query.filter_by(user=user).order_by(Change.time.desc()).paginate(page, current_app.config['CHANGES_PER_PAGE'], False)
+
+    next_url = url_for('main.user',username=username, page=changes.next_num) if changes.has_next else None
+    prev_url = url_for('main.user',username=username, page=changes.prev_num) if changes.has_prev else None
+
+    return render_template('user.html', user=user, changes=changes.items, user_fish = user_fish, title=title, pagination= changes, next_url=next_url,prev_url=prev_url )
 
 
 @bp.route('/fish/<id>')
@@ -151,26 +158,29 @@ def fishchange(id, filters = "all"):
 
         if len(filters)<1:
             filters.append("all")
+
         return redirect(url_for('main.fishchange', id= fish.id, filters = " ".join(filters)))
 
+    page = request.args.get('page', 1, type=int)
 
     filter_list = filters.split(" ")
     if filters == "all":
-        changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).all()
+        changes  = Change.query.filter_by(fish_id=id).order_by(Change.time.desc()).paginate(page, current_app.config['CHANGES_PER_PAGE'], False)
     else:
-        changes = []
+        changes = Change.query.filter_by(id = -1)
         for filter in filter_list:
-            changes += Change.query.filter_by(field = filter).all()
+            changes = changes.union(Change.query.filter_by(field = filter))
 
-        #sort the list back into decending time order
-        changes.sort(key=lambda x: x.time, reverse=True)
+        changes = changes.order_by(Change.time.desc()).paginate(page, current_app.config['CHANGES_PER_PAGE'], False)
 
 
-   
+
     
-
+    
+    next_url = url_for('main.fishchange',id=fish.id, filters=filters, page=changes.next_num) if changes.has_next else None
+    prev_url = url_for('main.fishchange',id=fish.id, filters=filters, page=changes.prev_num) if changes.has_prev else None
             
-    return render_template('fishchanges.html', fish=fish, changes = changes, filters = filter_list, form=form, title = title)
+    return render_template('fishchanges.html', fish=fish, changes = changes.items, filters = filter_list, form=form, title = title, pagination= changes, next_url=next_url,prev_url=prev_url )
 
 
 @bp.route('/newfish/', methods=['GET', 'POST'])
@@ -242,10 +252,12 @@ def updatefish(id):
     all_users = User.query.filter_by(is_verified = True).all()
     user_codes = [""] + [ user.code for user in all_users]
     form.user_code.choices = sorted(user_codes)
+    
 
-    licenses_values = [""] + [user.project_license for user in all_users]
-    licenses = list(filter(None, licenses_values))
+    licenses_values = [user.project_license for user in all_users]
+    licenses =[""] + list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
+
 
     if form.validate_on_submit():
 
@@ -495,6 +507,15 @@ def updatefish(id):
         flash("Fish updated", 'info')
         return redirect(url_for('main.fish', id = fish.id))
     
+
+
+
+    form.project_license.data= fish.project_license_holder.project_license
+    form.user_code.data = fish.user_code.code
+    form.status.data=fish.status
+    form.source.data=fish.source
+    form.comments.data = fish.comments
+
     return render_template("updatefish.html", fish=fish, form=form, title=title)
 
 @bp.route('/settings/', methods=['GET', 'POST'])

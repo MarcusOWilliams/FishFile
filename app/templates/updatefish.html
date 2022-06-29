@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <td>{{form.project_license.label}} {{form.project_license(placeholder="Project License", value = fish.project_license_holder.project_license)}}</td>
-                <td>{{form.user_code.label}} {{form.user_code(placeholder="User Code Email", value = fish.user_code.code)}}</td>
+                <td>{{form.user_code.label}} {{form.user_code(placeholder="User Code Email")}}</td>
             </tr>
             <tr>
                 <td>{{form.birthday.label}} {{form.birthday(value=fish.birthday)}}</td>
@@ -55,7 +55,7 @@
             <tr>
                 <td>{{form.total.label}} {{form.total(value = fish.total)}}</td>
 
-                <td>{{form.comments.label}} {{form.comments(placeholder="Comments...", value = fish.comments)}}</td>   
+                <td>{{form.comments.label}} {{form.comments(placeholder="Comments...")}}</td>   
             </tr> 
         </table>
         {% for field, errors in form.errors.items() %}

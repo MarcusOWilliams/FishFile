@@ -25,4 +25,5 @@ class Config(object):
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
 
-    ITEMS_PER_PAGE = int(os.environ.get('ITEMS_PER_PAGE')) or 3
+    FISH_PER_PAGE = int(os.environ.get('FISH_PER_PAGE')) or 5
+    CHANGES_PER_PAGE = int(os.environ.get('CHANGES_PER_PAGE')) or 10
