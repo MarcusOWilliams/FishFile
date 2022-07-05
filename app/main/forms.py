@@ -52,10 +52,10 @@ class NewFish(FlaskForm):
     mutant_gene = StringField("Mutant Gene", validators=[DataRequired()])
     transgenes = StringField("Transgenes")
 
-    father_id = StringField("Father's ID")
-    mother_id = StringField("Mother's ID")
-    father_stock = StringField("Father's Stock #")
-    mother_stock = StringField("Mother's Stock #")
+    father_id = StringField("Father's ID", validators=[DataRequired()])
+    mother_id = StringField("Mother's ID", validators=[DataRequired()])
+    father_stock = StringField("Father's Stock #", validators=[DataRequired()])
+    mother_stock = StringField("Mother's Stock #", validators=[DataRequired()])
 
     males = IntegerField("# Males")
     females = IntegerField("# Females")
