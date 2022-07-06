@@ -17,9 +17,12 @@
         <td>
             Current Role: {{user.role}}
         </td>
+        <td>
+            {% if user.last_seen %}<p>Last online: {{ moment(user.last_seen).fromNow() }}</p>{% endif %}
+        </td>
     </tr>
     <tr>
-        <td colspan="4"><a href="{{url_for('main.user', username = user.username)}}" target="_blank">View Profile...</a></td>
+        <td colspan="5"><a href="{{url_for('main.user', username = user.username)}}" target="_blank">View Profile...</a></td>
     </tr>
 </table>
 <br>
