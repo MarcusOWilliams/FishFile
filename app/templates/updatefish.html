@@ -8,54 +8,90 @@
         <table id="updateFishTable">
             <tr>
                 <td>
-                    {{form.fish_id.label}} {{form.fish_id(placeholder="Fish ID", value = fish.fish_id)}} 
+                    {{form.fish_id.label}} 
+                </td><td class="updateFormInputField">
+                    {{form.fish_id(placeholder="Fish ID", value = fish.fish_id)}} 
                 </td>
-                <td>{{form.tank_id.label}} {{form.tank_id(placeholder="Tank ID", value = fish.tank_id)}}</td>
+            
+                <td>{{form.tank_id.label}}
+                </td><td class="updateFormInputField">{{form.tank_id(placeholder="Tank ID", value = fish.tank_id)}}</td>
             </tr>
             <tr>
-                <td>{{form.stock.label}} {{form.stock(placeholder="Stock", value = fish.stock)}}</td>
-                <td>{{form.status.label}} {{form.status(value = fish.status)}}</td>
-            </tr>
-            <tr>
-                <td>{{form.project_license.label}} {{form.project_license(placeholder="Project License", value = fish.project_license_holder.project_license)}}</td>
-                <td>{{form.user_code.label}} {{form.user_code(placeholder="User Code Email")}}</td>
-            </tr>
-            <tr>
-                <td>{{form.birthday.label}} {{form.birthday(value=fish.birthday)}}</td>
-                <td>{{form.date_of_arrival.label}} {{form.date_of_arrival(value = fish.date_of_arrival)}}</td>
-            </tr>
-            <tr>
-                <td>{{form.protocol.label}} {{form.protocol(value=fish.protocol)}}</td>
-                <td>{{form.source.label}} {{form.source(value=fish.source)}}</td>
-            </tr>
-            <tr>
-                <td>{{form.mutant_gene.label}} {{form.mutant_gene(placeholder="Mutant Gene", value = fish.mutant_gene)}}</td>
-                <td>{{form.transgenes.label}} {{form.transgenes(placeholder="Transgenes", value = fish.transgenes)}}</td>
-            </tr>
-            <tr>
-                <td>{{form.allele.label}} {{form.allele(placeholder="Allele", value = fish.allele)}}</td>
-                <td>{{form.cross_type.label}} {{form.cross_type(placeholder="Cross Type", value = fish.cross_type)}}</td>
-            </tr>
-            <tr>
-                <td>{{form.father_id.label}} {{form.father_id(placeholder="Father's ID", value = fish.father.fish_id)}}</td>
-                <td>{{form.father_stock.label}} {{form.father_stock(placeholder="Father's Stock", value= fish.father.stock)}}</td>
-            </tr>
-            <tr>
-                <td>{{form.mother_id.label}} {{form.mother_id(placeholder="Mother's ID", value = fish.mother.fish_id)}}</td>
-                <td>{{form.mother_stock.label}} {{form.mother_stock(placeholder="Mother's Stock", value = fish.mother.stock)}}</td>
-            </tr>
-            <tr>
-                <td>{{form.males.label}} {{form.males(value = fish.males)}}</td>
-                <td>{{form.females.label}} {{form.females(value = fish.females)}}</td>
-            </tr>
-            <tr>
-                <td>{{form.unsexed.label}} {{form.unsexed(value = fish.unsexed)}}</td>
-                <td>{{form.carriers.label}} {{form.carriers(value = fish.carriers)}}</td>
-            </tr>
-            <tr>
-                <td>{{form.total.label}} {{form.total(value = fish.total)}}</td>
+                <td>{{form.stock.label}} 
+                </td><td class="updateFormInputField">{{form.stock(placeholder="Stock", value = fish.stock)}}</td>
 
-                <td>{{form.comments.label}} {{form.comments(placeholder="Comments...")}}</td>   
+                <td>{{form.status.label}} 
+                </td><td class="updateFormInputField">{{form.status(value = fish.status)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.project_license.label}} 
+                </td><td class="updateFormInputField">{{form.project_license(placeholder="Project License", value = fish.project_license_holder.project_license)}}</td>
+
+                <td>{{form.user_code.label}}
+                </td><td class="updateFormInputField"> {{form.user_code(placeholder="User Code Email")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.birthday.label}}
+                </td><td class="updateFormInputField">  {{form.birthday(value=fish.birthday)}}</td>
+
+                <td>{{form.date_of_arrival.label}} 
+                </td><td class="updateFormInputField">{{form.date_of_arrival(value = fish.date_of_arrival)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.protocol.label}}
+                </td><td class="updateFormInputField"> {{form.protocol(value=fish.protocol)}}</td>
+
+                <td>{{form.source.label}}
+                </td><td class="updateFormInputField"> {{form.source(value=fish.source)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.mutant_gene.label}}
+                </td><td class="updateFormInputField"> {{form.mutant_gene(placeholder="Mutant Gene", value = fish.mutant_gene)}}</td>
+
+                <td>{{form.transgenes.label}}
+                </td><td class="updateFormInputField"> {{form.transgenes(placeholder="Transgenes", value = fish.transgenes)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.allele.label}} 
+                </td><td class="updateFormInputField">{{form.allele(placeholder="Allele", value = fish.allele)}}</td>
+
+                <td>{{form.cross_type.label}}
+                </td><td class="updateFormInputField"> {{form.cross_type(placeholder="Cross Type", value = fish.cross_type)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.father_id.label}}
+                </td><td class="updateFormInputField"> {{form.father_id(placeholder="Father's ID", value = fish.father.fish_id)}}</td>
+
+                <td>{{form.father_stock.label}} 
+                </td><td class="updateFormInputField">{{form.father_stock(placeholder="Father's Stock", value= fish.father.stock)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.mother_id.label}}
+                </td><td class="updateFormInputField"> {{form.mother_id(placeholder="Mother's ID", value = fish.mother.fish_id)}}</td>
+
+                <td>{{form.mother_stock.label}}
+                </td><td class="updateFormInputField"> {{form.mother_stock(placeholder="Mother's Stock", value = fish.mother.stock)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.males.label}}
+                </td><td class="updateFormInputField"> {{form.males(value = fish.males)}}</td>
+
+                <td>{{form.females.label}}
+                </td><td class="updateFormInputField"> {{form.females(value = fish.females)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.unsexed.label}}
+                </td><td class="updateFormInputField"> {{form.unsexed(value = fish.unsexed)}}</td>
+
+                <td>{{form.carriers.label}}
+                </td><td class="updateFormInputField"> {{form.carriers(value = fish.carriers)}}</td>
+            </tr>
+            <tr>
+                <td>{{form.total.label}}
+                </td><td class="updateFormInputField"> {{form.total(value = fish.total)}}</td>
+
+                <td>{{form.comments.label}} 
+                </td><td class="updateFormInputField">{{form.comments(placeholder="Comments...")}}</td>   
             </tr> 
         </table>
         {% for field, errors in form.errors.items() %}

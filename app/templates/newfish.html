@@ -1,59 +1,105 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <h2>Add a fish to the database</h2>
+    <br>
     <form action="" method="post">
         {{form.hidden_tag()}}
         <table id="addFishTable">
             <tr>
                 <td>
-                    {{form.fish_id.label}} {{form.fish_id(placeholder="Fish ID")}} 
+                    {{form.fish_id.label}} 
                 </td>
-                <td>{{form.tank_id.label}} {{form.tank_id(placeholder="Tank ID")}}</td>
-            </tr>
-            <tr>
-                <td>{{form.stock.label}} {{form.stock(placeholder="Stock")}}</td>
-                <td>{{form.status.label}} {{form.status()}}</td>
-            </tr>
-            <tr>
-                <td>{{form.project_license.label}} {{form.project_license(placeholder="Project License")}}</td>
-                <td>{{form.user_code.label}} {{form.user_code(placeholder="User Code Email")}}</td>
-            </tr>
-            <tr>
-                <td>{{form.birthday.label}} {{form.birthday()}}</td>
-                <td>{{form.date_of_arrival.label}} {{form.date_of_arrival()}}</td>
-            </tr>
-            <tr>
-                <td>{{form.protocol.label}} {{form.protocol()}}</td>
-                <td>{{form.source.label}} {{form.source()}}</td>
-            </tr>
-            <tr>
-                <td>{{form.mutant_gene.label}} {{form.mutant_gene(placeholder="Mutant Gene")}}</td>
-                <td>{{form.transgenes.label}} {{form.transgenes(placeholder="Transgenes")}}</td>
-            </tr>
-            <tr>
-                <td>{{form.allele.label}} {{form.allele(placeholder="Allele")}}</td>
-                <td>{{form.cross_type.label}} {{form.cross_type(placeholder="Cross Type")}}</td>
-            </tr>
-            <tr>
-                <td>{{form.father_id.label}} {{form.father_id(placeholder="Father's ID")}}</td>
-                <td>{{form.father_stock.label}} {{form.father_stock(placeholder="Father's Stock")}}</td>
-            </tr>
-            <tr>
-                <td>{{form.mother_id.label}} {{form.mother_id(placeholder="Mother's ID")}}</td>
-                <td>{{form.mother_stock.label}} {{form.mother_stock(placeholder="Mother's Stock")}}</td>
-            </tr>
-            <tr>
-                <td>{{form.males.label}} {{form.males()}}</td>
-                <td>{{form.females.label}} {{form.females()}}</td>
-            </tr>
-            <tr>
-                <td>{{form.unsexed.label}} {{form.unsexed()}}</td>
-                <td>{{form.carriers.label}} {{form.carriers()}}</td>
-            </tr>
-            <tr>
-                <td>{{form.total.label}} {{form.total()}}</td>
+                <td class="addFishInputField">
+                    {{form.fish_id(placeholder="Fish ID")}} 
+                </td>
 
-                <td>{{form.comments.label}} {{form.comments(placeholder="Comments...")}}</td>   
+                <td>{{form.tank_id.label}}
+                </td>
+                <td class="addFishInputField">{{form.tank_id(placeholder="Tank ID")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.stock.label}}
+                </td>
+                <td class="addFishInputField"> {{form.stock(placeholder="Stock")}}</td>
+
+                <td>{{form.status.label}}
+                </td>
+                <td class="addFishInputField"> {{form.status()}}</td>
+            </tr>
+            <tr>
+                <td>{{form.project_license.label}}
+                </td>
+                <td class="addFishInputField"> {{form.project_license(placeholder="Project License")}}</td>
+
+                <td>{{form.user_code.label}}
+                </td>
+                <td class="addFishInputField"> {{form.user_code(placeholder="User Code Email")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.birthday.label}}
+                </td>
+                <td class="addFishInputField"> {{form.birthday()}}</td>
+
+                <td>{{form.date_of_arrival.label}}
+                </td>
+                <td class="addFishInputField"> {{form.date_of_arrival()}}</td>
+            </tr>
+            <tr>
+                <td>{{form.protocol.label}} </td>
+                <td class="addFishInputField">{{form.protocol()}}</td>
+                
+                <td>{{form.source.label}} </td>
+                <td class="addFishInputField">{{form.source()}}</td>
+            </tr>
+            <tr>
+                <td>{{form.mutant_gene.label}} </td>
+                <td class="addFishInputField">{{form.mutant_gene(placeholder="Mutant Gene")}}</td>
+
+                <td>{{form.transgenes.label}}</td>
+                <td class="addFishInputField"> {{form.transgenes(placeholder="Transgenes")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.allele.label}}</td>
+                <td class="addFishInputField"> {{form.allele(placeholder="Allele")}}</td>
+
+                <td>{{form.cross_type.label}}</td>
+                <td class="addFishInputField"> {{form.cross_type(placeholder="Cross Type")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.father_id.label}} </td>
+                <td class="addFishInputField">{{form.father_id(placeholder="Father's ID")}}</td>
+
+                <td>{{form.father_stock.label}} </td>
+                <td class="addFishInputField">{{form.father_stock(placeholder="Father's Stock")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.mother_id.label}}</td>
+                <td class="addFishInputField"> {{form.mother_id(placeholder="Mother's ID")}}</td>
+
+                <td>{{form.mother_stock.label}} </td>
+                <td class="addFishInputField">{{form.mother_stock(placeholder="Mother's Stock")}}</td>
+            </tr>
+            <tr>
+                <td>{{form.males.label}} </td>
+                <td class="addFishInputField">{{form.males()}}</td>
+
+                <td>{{form.females.label}} </td>
+                <td class="addFishInputField">{{form.females()}}</td>
+            </tr>
+            <tr>
+                <td>{{form.unsexed.label}}</td>
+                <td class="addFishInputField"> {{form.unsexed()}}</td>
+
+                <td>{{form.carriers.label}} </td>
+                <td class="addFishInputField">{{form.carriers()}}</td>
+            </tr>
+            <tr>
+                <td>{{form.total.label}}</td>
+                <td class="addFishInputField"> {{form.total()}}</td>
+
+                <td>{{form.comments.label}} </td>
+                <td class="addFishInputField">{{form.comments(placeholder="Comments...")}}</td>   
             </tr> 
         </table>
         {% for field, errors in form.errors.items() %}

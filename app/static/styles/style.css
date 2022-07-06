@@ -30,9 +30,55 @@
     margin:auto;
 }
 
+#addFishTable td{
+    text-align: left;
+}
+
+
+.addFishInputField{
+    margin-right: 10px;
+}
+
+
+#addFishTable td label{
+    margin:10px 5px;
+    margin-left: 20px;
+}
+
+#addFishTable td select{
+    width:100%;
+}
+#addFishTable td input{
+    width:100%;
+}
+
+#addFishTable td textarea{
+    width:100%;
+}
+
 #updateFishTable{
     margin:auto;
 }
+
+#updateFishTable td{
+    text-align: left;
+}
+
+#updateFishTable td input{
+    width:100%;
+}
+#updateFishTable td select{
+    width:100%;
+}
+
+#updateFishTable td textarea{
+    width:100%;
+}
+#updateFishTable td label{
+    margin:10px 5px;
+    margin-left: 20px;
+}
+
 #fishList{
     width:70%;
     margin: auto;
