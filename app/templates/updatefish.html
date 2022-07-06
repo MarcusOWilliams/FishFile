@@ -39,7 +39,7 @@
             </tr>
             <tr>
                 <td>{{form.protocol.label}}
-                </td><td class="updateFormInputField"> {{form.protocol(value=fish.protocol)}}</td>
+                </td><td class="updateFormInputField"> {{form.protocol(value=fish.protocol, min=0)}}</td>
 
                 <td>{{form.source.label}}
                 </td><td class="updateFormInputField"> {{form.source(value=fish.source)}}</td>
@@ -74,21 +74,21 @@
             </tr>
             <tr>
                 <td>{{form.males.label}}
-                </td><td class="updateFormInputField"> {{form.males(value = fish.males)}}</td>
+                </td><td class="updateFormInputField"> {{form.males(value = fish.males, min=0)}}</td>
 
                 <td>{{form.females.label}}
-                </td><td class="updateFormInputField"> {{form.females(value = fish.females)}}</td>
+                </td><td class="updateFormInputField"> {{form.females(value = fish.females, min=0)}}</td>
             </tr>
             <tr>
                 <td>{{form.unsexed.label}}
-                </td><td class="updateFormInputField"> {{form.unsexed(value = fish.unsexed)}}</td>
+                </td><td class="updateFormInputField"> {{form.unsexed(value = fish.unsexed, min=0)}}</td>
 
                 <td>{{form.carriers.label}}
-                </td><td class="updateFormInputField"> {{form.carriers(value = fish.carriers)}}</td>
+                </td><td class="updateFormInputField"> {{form.carriers(value = fish.carriers, min=0)}}</td>
             </tr>
             <tr>
                 <td>{{form.total.label}}
-                </td><td class="updateFormInputField"> {{form.total(value = fish.total)}}</td>
+                </td><td class="updateFormInputField"> {{form.total(value = fish.total, min=0)}}</td>
 
                 <td>{{form.comments.label}} 
                 </td><td class="updateFormInputField">{{form.comments(placeholder="Comments...")}}</td>   

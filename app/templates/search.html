@@ -7,10 +7,11 @@
                 {{form.hidden_tag()}}
                 {%for field in form%}
                     {% if field.type != "SubmitField" and field.type != "CSRFTokenField"%}
-                        
-                        <span class="seachFormField"> <b>{{ field.label }}</b> {{ field(value = search_dict[field.id]) }}</span>
-                        
-                        
+                    {%if field.type == "IntegerField" %}
+                        <span class="seachFormField"> <b>{{ field.label }}</b> {{ field(min=0) }}</span>
+                    {%else%}
+                        <span class="seachFormField"> <b>{{ field.label }}</b> {{ field }}</span>
+                    {%endif%}
                     {% elif field.type == "SubmitField"%}
                         <div id="searchFormSubmit">{{ field }}</div>
                     {% endif %}

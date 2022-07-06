@@ -47,7 +47,7 @@
             </tr>
             <tr>
                 <td>{{form.protocol.label}} </td>
-                <td class="addFishInputField">{{form.protocol()}}</td>
+                <td class="addFishInputField">{{form.protocol(min=0)}}</td>
                 
                 <td>{{form.source.label}} </td>
                 <td class="addFishInputField">{{form.source()}}</td>
@@ -82,21 +82,21 @@
             </tr>
             <tr>
                 <td>{{form.males.label}} </td>
-                <td class="addFishInputField">{{form.males()}}</td>
+                <td class="addFishInputField">{{form.males(min=0)}}</td>
 
                 <td>{{form.females.label}} </td>
-                <td class="addFishInputField">{{form.females()}}</td>
+                <td class="addFishInputField">{{form.females(min=0)}}</td>
             </tr>
             <tr>
                 <td>{{form.unsexed.label}}</td>
-                <td class="addFishInputField"> {{form.unsexed()}}</td>
+                <td class="addFishInputField"> {{form.unsexed(min=0)}}</td>
 
                 <td>{{form.carriers.label}} </td>
-                <td class="addFishInputField">{{form.carriers()}}</td>
+                <td class="addFishInputField">{{form.carriers(min=0)}}</td>
             </tr>
             <tr>
                 <td>{{form.total.label}}</td>
-                <td class="addFishInputField"> {{form.total()}}</td>
+                <td class="addFishInputField"> {{form.total(min=0)}}</td>
 
                 <td>{{form.comments.label}} </td>
                 <td class="addFishInputField">{{form.comments(placeholder="Comments...")}}</td>   

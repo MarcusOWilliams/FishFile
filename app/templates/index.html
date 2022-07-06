@@ -20,7 +20,11 @@
                 {%for field in form%}
                     {% if field.type != "SubmitField" and field.type != "CSRFTokenField"%}
                         
-                        <span class="seachFormField"> <b>{{ field.label }}</b> {{ field }}</span>
+                        {%if field.type == "IntegerField" %}
+                            <span class="seachFormField"> <b>{{ field.label }}</b> {{ field(min=0) }}</span>
+                        {%else%}
+                            <span class="seachFormField"> <b>{{ field.label }}</b> {{ field }}</span>
+                        {%endif%}
                         
                         
                     {% elif field.type == "SubmitField"%}
