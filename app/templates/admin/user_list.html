@@ -1,0 +1,15 @@
+{%extends 'base.html'%}
+
+{%block content%}
+
+    <h2>User List</h2><br>
+    <p>Total number of users: {{ users.count() }}</p>
+    {% if users.count() > 0 %}
+        {% for user in users %}
+            {%include 'subtemplates/_user_role_summary.html'%}
+        {%endfor%}
+    {% else %}
+        <h3>No users found</h3>
+    {% endif %}
+
+{%endblock%}

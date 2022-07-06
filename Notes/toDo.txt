@@ -30,7 +30,7 @@ make family tree
  / make user code and project licenece select field of all options
     NEED TO MAKE THIS JUST VERIFIED/ USERS OF CERTAIN ROLES
 
-make father and mother information required on form
+/ make father and mother information required on form
 
 add dates till turnover required
 
@@ -49,3 +49,9 @@ add validation on new fish form, e.g. check if certain fields exists already (ta
     view any
 
 / add pagination
+
+Add data download
+
+Add more filter options (e.g. birthdath between)
+
+Make admin page

@@ -1,0 +1,25 @@
+<table class="table table-striped">
+    <tr>
+        
+        <td>
+            Name: {{user.first_name}} {{user.last_name}}
+        </td>
+        <td>
+            Email: {{user.email}}
+        </td>
+        <td>
+            {%if user.project_license%}
+                Project License: {{user.project_license}}
+            {%else%}
+                Project License: N/A
+            {%endif%}
+        </td>
+        <td>
+            Current Role: {{user.role}}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4"><a href="{{url_for('main.user', username = user.username)}}" target="_blank">View Profile...</a></td>
+    </tr>
+</table>
+<br>

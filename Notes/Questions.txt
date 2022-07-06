@@ -1,5 +1,7 @@
 Does each project license only have one user, can one user have more than one?
 
+Should there be able to be multiple fish with the same stock/ tank_id (alive)
+
 
 
 

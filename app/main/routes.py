@@ -1,4 +1,5 @@
 from datetime import datetime
+from os import abort
 
 
 from app import db
@@ -22,6 +23,7 @@ from app.main.forms import (
     SettingsForm,
     FilterChanges,
     SearchFrom,
+    RoleChange
 )
 from app.main.email import send_notification_email
 import sys
@@ -228,7 +230,7 @@ def simplesearch():
     return redirect(url_for("main.fish", id=fish.id))
 
 
-@bp.route("/user/<username>/")
+@bp.route("/user/<username>/", methods=["GET", "POST"])
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
@@ -254,6 +256,15 @@ def user(username):
         else None
     )
 
+    roleForm = RoleChange()
+    if roleForm.validate_on_submit():
+        if not current_user.isAdmin:
+            abort(403)
+        user.role = roleForm.role.data
+        db.session.commit()
+        return redirect(url_for('main.user', username = user.username))
+
+
     return render_template(
         "user.html",
         user=user,
@@ -263,6 +274,7 @@ def user(username):
         pagination=changes,
         next_url=next_url,
         prev_url=prev_url,
+        roleForm = roleForm
     )
 
 
@@ -789,6 +801,21 @@ def settings():
         "settings.html", form=form, current_settings=current_settings
     )
 
+@bp.route("/admin/")
+@requires_roles("Admin")
+@login_required
+def admin():
+
+
+    return render_template('admin/adminhome.html', title = "Admin Home")
+
+@bp.route("/admin/userlist/")
+@requires_roles("Admin")
+@login_required
+def admin_users():
+    users = User.query.order_by(User.id.desc())
+
+    return render_template('Admin/user_list.html',users=users)
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request

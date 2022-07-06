@@ -34,6 +34,9 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "<User {} {}>".format(self.first_name, self.last_name)
+    
+    def isAdmin(self, role):
+        return role == "Admin"
 
     # takes a password and returns its hash
     def set_password(self, password):

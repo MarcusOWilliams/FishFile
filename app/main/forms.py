@@ -165,3 +165,7 @@ class SearchFrom(FlaskForm):
 class SettingsForm(FlaskForm):
     emails = BooleanField("Email notifications:")
     submit = SubmitField("Apply")
+
+class RoleChange(FlaskForm):
+    role = SelectField('Update Role:', choices = ['User', 'Researcher', 'Admin'])
+    submit = SubmitField('Change')
