@@ -1,5 +1,6 @@
 from flask import request
 from flask_wtf import FlaskForm
+from flask_login import current_user
 from wtforms import (
     StringField,
     SubmitField,
@@ -164,7 +165,15 @@ class SearchFrom(FlaskForm):
 
 class SettingsForm(FlaskForm):
     emails = BooleanField("Email notifications:")
+    project_license = StringField("Project License:")
     submit = SubmitField("Apply")
+
+    def validate_project_license(self, project_license):
+        if project_license.data and project_license.data != "":
+            user = User.query.filter_by(project_license = project_license.data).first()
+            if user is not None and user != current_user:
+                raise ValidationError("This project license is already associated with another user")
+
 
 class RoleChange(FlaskForm):
     role = SelectField('Update Role:', choices = ['User', 'Researcher', 'Admin'])

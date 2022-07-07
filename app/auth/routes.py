@@ -78,7 +78,7 @@ def register():
         user.code = f"{user.first_name[0]}{user.last_name[0]} ({user.username})"
         db.session.add(user)
 
-        settings = Settings(user_id=user.id)
+        settings = Settings(user=user)
         db.session.add(settings)
 
         db.session.commit()
@@ -141,7 +141,7 @@ def verify_email(token):
         return redirect(url_for("auth.login"))
     user.is_verified = True
     db.session.commit()
-    flash("Your email has been verified")
+    flash("Your email has been verified", "success")
     return redirect(url_for("auth.login"))
 
 
@@ -154,7 +154,7 @@ def change_password():
         if not current_user.check_password(form.old_password.data):
             flash(
                 "The current password you entered is incorrect. If you have forgotten your password, logout and use the 'forgoten password' link on the login page.",
-                "danger",
+                "danger"
             )
             return redirect(url_for("auth.change_password"))
 

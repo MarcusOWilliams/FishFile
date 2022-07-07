@@ -4,9 +4,13 @@
     <h2>Settings for {{current_user.username}}:</h2>
     <form action="" method="post" >
         {{form.hidden_tag()}}
-        {{form.emails.label}}{{form.emails(checked=current_settings.emails)}}
-        {{form.submit}}
+        {{form.emails.label}} {{form.emails(checked=current_settings.emails)}}<br>
+        {{form.project_license.label}} {{form.project_license(placeholder="Your project license", value = current_user.project_license)}}<br>
 
+        {{form.submit}}
     </form>
+    {% for field, errors in form.errors.items() %}
+                <div class = "formError">{{ form[field].label }} {{ ', '.join(errors) }}</div>
+    {% endfor %}
     <p><a href="{{url_for('auth.change_password')}}">Change Password</a></p>
 {%endblock%}

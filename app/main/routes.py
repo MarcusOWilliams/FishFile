@@ -2,6 +2,8 @@ from datetime import datetime
 from os import abort
 
 
+
+
 from app import db
 from app.main import bp
 from app.main import email
@@ -362,8 +364,8 @@ def newfish():
     user_codes = [""] + [user.code for user in all_users]
     form.user_code.choices = sorted(user_codes)
 
-    licenses_values = [""] + [user.project_license for user in all_users]
-    licenses = list(filter(None, licenses_values))
+    licenses_values = [user.project_license for user in all_users]
+    licenses = [""] + list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
 
     if form.validate_on_submit():
@@ -373,7 +375,7 @@ def newfish():
         mother = Fish.query.filter_by(
             fish_id=form.mother_id.data, stock=form.mother_stock.data
         ).first()
-        fish_user = User.query.filter_by(email=form.user_code.data).first()
+        fish_user = User.query.filter_by(code=form.user_code.data).first()
         license_holder = User.query.filter_by(
             project_license=form.project_license.data
         ).first()
@@ -405,8 +407,9 @@ def newfish():
         db.session.add(newfish)
 
         change = Change(user=current_user, fish=newfish, action="Added")
+        notification = Notification(user=newfish.user_code, fish=newfish, category="Added", contents="A new fish under your user code has been added")
         db.session.add(change)
-
+        db.session.add(notification)
         db.session.commit()
         flash("The new fish has been added to the database", "info")
         return redirect(url_for("main.fish", id=newfish.id))
@@ -793,7 +796,11 @@ def settings():
     current_settings = current_user.settings
     if form.validate_on_submit():
         current_user.settings.emails = form.emails.data
+        
+        current_user.project_license = form.project_license.data
+
         db.session.commit()
+
         flash("Settings Applied", "info")
         n = Notification(category="Updated", user=current_user)
         send_notification_email(current_user, n)

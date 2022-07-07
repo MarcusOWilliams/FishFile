@@ -55,3 +55,14 @@ Add data download
 Add more filter options (e.g. birthdath between)
 
 Make admin page
+
+add info boxes on inputs
+    project license in settings (only your own)
+
+add async emails with celery
+
+make password requirements more secure
+
+WHEN DONE:
+
+change email sent from

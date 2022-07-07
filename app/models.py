@@ -30,7 +30,7 @@ class User(UserMixin, db.Model):
     role = db.Column(db.String(64), default="User")
     code = db.Column(db.String(64), index=True)
     changes = db.relationship("Change", backref="user", lazy="dynamic")
-    notification = db.relationship("Notification", backref="user", lazy="dynamic")
+    notifications = db.relationship("Notification", backref="user", lazy="dynamic")
 
     def __repr__(self):
         return "<User {} {}>".format(self.first_name, self.last_name)
@@ -171,6 +171,10 @@ class Fish(db.Model):
         "Change", backref="fish", lazy="dynamic", cascade="all, delete"
     )
 
+    notifications = db.relationship(
+        "Notification", backref="fish", lazy="dynamic", cascade="all, delete"
+    )
+
     def __repr__(self):
         return f"Fish - ID: {self.fish_id}, Stock: {self.stock}, Tank: {self.tank_id}"
 
@@ -235,4 +239,4 @@ class Notification(db.Model):
     contents = db.Column(db.String(64))
 
     def __repr__(self):
-        return f"<Notification for User:{self.user.username}"
+        return f"<Notification for User:{self.user.username}>"
