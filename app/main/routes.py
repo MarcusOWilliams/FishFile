@@ -809,8 +809,6 @@ def settings():
         db.session.commit()
 
         flash("Settings Applied", "info")
-        n = Notification(category="Updated", user=current_user)
-        send_notification_email(current_user, n)
 
         return redirect(url_for("main.user", username=current_user.username))
 
