@@ -223,9 +223,9 @@ def search():
 @bp.route("/simplesearch/")
 @login_required
 def simplesearch():
-    fish = Fish.query.filter_by(stock=g.search_form.search.data).first_or_404()
+    fish = Fish.query.filter_by(stock=g.search_form.search.data.upper()).first()
     if fish is None:
-        pass
+        return redirect(url_for("main.fish", id=-1))
 
     return redirect(url_for("main.fish", id=fish.id))
 
@@ -281,8 +281,11 @@ def user(username):
 @bp.route("/fish/<id>")
 @login_required
 def fish(id):
-    fish = Fish.query.filter_by(id=id).first_or_404()
-    title = f"Fish ({fish.stock})"
+    fish = Fish.query.filter_by(id=id).first()
+    if fish is None:
+        title = "Fish Not Found"
+    else:
+        title = f"Fish ({fish.stock})"
 
     return render_template("fish.html", fish=fish, title=title)
 

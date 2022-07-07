@@ -15,7 +15,7 @@ from app.models import Fish, User
 
 
 class SimpleSearch(FlaskForm):
-    search = StringField("Search by fish id", validators=[DataRequired()])
+    search = StringField("Search by fish stock...", validators=[DataRequired()])
     submit = SubmitField("Search")
 
     def __init__(self, *args, **kwargs):

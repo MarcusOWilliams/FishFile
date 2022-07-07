@@ -114,8 +114,7 @@
             {% if g.search_form %}
             <form class="d-flex" role="search" method="get"
                     action="{{ url_for('main.simplesearch') }}">
-                    {{ g.search_form.search(size=20, class='form-control', placeholder=g.search_form.search.label.text) }}
-                    {{ g.search_form.submit() }}
+                    {{ g.search_form.search(size=20, class='form-control', placeholder=g.search_form.search.label.text) }} {{ g.search_form.submit() }}
             </form>
             {% endif %}
           </ul>

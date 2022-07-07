@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{%if fish%}
 <div id="fishInformation">
     <div class="fishInfoBlock">
         <h2>Fish</h2>
@@ -58,4 +59,8 @@
 </div>
 <a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a>
 <a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</a>
+{%else%}
+    <h2>A fish matching this information could not be found</h2>
+    <p>Try altering your search conditions on the <a href="{{url_for('main.index')}}">home page</a></p>
+{%endif%}
 {%endblock%}
