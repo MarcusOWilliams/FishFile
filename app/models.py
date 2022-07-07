@@ -229,6 +229,7 @@ It also contains the methods required for the notifiaction
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
     time = db.Column(db.DateTime, default=datetime.utcnow)
     category = db.Column(db.String(64))
     contents = db.Column(db.String(64))
