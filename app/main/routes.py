@@ -4,6 +4,7 @@ from os import abort
 
 
 
+
 from app import db
 from app.main import bp
 from app.main import email
@@ -239,6 +240,7 @@ def user(username):
     title = user.username
     user_fish = Fish.query.filter_by(user_code=user).filter(Fish.status != "Dead").all()
     changes = Change.query.filter_by(user=user).order_by(Change.time.desc()).all()
+    notifications = Notification.query.filter_by(user=user).all()
 
     page = request.args.get("page", 1, type=int)
     changes = (
@@ -276,7 +278,8 @@ def user(username):
         pagination=changes,
         next_url=next_url,
         prev_url=prev_url,
-        roleForm = roleForm
+        roleForm = roleForm,
+        notifications = notifications
     )
 
 
@@ -776,8 +779,12 @@ def updatefish(id):
             db.session.add(change)
             fish.project_license_holder = license_holder
 
+
+        notification = Notification(user = fish.user_code, fish=fish, category="Change", contents="Changes have been made to one of your fish")
+        db.session.add(notification)
         db.session.commit()
         flash("Fish updated", "info")
+
         return redirect(url_for("main.fish", id=fish.id))
 
     form.project_license.data = fish.project_license_holder.project_license
