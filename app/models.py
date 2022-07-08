@@ -32,8 +32,7 @@ class User(UserMixin, db.Model):
     code = db.Column(db.String(64), index=True)
     changes = db.relationship("Change", backref="user", lazy="dynamic")
 
-    notifications = db.relationship("Notification", backref="user", lazy="dynamic")
-    notificationIcon = db.relationship('NotificationIcon', backref='user',lazy='dynamic', cascade="all, delete-orphan")
+    notifications = db.relationship("Notification", backref="user", lazy="dynamic", cascade="all, delete")
     last_notification_read_time = db.Column(db.DateTime)
 
     def __repr__(self):
@@ -206,6 +205,9 @@ class Change(db.Model):
     old = db.Column(db.String(64))
     new = db.Column(db.String(64))
     time = db.Column(db.DateTime, default=datetime.utcnow)
+    notification_id = db.Column(db.Integer, db.ForeignKey("notification.id"))
+
+
 
     def __repr__(self):
         return f"<Change by User:{self.user_id} on Fish: {self.fish_id}"
@@ -243,20 +245,14 @@ class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
+    
     time = db.Column(db.DateTime, default=datetime.utcnow)
     category = db.Column(db.String(64))
     contents = db.Column(db.String(64))
-
+    change_count = db.Column(db.Integer)
+    changes =  db.relationship(
+        "Change", backref="notification", lazy="dynamic", cascade="all, delete"
+    )
     def __repr__(self):
         return f"<Notification for User:{self.user.username}>"
 
-class NotificationIcon(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), index=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    timestamp = db.Column(db.Float, index=True, default=time)
-    time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    payload_json = db.Column(db.Text)
-
-    def get_data(self):
-        return json.loads(str(self.payload_json))

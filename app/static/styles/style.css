@@ -111,12 +111,17 @@
 
 .fishInfoBlock{
     border-bottom: 1px lightgrey solid;
+    
 }
+
 
 .pointHeader{
     font-weight: bold;
 }
 
+.moreFishOptionsItem{
+    font-weight: bold;
+}
 .fishChange{
     margin: auto;
     margin-top: 20px;

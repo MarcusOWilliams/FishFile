@@ -449,6 +449,9 @@ def updatefish(id):
             project_license=form.project_license.data
         ).first()
 
+        notification = Notification(user = fish.user_code, fish=fish, category="Change", contents="Changes have been made to one of your fish")
+        db.session.add(notification)
+        change_count=0
         if fish.fish_id != form.fish_id.data:
             change = Change(
                 user=current_user,
@@ -458,10 +461,13 @@ def updatefish(id):
                 field="fish_id",
                 old=fish.fish_id,
                 new=form.fish_id.data,
+                notification = notification
             )
             db.session.add(change)
-
+            
             fish.fish_id = form.fish_id.data
+            change_count+=1
+            
 
         if fish.tank_id != form.tank_id.data:
             change = Change(
@@ -472,10 +478,13 @@ def updatefish(id):
                 field="tank_id",
                 old=fish.tank_id,
                 new=form.tank_id.data,
+                notification = notification
             )
             db.session.add(change)
-
+            
             fish.tank_id = form.tank_id.data
+            change_count+=1
+
 
         if fish.status != form.status.data:
             change = Change(
@@ -486,9 +495,10 @@ def updatefish(id):
                 field="status",
                 old=fish.status,
                 new=form.status.data,
+                notification = notification
             )
             db.session.add(change)
-
+            change_count+=1
             fish.status = form.status.data
 
         if fish.stock != form.stock.data:
@@ -500,8 +510,10 @@ def updatefish(id):
                 field="stock",
                 old=fish.stock,
                 new=form.stock.data,
+                notification = notification
             )
             db.session.add(change)
+            change_count+=1
 
             fish.stock = form.stock.data
 
@@ -514,9 +526,10 @@ def updatefish(id):
                 field="protocol",
                 old=fish.protocol,
                 new=form.protocol.data,
+                notification = notification
             )
             db.session.add(change)
-
+            change_count+=1
             fish.protocol = form.protocol.data
 
         if fish.birthday != form.birthday.data:
@@ -528,10 +541,13 @@ def updatefish(id):
                 field="birthday",
                 old=fish.birthday,
                 new=form.birthday.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.birthday = form.birthday.data
+            change_count+=1
+
 
         if fish.date_of_arrival != form.date_of_arrival.data:
             change = Change(
@@ -542,10 +558,13 @@ def updatefish(id):
                 field="date_of_arrival",
                 old=fish.date_of_arrival,
                 new=form.date_of_arrival.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.date_of_arrival = form.date_of_arrival.data
+            change_count+=1
+
 
         if fish.allele != form.allele.data:
             change = Change(
@@ -556,10 +575,13 @@ def updatefish(id):
                 field="allele",
                 old=fish.allele,
                 new=form.allele.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.allele = form.allele.data
+            change_count+=1
+
 
         if fish.mutant_gene != form.mutant_gene.data:
             change = Change(
@@ -570,10 +592,13 @@ def updatefish(id):
                 field="mutant_gene",
                 old=fish.mutant_gene,
                 new=form.mutant_gene.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.mutant_gene = form.mutant_gene.data
+            change_count+=1
+
 
         if fish.transgenes != form.transgenes.data:
             change = Change(
@@ -584,10 +609,13 @@ def updatefish(id):
                 field="transgenes",
                 old=fish.transgenes,
                 new=form.transgenes.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.transgenes = form.transgenes.data
+            change_count+=1
+
 
         if fish.cross_type != form.cross_type.data:
             change = Change(
@@ -598,10 +626,13 @@ def updatefish(id):
                 field="cross_type",
                 old=fish.cross_type,
                 new=form.cross_type.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.cross_type = form.cross_type.data
+            change_count+=1
+
 
         if fish.comments != form.comments.data:
             change = Change(
@@ -612,10 +643,13 @@ def updatefish(id):
                 field="comments",
                 old=fish.comments,
                 new=form.comments.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.comments = form.comments.data
+            change_count+=1
+
 
         if fish.males != form.males.data:
             change = Change(
@@ -626,10 +660,13 @@ def updatefish(id):
                 field="males",
                 old=fish.males,
                 new=form.males.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.males = form.males.data
+            change_count+=1
+
 
         if fish.females != form.females.data:
             change = Change(
@@ -640,10 +677,13 @@ def updatefish(id):
                 field="females",
                 old=fish.females,
                 new=form.females.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.females = form.females.data
+            change_count+=1
+
 
         if fish.unsexed != form.unsexed.data:
             change = Change(
@@ -654,10 +694,13 @@ def updatefish(id):
                 field="unsexed",
                 old=fish.unsexed,
                 new=form.unsexed.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.unsexed = form.unsexed.data
+            change_count+=1
+
 
         if fish.carriers != form.carriers.data:
             change = Change(
@@ -668,10 +711,13 @@ def updatefish(id):
                 field="carriers",
                 old=fish.carriers,
                 new=form.carriers.data,
+                notification = notification
             )
             db.session.add(change)
 
             fish.carriers = form.carriers.data
+            change_count+=1
+
 
         if fish.total != form.total.data:
             change = Change(
@@ -682,8 +728,11 @@ def updatefish(id):
                 field="total",
                 old=fish.total,
                 new=form.total.data,
+                notification = notification
             )
             db.session.add(change)
+            change_count+=1
+
 
             fish.total = form.total.data
 
@@ -696,8 +745,11 @@ def updatefish(id):
                 field="source",
                 old=fish.source,
                 new=form.source.data,
+                notification = notification
             )
             db.session.add(change)
+            change_count+=1
+
 
             fish.source = form.source.data
 
@@ -710,9 +762,12 @@ def updatefish(id):
                 field="father_id",
                 old=f"{fish.father.fish_id}",
                 new=f"{father.fish_id}",
+                notification = notification
             )
             db.session.add(change)
             fish.father = father
+            change_count+=1
+
 
         if fish.father.stock != form.father_stock.data:
             change = Change(
@@ -723,8 +778,11 @@ def updatefish(id):
                 field="father_stock",
                 old=f"{fish.father.stock}",
                 new=f"{father.stock}",
+                notification = notification
             )
             db.session.add(change)
+            change_count+=1
+
             fish.father = father
 
         if fish.mother.fish_id != form.mother_id.data:
@@ -736,8 +794,11 @@ def updatefish(id):
                 field="mother_id",
                 old=f"{fish.mother.fish_id}",
                 new=f"{mother.fish_id}",
+                notification = notification
             )
             db.session.add(change)
+            change_count+=1
+
             fish.mother = mother
 
         if fish.mother.stock != form.mother_stock.data:
@@ -749,8 +810,11 @@ def updatefish(id):
                 field="mother_stock",
                 old=f"{fish.mother.stock}",
                 new=f"{mother.stock}",
+                notification = notification
             )
             db.session.add(change)
+            change_count+=1
+
             fish.father = mother
 
         if fish.user_code != fish_user:
@@ -762,8 +826,11 @@ def updatefish(id):
                 field="user_code",
                 old=fish.user_code.code,
                 new=fish_user.code,
+                notification = notification
             )
             db.session.add(change)
+            change_count+=1
+
 
             fish.user_code = fish_user
 
@@ -776,15 +843,18 @@ def updatefish(id):
                 field="project_license",
                 old=fish.project_license_holder.project_license,
                 new=license_holder.project_license,
+                notification = notification
             )
             db.session.add(change)
             fish.project_license_holder = license_holder
+            change_count+=1
 
 
-        notification = Notification(user = fish.user_code, fish=fish, category="Change", contents="Changes have been made to one of your fish")
-        db.session.add(notification)
-        db.session.commit()
-        flash("Fish updated", "info")
+
+        if change_count>0:
+            notification.change_count = change_count
+            db.session.commit()
+            flash("Fish updated", "info")
 
         return redirect(url_for("main.fish", id=fish.id))
 

@@ -4,7 +4,15 @@
         {% if notification.category == "Added" %}
             You have been set as the user for a new fish entry (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
         {% elif notification.category == "Change" %}
-            Changes have been made to one of your fish (<strong>{{notification.fish}}</strong>), view the changes <a href="{{url_for('main.fishchange', id = notification.fish.id, filters='all')}}">here</a>
+            {{notification.change_count}} changes have been made to one of your tanks (<strong>{{notification.fish}}</strong>)<br>
+            <b>Changes:</b>
+            <ul>
+                {%for change in notification.changes%}
+                <li>Updated {{change.contents}} from <b>{{change.old}}</b> to <b>{{change.new}}</b></li>
+                {%endfor%}
+            </ul>
+            <br>
+            view all previous changes <a href="{{url_for('main.fishchange', id = notification.fish.id, filters='all')}}">here</a>
         {%endif%}
     </p>
     <p class="notifTimestamp">{{moment(notification.time).fromNow()}}</p>
