@@ -151,7 +151,7 @@
                   <ul class="dropdown-menu" id="notificationDropdownList" aria-labelledby="notifsDropdown">
                     {%if current_user.notifications%}
                       <p><strong>Notifications:</strong></p>
-                      {%for notification in current_user.notifications%}
+                      {%for notification in current_user.notifications|reverse %}
                         <hr class="dropdown-divider" />
                         <li class="dropdown-item">{%include 'subtemplates/_notification.html'%}</li>
                       
