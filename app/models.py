@@ -8,6 +8,7 @@ import jwt
 from flask import current_app, abort
 from datetime import datetime
 from functools import wraps
+import json
 
 """
 This is the class for the User table  of the SQL database
@@ -30,7 +31,10 @@ class User(UserMixin, db.Model):
     role = db.Column(db.String(64), default="User")
     code = db.Column(db.String(64), index=True)
     changes = db.relationship("Change", backref="user", lazy="dynamic")
+
     notifications = db.relationship("Notification", backref="user", lazy="dynamic")
+    notificationIcon = db.relationship('NotificationIcon', backref='user',lazy='dynamic', cascade="all, delete-orphan")
+    last_notification_read_time = db.Column(db.DateTime)
 
     def __repr__(self):
         return "<User {} {}>".format(self.first_name, self.last_name)
@@ -63,6 +67,10 @@ class User(UserMixin, db.Model):
             algorithm="HS256",
         )
 
+    def new_notifications(self):
+        last_read_time = self.last_notification_read_time or datetime(1900, 1, 1)
+        return Notification.query.filter_by(user=self).filter(Notification.time > last_read_time).count()
+        
     # this is used to verify a password reset token, it decodes the link and checks the id of the user exists
     @staticmethod
     def verify_reset_password_token(token):
@@ -174,6 +182,7 @@ class Fish(db.Model):
     notifications = db.relationship(
         "Notification", backref="fish", lazy="dynamic", cascade="all, delete"
     )
+    
 
     def __repr__(self):
         return f"Fish - ID: {self.fish_id}, Stock: {self.stock}, Tank: {self.tank_id}"
@@ -240,3 +249,14 @@ class Notification(db.Model):
 
     def __repr__(self):
         return f"<Notification for User:{self.user.username}>"
+
+class NotificationIcon(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    timestamp = db.Column(db.Float, index=True, default=time)
+    time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    payload_json = db.Column(db.Text)
+
+    def get_data(self):
+        return json.loads(str(self.payload_json))

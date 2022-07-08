@@ -188,4 +188,41 @@
     padding: 0;
 }
 
+#simpleSearchForm{
+    position: absolute;
+    right:0;
+    margin-right: 20px;
+}
+
+.notifTimestamp{
+    width:20%;
+    border-left: 1px gray solid;
+}
+
+#notificationDropdownList{
+    width:40em;
+}
+@media only screen and (max-width: 1000px) {
+    #notificationDropdownList {
+        width:100%
+    }
+    #simpleSearchForm{
+        position: relative;
+    }
+
+}
+
+.notificationLine{
+    width:100%;
+    white-space: normal;
+}
+
+.notifBody{
+    white-space: normal;
+    width:100%;
+    word-wrap: break-word;
+}
+
+
+
 

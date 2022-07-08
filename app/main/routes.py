@@ -14,6 +14,7 @@ from flask import (
     redirect,
     render_template,
     url_for,
+    jsonify,
     g,
     session,
     request,
@@ -831,6 +832,14 @@ def admin_users():
     users = User.query.order_by(User.id.desc())
 
     return render_template('Admin/user_list.html',users=users)
+
+
+@bp.route('/reset_notifications', methods=['POST'])
+@login_required
+def reset_notifications():
+    current_user.last_notification_read_time = datetime.utcnow()
+    db.session.commit()
+    return jsonify({"status": "reset"})
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request

@@ -1,5 +1,12 @@
-{% if notification.category == "Added" %}
-    <p>You have been set as the user for a new fish entry, view the fish <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a></p>
-{% elif notification.category == "Change" %}
-    <p>Changes have been made to one of your fish, view them <a href="{{url_for('main.fishchange', id = notification.fish.id, filters='all')}}">here</a></p>
-{%endif%}
+<div class="notificationLine">
+
+    <p classs = "notifBody">
+        {% if notification.category == "Added" %}
+            You have been set as the user for a new fish entry, view the fish <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
+        {% elif notification.category == "Change" %}
+            Changes have been made to one of your fish, view them <a href="{{url_for('main.fishchange', id = notification.fish.id, filters='all')}}">here</a>
+        {%endif%}
+    </p>
+    <p class="notifTimestamp">{{moment(notification.time).fromNow()}}</p>
+
+</div>
