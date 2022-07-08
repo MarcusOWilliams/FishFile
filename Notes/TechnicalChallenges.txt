@@ -6,4 +6,6 @@ Making subqueries work
 Adding pagination
     Especially to changes because you had to start with an empty query, then union then, sort, then paginate all, nothing else works
 
-Using celery vs redis
+
+
+Making the screen synamic to be nice on all screens

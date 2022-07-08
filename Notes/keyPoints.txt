@@ -8,3 +8,5 @@ email
     I can currently only send 100 emails per day, so need to make sure that is enough, also need an email to send email from permanantly
 
 Finding just the right fields to allow the full functionality of search and filter without an overwhelming number of options
+
+Using celery vs redis
