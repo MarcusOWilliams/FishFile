@@ -32,7 +32,7 @@ make family tree
 
 / make father and mother information required on form
 
-add dates till turnover required
+add dates till turnover required with notifs
 
 add validation on new fish form, e.g. check if certain fields exists already (tank/stock), use JS
 
@@ -55,6 +55,8 @@ Add data download
 Add more filter options (e.g. birthdath between)
 
 Make admin page
+
+Add ability to flag fish with a comment
 
 add info boxes on inputs
     project license in settings (only your own)
