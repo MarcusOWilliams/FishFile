@@ -1,6 +1,7 @@
 
 from datetime import datetime
 from os import abort
+from turtle import title
 
 
 
@@ -364,13 +365,9 @@ def fishchange(id, filters="all"):
 def fishhistory(id):
     fish = Fish.query.filter_by(id=id).first()
 
-    
-    
-        
-
     fish_list = fish.get_ancestors(0)
 
-    return render_template("fishhistory.html", fish_list = fish_list, current_generation =0)
+    return render_template("fishhistory.html", fish_list = fish_list, current_generation =0, title="Fish History")
 
 @bp.route("/newfish/", methods=["GET", "POST"])
 @login_required

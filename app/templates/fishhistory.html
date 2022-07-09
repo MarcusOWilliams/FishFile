@@ -4,15 +4,40 @@
 
     {% set current_generation = [0]%}
 
-    {%for fish in fish_list%}
 
-        {%if fish["level"] != current_generation[0] %}
-            {% if current_generation.append(current_generation.pop() + 1) %}{% endif %}
-            <h3>Generation {{current_generation[0]}}</h3>
-        {%endif%}
-        <p>{%if fish["relation"] != None %}{{fish["relation"]}}{%endif%}</p>
-        <p>{{fish["fish"]}}</p>
-        <br>
+    {%for fish in fish_list%}
+        <div class = "ancestorFish">
+            
+            {%if fish["level"] != current_generation[0] %}
+                {% if current_generation.append(current_generation.pop() + 1) %}{% endif %}
+                <h3>Generation {{current_generation[0]}}</h3>
+            {%endif%}
+            {%if current_generation[0] == 0%}
+                <h2>Genetic history of:</h2>
+            {%endif%}
+            {%if fish["relation"] != None %}
+                {%if fish["relation"] == "Father" %}
+                    <p>Father: <a href="{{url_for('main.fish', id = fish['fish'].id)}}" target="_blank">{{fish["fish"]}}</a></p>
+                {%else%}
+                <p>Mother: <a href="{{url_for('main.fish', id = fish['fish'].id)}}" target="_blank">{{fish["fish"]}}</a></p>
+                {%endif%}
+            {%else%}
+            <p><a href="{{url_for('main.fish', id = fish['fish'].id)}}" target="_blank">{{fish["fish"]}}</a></p>
+
+            {%endif%}
+            
+            <p>
+                {%if fish["fish"].father != None%}
+                (Father's stock = {{fish['fish'].father.stock}})
+                {%else%}
+                    (No Father)
+                {%endif%}
+                {%if fish["fish"].mother != None%}
+                (Mother's stock = {{fish['fish'].mother.stock}})
+                {%else%}
+                    (No Mother)
+                {%endif%}</p>
+        </div>
         
     {%endfor%}
 {%endblock%}
