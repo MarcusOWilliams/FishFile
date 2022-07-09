@@ -34,10 +34,22 @@
         {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Type of Cross: </span>{{fish.cross_type}}</p>
         {%if fish.father != None%}
-            <p class = "fishInfoPoint"><a href="{{url_for('main.fish', id=fish.father.id)}}" target=”_blank”><span class="pointHeader">Father</span></a> ID: {{fish.father.fish_id}}, Stock: {{fish.father.stock}}</p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Father:</span> ID = {{fish.father.fish_id}}, Stock = {{fish.father.stock}} <a href="{{url_for('main.fish', id=fish.father.id)}}" target=”_blank”>(view entry)</a></p>
         {%endif%}
         {%if fish.mother != None%}
-            <p class = "fishInfoPoint"><a href="{{url_for('main.fish', id=fish.mother.id)}}" target=”_blank”><span class="pointHeader">Mother</span></a> ID: {{fish.mother.fish_id}}, Stock: {{fish.mother.stock}}</p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Mother:</span> ID = {{fish.mother.fish_id}}, Stock = {{fish.mother.stock}} <a href="{{url_for('main.fish', id=fish.mother.id)}}" target=”_blank”>(view entry)</a></p>
+        {%endif%}
+        {%if fish.fathered != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Fathered Fish:</span></p>
+            {%for fish in fish.fathered%}
+                <p class = "fishInfoPoint fishSubpoint">{{fish}} <a href="{{url_for('main.fish', id=fish.id)}}" target=”_blank”>(view entry)</a></p>
+            {%endfor%}
+        {%endif%}
+        {%if fish.mothered != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Mothered Fish:</span></p>
+            {%for fish in fish.mothered%}
+                <p class = "fishInfoPoint fishSubpoint">{{fish}} <a href="{{url_for('main.fish', id=fish.id)}}" target=”_blank”>(view entry)</a></p>
+            {%endfor%}
         {%endif%}
     </div>
     <div class="fishInfoBlock">
