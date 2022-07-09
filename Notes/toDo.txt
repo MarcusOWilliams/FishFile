@@ -65,6 +65,10 @@ add async emails with celery
 
 make password requirements more secure
 
+Add daily tasks:
+ clear old notifs
+ send required time based alerts
+
 WHEN DONE:
 
 change email sent from

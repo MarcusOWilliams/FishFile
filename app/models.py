@@ -186,6 +186,21 @@ class Fish(db.Model):
     def __repr__(self):
         return f"Fish - ID: {self.fish_id}, Stock: {self.stock}, Tank: {self.tank_id}"
 
+    def get_ancestors(self,generation, relation = None):
+        ancestors = []
+        
+        ancestors.append({"fish":self,"relation":relation,"level" : generation})
+
+        generation += 1
+
+        if self.father is not None:
+            ancestors = ancestors + self.father.get_ancestors(generation, "Father")
+        if self.mother is not None:
+            ancestors = ancestors + self.mother.get_ancestors(generation, "Mother")
+            
+
+        return sorted(ancestors, key=lambda x: x["level"])
+
 
 """
 This is the class for the Change table of the SQL database, which is used to record changes to the database

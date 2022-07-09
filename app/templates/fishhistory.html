@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %} 
+
+    {% set current_generation = [0]%}
+
+    {%for fish in fish_list%}
+
+        {%if fish["level"] != current_generation[0] %}
+            {% if current_generation.append(current_generation.pop() + 1) %}{% endif %}
+            <h3>Generation {{current_generation[0]}}</h3>
+        {%endif%}
+        <p>{%if fish["relation"] != None %}{{fish["relation"]}}{%endif%}</p>
+        <p>{{fish["fish"]}}</p>
+        <br>
+        
+    {%endfor%}
+{%endblock%}

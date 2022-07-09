@@ -1,3 +1,4 @@
+
 from datetime import datetime
 from os import abort
 
@@ -358,6 +359,18 @@ def fishchange(id, filters="all"):
         prev_url=prev_url,
     )
 
+@bp.route("/fish/<id>/history/")
+@login_required
+def fishhistory(id):
+    fish = Fish.query.filter_by(id=id).first()
+
+    
+    
+        
+
+    fish_list = fish.get_ancestors(0)
+
+    return render_template("fishhistory.html", fish_list = fish_list, current_generation =0)
 
 @bp.route("/newfish/", methods=["GET", "POST"])
 @login_required
