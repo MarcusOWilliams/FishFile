@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 
+{%block scripts%}
+    <script>
+        function showPassword() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+              x.type = "text";
+              document.getElementById("showPasswordIcon").innerHTML= '<i class="bi bi-eye-slash-fill"></i>'
+            } else {
+              x.type = "password";
+              document.getElementById("showPasswordIcon").innerHTML= '<i class="bi bi-eye-fill"></i>'
+            }
+          }
+    </script>
+{%endblock%}
+
 {% block content %}
 <h1>Register</h1>
 <p>Please register using a University of Bath email address</p>
@@ -30,14 +45,22 @@
     </p>
     <p>
         {{ form.password.label }}<br>
-        {{ form.password(size=32, placeholder='Password') }}<br>
+        {{ form.password(size=32, placeholder='Password') }}
+        <span onclick="showPassword()" id="showPasswordIcon">
+            <i class="bi bi-eye-fill"></i>
+        </span>
+        <br>
         {% for error in form.password.errors %}
             <span class = "formError">{{ error }}</span>
         {% endfor %}
     </p>
     <p>
         {{ form.password2.label }}<br>
-        {{ form.password2(size=32, placeholder='Repeat Password') }}<br>
+        {{ form.password2(size=32, placeholder='Repeat Password') }}
+        <span onclick="showPassword()" id="showPasswordIcon">
+            <i class="bi bi-eye-fill"></i>
+        </span>
+        <br>
         {% for error in form.password2.errors %}
         <span class = "formError">{{ error }}</span>
         {% endfor %}

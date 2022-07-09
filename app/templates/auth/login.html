@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 
+{%block scripts%}
+    <script>
+        function showPassword() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+              x.type = "text";
+              document.getElementById("showPasswordIcon").innerHTML= '<i class="bi bi-eye-slash-fill"></i>'
+            } else {
+              x.type = "password";
+              document.getElementById("showPasswordIcon").innerHTML= '<i class="bi bi-eye-fill"></i>'
+            }
+          }
+    </script>
+{%endblock%}
+
 {% block content %}
 <h1>Sign In</h1>
 <form action="" method="post">
@@ -16,6 +31,9 @@
     <p>
     <p>
         {{ form.password(size=32,placeholder='Password') }}
+        <span onclick="showPassword()" id="showPasswordIcon">
+            <i class="bi bi-eye-fill"></i>
+        </span>
     </p>
     {% for error in form.password.errors %}
     <span class = "formError">{{ error }}</span>

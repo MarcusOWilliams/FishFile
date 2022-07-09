@@ -86,6 +86,16 @@ class ChangePasswordForm(FlaskForm):
     old_password = PasswordField("Current password", validators=[DataRequired()])
     new_password = PasswordField("New password", validators=[DataRequired()])
     new_password2 = PasswordField(
-        "Repeat new Password", validators=[DataRequired(), EqualTo("new_password")]
+        "Repeat new Password", validators=[DataRequired(), EqualTo("new_password", message="Passwords do not match.")]
     )
     submit = SubmitField("Change Password")
+
+    def validate_new_password(self, new_password):
+        if len(new_password.data)<8:
+            raise ValidationError("Password must be at least 8 characters")
+        if " " in new_password.data:
+            raise ValidationError("Password must not contain spaces")
+        if new_password.data.islower() or new_password.data.isupper():
+            raise ValidationError("Password must have at least one upper case and one lower case character")
+        if not any(char.isdigit() for char in new_password.data):
+            raise ValidationError("Password must contain at least one number")
