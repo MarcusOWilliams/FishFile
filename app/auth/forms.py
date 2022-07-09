@@ -20,7 +20,7 @@ class RegistrationForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     password2 = PasswordField(
-        "Confirm Password", validators=[DataRequired(), EqualTo("password")]
+        "Confirm Password", validators=[DataRequired(), EqualTo("password", message="Passwords do not match.")]
     )
     submit = SubmitField("Register")
 
@@ -44,7 +44,19 @@ class RegistrationForm(FlaskForm):
         if not email.data.endswith("@bath.ac.uk"):
             raise ValidationError(
                 "You must use a University of Bath email address, ending in @bath.ac.uk"
+
             )
+    def validate_password(self, password):
+        if len(password.data)<8:
+            raise ValidationError("Password must be at least 8 characters")
+        if " " in password.data:
+            raise ValidationError("Password must not contain spaces")
+        if password.data.islower() or password.data.isupper():
+            raise ValidationError("Password must have at least one upper case and one lower case character")
+        if not any(char.isdigit() for char in password.data):
+            raise ValidationError("Password must contain at least one number")
+
+
 
 
 class ResetPasswordRequestForm(FlaskForm):
@@ -55,9 +67,19 @@ class ResetPasswordRequestForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired()])
     password2 = PasswordField(
-        "Repeat Password", validators=[DataRequired(), EqualTo("password")]
+        "Repeat Password", validators=[DataRequired(), EqualTo("password", message="Passwords do not match.")]
     )
     submit = SubmitField("Reset Password")
+
+    def validate_password(self, password):
+        if len(password.data)<8:
+            raise ValidationError("Password must be at least 8 characters")
+        if " " in password.data:
+            raise ValidationError("Password must not contain spaces")
+        if password.data.islower() or password.data.isupper():
+            raise ValidationError("Password must have at least one upper case and one lower case character")
+        if not any(char.isdigit() for char in password.data):
+            raise ValidationError("Password must contain at least one number")
 
 
 class ChangePasswordForm(FlaskForm):

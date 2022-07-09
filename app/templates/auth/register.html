@@ -39,7 +39,7 @@
         {{ form.password2.label }}<br>
         {{ form.password2(size=32, placeholder='Repeat Password') }}<br>
         {% for error in form.password2.errors %}
-        <span class = "formError">[{{ error }}]</span>
+        <span class = "formError">{{ error }}</span>
         {% endfor %}
     </p>
     <p>{{ form.submit() }}</p>

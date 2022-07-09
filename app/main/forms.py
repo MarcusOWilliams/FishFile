@@ -105,6 +105,7 @@ class NewFish(FlaskForm):
             raise ValidationError("The total number of fish must not be negative")
 
 
+
 class FilterChanges(FlaskForm):
     fish_id = BooleanField("Fish ID")
     tank_id = BooleanField("Tank ID")
