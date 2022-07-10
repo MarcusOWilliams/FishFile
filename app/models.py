@@ -28,7 +28,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_verified = db.Column(db.Boolean, default=False)
     project_license = db.Column(db.String(120), index=True)
-    role = db.Column(db.String(64), default="User")
+    role = db.Column(db.String(64), default="Limited")
     code = db.Column(db.String(64), index=True)
     changes = db.relationship("Change", backref="user", lazy="dynamic")
 
@@ -38,8 +38,16 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return "<User {} {}>".format(self.first_name, self.last_name)
     
-    def isAdmin(self, role):
-        return role == "Admin"
+    
+
+    def isOwner(self):
+        return self.role == "Owner"
+
+    def isAdmin(self):
+        return self.role in ("Admin", "Owner")
+
+    def isResearcher(self):
+        return self.role in ("Researcher", "Admin", "Owner")
 
     # takes a password and returns its hash
     def set_password(self, password):

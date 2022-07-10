@@ -12,3 +12,4 @@ Step 4: setup your .env file
     MAIL_PASSWORD = password for above email
 Step 5: Run flask db init to create the database migration
 Step 6: run a migration to add the structure to the database
+

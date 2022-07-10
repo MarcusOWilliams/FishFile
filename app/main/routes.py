@@ -51,6 +51,7 @@ def landing():
 
 @bp.route("/home", methods=["GET", "POST"])
 @login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
 def index():
     form = SearchFrom()
     if form.validate_on_submit():
@@ -68,6 +69,7 @@ def index():
 
 @bp.route("/search", methods=["GET", "POST"])
 @login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
 def search():
     form = SearchFrom()
 
@@ -229,6 +231,7 @@ def search():
 
 @bp.route("/simplesearch/")
 @login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
 def simplesearch():
     fish = Fish.query.filter_by(stock=g.search_form.search.data.upper()).first()
     if fish is None:
@@ -239,6 +242,7 @@ def simplesearch():
 
 @bp.route("/user/<username>/", methods=["GET", "POST"])
 @login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     title = user.username
@@ -264,6 +268,13 @@ def user(username):
     )
 
     roleForm = RoleChange()
+
+    if current_user.isOwner():
+        roleForm.role.choices = ["","Blocked", "Limited", "User", "Researcher", "Admin", "Owner"]
+    elif current_user.isAdmin():
+        roleForm.role.choices =  ["","Blocked", "Limited", "User", "Researcher"]
+
+    
     if roleForm.validate_on_submit():
         if not current_user.isAdmin:
             abort(403)
@@ -271,6 +282,9 @@ def user(username):
         db.session.commit()
         return redirect(url_for('main.user', username = user.username))
 
+    
+    roleForm.role.data = user.role
+    
 
     return render_template(
         "user.html",
@@ -287,6 +301,7 @@ def user(username):
 
 @bp.route("/fish/<id>")
 @login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
 def fish(id):
     fish = Fish.query.filter_by(id=id).first()
     if fish is None:
@@ -300,6 +315,7 @@ def fish(id):
 
 @bp.route("/fish/<id>/changes/<filters>", methods=["GET", "POST"])
 @login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
 def fishchange(id, filters="all"):
     fish = Fish.query.filter_by(id=id).first_or_404()
     form = FilterChanges()
@@ -362,6 +378,7 @@ def fishchange(id, filters="all"):
 
 @bp.route("/fish/<id>/history/")
 @login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
 def fishhistory(id):
     fish = Fish.query.filter_by(id=id).first()
 
@@ -371,6 +388,7 @@ def fishhistory(id):
 
 @bp.route("/newfish/", methods=["GET", "POST"])
 @login_required
+@requires_roles("Admin", "Owner")
 def newfish():
     form = NewFish()
 
@@ -433,6 +451,7 @@ def newfish():
 
 @bp.route("/updatefish/<id>/", methods=["GET", "POST"])
 @login_required
+@requires_roles("Researcher", "Admin", "Owner")
 def updatefish(id):
     form = NewFish()
     fish = Fish.query.filter_by(id=id).first_or_404()
@@ -884,6 +903,7 @@ def updatefish(id):
 
 @bp.route("/settings/", methods=["GET", "POST"])
 @login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
 def settings():
     form = SettingsForm()
     current_settings = current_user.settings
@@ -903,15 +923,15 @@ def settings():
     )
 
 @bp.route("/admin/")
-@requires_roles("Admin")
+@requires_roles("Admin","Owner")
 @login_required
 def admin():
 
 
     return render_template('admin/adminhome.html', title = "Admin Home")
 
-@bp.route("/admin/userlist/")
-@requires_roles("Admin")
+@bp.route("/userlist/")
+@requires_roles("Owner")
 @login_required
 def admin_users():
     users = User.query.order_by(User.id.desc())
@@ -928,7 +948,7 @@ def reset_notifications():
 
 @bp.route('/deletefish/<id>', methods=['POST'])
 @login_required
-@requires_roles("Admin")
+@requires_roles("Admin", "Owner")
 def deletefish(id):
     fish = Fish.query.filter_by(id=id).first()
     db.session.delete(fish)

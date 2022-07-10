@@ -10,7 +10,7 @@ from app.auth.forms import (
     ChangePasswordForm,
 )
 from app.models import Settings, User
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for, current_app
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
 
@@ -25,10 +25,15 @@ def login():
     if form.validate_on_submit():
 
         user = User.query.filter_by(email=form.email.data).first()
-
+        
         # check if they have entered an email that is in the db
         if user is None or not user.check_password(form.password.data):
             flash("Invalid email or password", "danger")
+            return redirect(url_for("auth.login"))
+
+        #If the user's role has been set to blocked, deny login
+        if user.role =="Blocked":
+            flash(f"This account has been removed, if you think this is a mistake please contact your system manager to resolve the issue.", "danger")
             return redirect(url_for("auth.login"))
 
         # if the user is not verified they are sent a verification email

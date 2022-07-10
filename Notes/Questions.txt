@@ -4,6 +4,12 @@ Should there be able to be multiple fish with the same stock/ tank_id (alive)
 
 Do you need the s at the start of stock number?
 
+Would you ever search by dates? should there be a range?
+
+What other fields are not necessary for searching?
+
+What fields are not necessary for change filters?
+
 
 
 

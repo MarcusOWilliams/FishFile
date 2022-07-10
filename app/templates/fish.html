@@ -71,9 +71,12 @@
     <div class="fishInfoBlock">
         <h2>More Options</h2>
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishhistory', id = fish.id)}}">View the genetic history of this fish</a></p>
-        <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
-        <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</a></p><br>
-        {%if current_user.role == "Admin"%}
+        <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</a></p>
+        {%if current_user.isResearcher()%}
+            <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
+        {%endif%}
+        <br>
+        {% if current_user.isAdmin() %}
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteFishModal" style="margin-left: 20px; margin-bottom:20px;">
                 Delete Fish Entry
