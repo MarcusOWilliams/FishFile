@@ -39,13 +39,13 @@
         {%if fish.mother != None%}
             <p class = "fishInfoPoint"><span class="pointHeader">Mother:</span> ID = {{fish.mother.fish_id}}, Stock = {{fish.mother.stock}} <a href="{{url_for('main.fish', id=fish.mother.id)}}" target=”_blank”>(view entry)</a></p>
         {%endif%}
-        {%if fish.fathered != None %}
+        {%if fish.fathered |length > 0 %}
             <p class = "fishInfoPoint"><span class="pointHeader">Fathered Fish:</span></p>
             {%for fish in fish.fathered%}
                 <p class = "fishInfoPoint fishSubpoint">{{fish}} <a href="{{url_for('main.fish', id=fish.id)}}" target=”_blank”>(view entry)</a></p>
             {%endfor%}
         {%endif%}
-        {%if fish.mothered != None %}
+        {%if fish.mothered |length > 0%}
             <p class = "fishInfoPoint"><span class="pointHeader">Mothered Fish:</span></p>
             {%for fish in fish.mothered%}
                 <p class = "fishInfoPoint fishSubpoint">{{fish}} <a href="{{url_for('main.fish', id=fish.id)}}" target=”_blank”>(view entry)</a></p>
@@ -73,7 +73,12 @@
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishhistory', id = fish.id)}}">View the genetic history of this fish</a></p>
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</p>
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</p>
-        
+        {%if current_user.role == "Admin"%}
+            <form action="{{ url_for('main.deletefish', id = fish.id)}}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Delete Fish Entry') }}
+            </form>
+        {%endif%}
     </div>
 </div>
 <br>

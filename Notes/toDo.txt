@@ -61,13 +61,14 @@ Add ability to flag fish with a comment
 / add info boxes on inputs
     project license in settings (only your own)
 
-add async emails with celery
 
 / make password requirements more secure
 
-Add daily tasks:
+Add scheduled tasks:
  clear old notifs
  send required time based alerts
+
+Add data deletion
 
 WHEN DONE:
 

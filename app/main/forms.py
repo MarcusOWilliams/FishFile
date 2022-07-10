@@ -179,3 +179,6 @@ class SettingsForm(FlaskForm):
 class RoleChange(FlaskForm):
     role = SelectField('Update Role:', choices = ['User', 'Researcher', 'Admin'])
     submit = SubmitField('Change')
+
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')

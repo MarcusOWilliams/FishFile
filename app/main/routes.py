@@ -24,6 +24,7 @@ from flask import (
 )
 from flask_login import current_user, login_required
 from app.main.forms import (
+    EmptyForm,
     SimpleSearch,
     NewFish,
     SettingsForm,
@@ -243,7 +244,6 @@ def user(username):
     title = user.username
     user_fish = Fish.query.filter_by(user_code=user).filter(Fish.status != "Dead").all()
     changes = Change.query.filter_by(user=user).order_by(Change.time.desc()).all()
-    notifications = Notification.query.filter_by(user=user).all()
 
     page = request.args.get("page", 1, type=int)
     changes = (
@@ -281,8 +281,7 @@ def user(username):
         pagination=changes,
         next_url=next_url,
         prev_url=prev_url,
-        roleForm = roleForm,
-        notifications = notifications
+        roleForm = roleForm
     )
 
 
@@ -294,8 +293,9 @@ def fish(id):
         title = "Fish Not Found"
     else:
         title = f"Fish ({fish.stock})"
+    
 
-    return render_template("fish.html", fish=fish, title=title)
+    return render_template("fish.html", fish=fish, title=title, form = EmptyForm())
 
 
 @bp.route("/fish/<id>/changes/<filters>", methods=["GET", "POST"])
@@ -920,6 +920,17 @@ def reset_notifications():
     current_user.last_notification_read_time = datetime.utcnow()
     db.session.commit()
     return jsonify({"status": "reset"})
+
+@bp.route('/deletefish/<id>', methods=['POST'])
+@login_required
+@requires_roles("Admin")
+def deletefish(id):
+    fish = Fish.query.filter_by(id=id).first()
+    db.session.delete(fish)
+    db.session.commit()
+    flash("The entry has been deleted", 'info')
+    return redirect(url_for('main.index'))
+
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request

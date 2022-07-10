@@ -26,11 +26,7 @@
             {%endfor%}
         </div>
     {%endif%}
-    {%if notifications %}
-        {%for notification in notifications %}
-            {%include 'subtemplates/_notification.html'%}
-        {%endfor%}
-    {%endif%}
+   
     {% if changes %}
         <p>Changes made by {{user.first_name}}:</p>
             {%for change in changes%}
