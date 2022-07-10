@@ -900,6 +900,13 @@ def updatefish(id):
 
     return render_template("updatefish.html", fish=fish, form=form, title=title)
 
+@bp.route("/allfish/")
+@login_required
+@requires_roles("Admin", "Owner")
+def allfish():
+    fish = Fish.query.all()
+
+    return render_template('allfish.html', all_fish = fish)
 
 @bp.route("/settings/", methods=["GET", "POST"])
 @login_required

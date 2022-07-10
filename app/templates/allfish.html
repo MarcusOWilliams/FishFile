@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+    
+
+{% block content %}
+{% if all_fish %}
+<h2>Data For All Fish</h2>
+<textarea style="width:80%;" id="copyText">ID, Tank ID, Stock, Status, Protocol, Birthday, Date of Arrival, Source, Project License, User code, Mutant gene, Transgenes, Cross Type, Father ID, Father Stock, Mother ID, Mother Stock, Males, Females, Unsexed, Carriers, Total
+{%for fish in all_fish%}{{fish.fish_id}}, {{fish.tank_id}}, {{fish.stock}}, {{fish.status}}, {{fish.protocol}}, {{fish.birthday}}, {{fish.date_of_arrival}}, {{fish.source}}, {{fish.project_license_holder.project_license}}, {{fish.user_code.code}}, {{fish.mutant_gene}}, {{fish.transgenes}}, {{fish.cross_type}}, {{fish.father.fish_id}}, {{fish.father.stock}}, {{fish.mother.fish_id}}, {{fish.mother.stock}}, {{fish.males}}, {{fish.females}}, {{fish.unsexed}}, {{fish.carriers}}, {{fish.total}}
+{%endfor%}
+</textarea><br>
+<button id="copybtn" class="btn btn-secondary" data-clipboard-action="copy" data-clipboard-target="#copyText">
+    Copy fish data to clipboard
+</button>
+<br>
+
+<!-- Include clipboard.js -->
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+<!-- Instantiate clipboard -->
+<script>
+    var btn = document.getElementById('copybtn');
+    var clipboard = new ClipboardJS(btn);
+
+    clipboard.on('success', function (e) {
+        console.info('Action:', e.action);
+        console.info('Text:', e.text);
+        console.info('Trigger:', e.trigger);
+    });
+
+    clipboard.on('error', function (e) {
+        console.info('Action:', e.action);
+        console.info('Text:', e.text);
+        console.info('Trigger:', e.trigger);
+    });
+</script>
+{%endif%}
+
+<h2>Every database entry:</h2>
+{%for fish in all_fish%}
+    {% include 'subtemplates/_fish.html'%}
+{%endfor%}
+{%endblock%}
