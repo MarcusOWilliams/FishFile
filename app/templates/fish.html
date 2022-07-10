@@ -71,13 +71,35 @@
     <div class="fishInfoBlock">
         <h2>More Options</h2>
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishhistory', id = fish.id)}}">View the genetic history of this fish</a></p>
-        <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</p>
-        <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</p>
+        <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
+        <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</a></p><br>
         {%if current_user.role == "Admin"%}
-            <form action="{{ url_for('main.deletefish', id = fish.id)}}" method="post">
-                {{ form.hidden_tag() }}
-                {{ form.submit(value='Delete Fish Entry') }}
-            </form>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteFishModal" style="margin-left: 20px; margin-bottom:20px;">
+                Delete Fish Entry
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="deleteFishModal" tabindex="-1" aria-labelledby="deleteFishModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="deleteFishModalLabel">Are you sure?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this entry? You will not be able to recover it after this.
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{{ url_for('main.deletefish', id = fish.id)}}" method="post">
+                        {{ form.hidden_tag() }}
+                        {{ form.submit(value='Delete Fish Entry', class="btn btn-danger") }}
+                    </form>
+                    </div>
+                </div>
+                </div>
+            </div>
+           
         {%endif%}
     </div>
 </div>

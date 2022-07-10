@@ -16,7 +16,7 @@
                     {%endif%}
                     
                 {% elif field.type == "SubmitField"%}
-                    <div id="filterChangesSubmit">{{ field }}</div>
+                    <div id="filterChangesSubmit">{{ field() }}</div>
                 {% endif %}
                 </tr>
             {%endfor%}

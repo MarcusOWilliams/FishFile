@@ -868,10 +868,15 @@ def updatefish(id):
 
         return redirect(url_for("main.fish", id=fish.id))
 
-    form.project_license.data = fish.project_license_holder.project_license
-    form.user_code.data = fish.user_code.code
-    form.status.data = fish.status
-    form.source.data = fish.source
+    if fish.project_license_holder != None:
+        form.project_license.data = fish.project_license_holder.project_license
+    if fish.user_code != None:
+        form.user_code.data = fish.user_code.code
+    if fish.status != None:
+        form.status.data = fish.status
+    if fish.source != None:
+        form.source.data = fish.source
+
     form.comments.data = fish.comments
 
     return render_template("updatefish.html", fish=fish, form=form, title=title)
