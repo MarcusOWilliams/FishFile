@@ -68,7 +68,11 @@ Add scheduled tasks:
  clear old notifs
  send required time based alerts
 
-Add data deletion
+/ Add data deletion
+
+add tutorials
+ How to get it on excel
+ simple search
 
 WHEN DONE:
 
