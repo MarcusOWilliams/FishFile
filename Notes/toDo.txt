@@ -58,12 +58,12 @@ Make admin page
 
 Add ability to flag fish with a comment
 
-add info boxes on inputs
+/ add info boxes on inputs
     project license in settings (only your own)
 
 add async emails with celery
 
-make password requirements more secure
+/ make password requirements more secure
 
 Add daily tasks:
  clear old notifs

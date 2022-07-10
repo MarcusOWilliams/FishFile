@@ -1,11 +1,23 @@
 {% extends "base.html" %}
 
+{%block styles%}
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/settingsStyle.css')}}">
+{%endblock%}
+
+{%block scripts%}
+    <script>
+        function popupShow() {
+            var popup = document.getElementById("plInfoPopupText");
+            popup.classList.toggle("show");
+        }
+    </script>
+{%endblock%}
 {% block content %}
-    <h2>Settings for {{current_user.username}}:</h2>
+    <h2>Settings for {{current_user.username}}:</h2><br>
     <form action="" method="post" >
         {{form.hidden_tag()}}
         {{form.emails.label}} {{form.emails(checked=current_settings.emails)}}<br>
-        {{form.project_license.label}} {{form.project_license(placeholder="Your project license", value = current_user.project_license)}}<br>
+        {{form.project_license.label}} {{form.project_license(placeholder="Your project license", value = current_user.project_license)}}<div class="plInfoPopup" onclick="popupShow()">&#x1F6C8;<span class="plPopupText" id="plInfoPopupText"> If you have your own project license enter it here, if don't have one/use someone else's, leave this blank (or as None)</span></div><br><br>
 
         {{form.submit}}
     </form>
