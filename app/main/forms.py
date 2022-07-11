@@ -64,7 +64,7 @@ class NewFish(FlaskForm):
     carriers = IntegerField("# Carriers/Licenced")
     total = IntegerField("Total #")
 
-    alert_date = DateField("Next reminder date", validators=[Optional()])
+    alert_date = DateField("Reminder date", validators=[Optional()])
     alert_msg = StringField("Reminder message", validators=[Optional()])
 
     submit = SubmitField("Add Fish")
