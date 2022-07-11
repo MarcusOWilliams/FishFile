@@ -166,7 +166,18 @@ class SearchFrom(FlaskForm):
 
 class SettingsForm(FlaskForm):
     emails = BooleanField("Email notifications:")
+
+    add_notifications = BooleanField("Fish added under your user code:")
+    change_notifications = BooleanField("Change made to entry under your user code:")
+    turnover_notifications = BooleanField("Fish alerts (e.g. split/turnover) due soon reminders:")
+    age_notifications = BooleanField("Alerts when fish under your user code reach a certain age:")
+
+    pl_add_notifications = BooleanField("Fish added under your project license:")
+    pl_turnover_notifications = BooleanField("Fish alerts (e.g. split/turnover) due soon for all fish under your project license:")
+    pl_age_notifications = BooleanField("Fish age reminders for all fish under your project license:")
+
     project_license = StringField("Project License:")
+
     submit = SubmitField("Apply")
 
     def validate_project_license(self, project_license):

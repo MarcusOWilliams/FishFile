@@ -16,7 +16,20 @@
     <h2>Settings for {{current_user.username}}:</h2><br>
     <form action="" method="post" >
         {{form.hidden_tag()}}
-        {{form.emails.label}} {{form.emails(checked=current_settings.emails)}}<br>
+        <h4>Emails:</h4>
+            {{form.emails.label}} {{form.emails(checked=current_user.settings.emails)}}<br>
+        <h4>Notifications:</h4>
+            {{form.add_notifications.label}} {{form.add_notifications(checked=current_user.settings.add_notifications)}}<br>
+            {{form.change_notifications.label}} {{form.change_notifications(checked=current_user.settings.change_notifications)}}<br>
+            {{form.turnover_notifications.label}} {{form.turnover_notifications(checked=current_user.settings.turnover_notifications)}}<br>
+            {{form.age_notifications.label}} {{form.age_notifications(checked=current_user.settings.age_notifications)}}<br>
+            {% if current_user.project_license != None and current_user.project_license != "" %}
+                {{form.pl_add_notifications.label}} {{form.pl_add_notifications(checked=current_user.settings.pl_add_notifications)}}<br>
+                {{form.pl_turnover_notifications.label}} {{form.pl_turnover_notifications(checked=current_user.settings.pl_turnover_notifications)}}<br>
+                {{form.pl_age_notifications.label}} {{form.pl_age_notifications(checked=current_user.settings.pl_age_notifications)}}<br>
+            {%endif%}
+
+        <br>    
         {{form.project_license.label}} {{form.project_license(placeholder="Your project license", value = current_user.project_license)}}<div class="plInfoPopup" onclick="popupShow()">&#x1F6C8;<span class="plPopupText" id="plInfoPopupText"> If you have your own project license enter it here, if don't have one/use someone else's, leave this blank (or as None)</span></div><br><br>
 
         {{form.submit}}

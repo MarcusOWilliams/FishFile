@@ -439,9 +439,16 @@ def newfish():
         db.session.add(newfish)
 
         change = Change(user=current_user, fish=newfish, action="Added")
-        notification = Notification(user=newfish.user_code, fish=newfish, category="Added", contents="A new fish under your user code has been added")
         db.session.add(change)
-        db.session.add(notification)
+
+        if newfish.user_code.settings.add_notifications:
+            notification = Notification(user=newfish.user_code, fish=newfish, category="Added", contents="A new fish under your user code has been added")
+            db.session.add(notification)
+
+        if newfish.project_license_holder.settings.pl_add_notifications and newfish.user_code != newfish.project_license_holder:
+            pl_notification = Notification(user=newfish.project_license_holder, fish=newfish, category="Added", contents="A new fish under your project license has been added") 
+            db.session.add(pl_notification)
+        
         db.session.commit()
         flash("The new fish has been added to the database", "info")
         return redirect(url_for("main.fish", id=newfish.id))
@@ -478,8 +485,11 @@ def updatefish(id):
             project_license=form.project_license.data
         ).first()
 
-        notification = Notification(user = fish.user_code, fish=fish, category="Change", contents="Changes have been made to one of your fish")
+        
+        notification = Notification(fish=fish, category="Change", contents="Changes have been made to one of your fish entries")
         db.session.add(notification)
+
+
         change_count=0
         if fish.fish_id != form.fish_id.data:
             change = Change(
@@ -882,7 +892,11 @@ def updatefish(id):
 
         if change_count>0:
             notification.change_count = change_count
-            db.session.commit()
+
+            if fish.user_code.settings.change_notifications:
+                notification.user = fish.user_code
+                db.session.commit()
+            
             flash("Fish updated", "info")
 
         return redirect(url_for("main.fish", id=fish.id))
@@ -916,6 +930,15 @@ def settings():
     current_settings = current_user.settings
     if form.validate_on_submit():
         current_user.settings.emails = form.emails.data
+
+        current_user.settings.add_notifications = form.add_notifications.data
+        current_user.settings.change_notifications = form.change_notifications.data
+        current_user.settings.turnover_notifications = form.turnover_notifications.data
+        current_user.settings.age_notifications = form.age_notifications.data
+
+        current_user.settings.pl_add_notifications = form.pl_add_notifications.data
+        current_user.settings.pl_turnover_notifications = form.pl_turnover_notifications.data
+        current_user.settings.pl_age_notifications = form.pl_age_notifications.data
         
         current_user.project_license = form.project_license.data
 
@@ -923,7 +946,7 @@ def settings():
 
         flash("Settings Applied", "info")
 
-        return redirect(url_for("main.user", username=current_user.username))
+        return redirect(url_for("main.settings"))
 
     return render_template(
         "settings.html", form=form, current_settings=current_settings

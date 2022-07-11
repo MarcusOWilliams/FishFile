@@ -2,7 +2,13 @@
 
     <p classs = "notifBody">
         {% if notification.category == "Added" %}
-            You have been set as the user for a new fish entry (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
+            {%if notification.user == notification.fish.user_code %}
+                You have been set as the user for a new fish entry (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
+            {%elif notification.user == notification.fish.project_license_holder%}
+                A new fish entry has been added under your project license (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
+            {%else%}
+                A new fish entry has been added to the database (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
+            {%endif%}
         {% elif notification.category == "Change" %}
             {{notification.change_count}} changes have been made to one of your tanks (<strong>{{notification.fish}}</strong>)<br>
             <b>Changes:</b>

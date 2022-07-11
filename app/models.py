@@ -251,6 +251,17 @@ class Settings(db.Model):
     user = db.relationship("User", backref=db.backref("settings", uselist=False))
 
     emails = db.Column(db.Boolean, default=True)
+    
+    add_notifications = db.Column(db.Boolean, default=True)
+    change_notifications = db.Column(db.Boolean, default=True)
+    turnover_notifications = db.Column(db.Boolean, default=True)
+    age_notifications = db.Column(db.Boolean, default=True)
+    
+    pl_add_notifications = db.Column(db.Boolean, default=False)
+    pl_turnover_notifications = db.Column(db.Boolean, default=False)
+    pl_age_notifications = db.Column(db.Boolean, default=False)
+
+
 
     def __repr__(self):
         return f"<Settings for User:{self.user.username}"
