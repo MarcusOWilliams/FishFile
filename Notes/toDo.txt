@@ -65,7 +65,7 @@ Add more filter options (e.g. birthdath between)
 / make password requirements more secure
 
 Add scheduled tasks:
- clear old notifs
+ / clear old notifs
  send required time based alerts
  check fish ages, send alerts
  check reminders
@@ -74,6 +74,7 @@ Add scheduled tasks:
 
 / Add notification settings
 
+add a clear notifications button
 
 add a footer, with link to guides
 
