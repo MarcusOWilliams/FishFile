@@ -9,4 +9,7 @@ email
 
 Finding just the right fields to allow the full functionality of search and filter without an overwhelming number of options
 
-Using celery vs redis
+Not using celery or redis for background jobs or cli for scheduled tasks
+    This would rely on other services that need to run, either increasing cost or complexity and making it impossible to run locally
+    Was able to come up with clever solution, usnig csv files and aps-scheduler
+    USed threads for jobs that needed to be asynce, e.g emails

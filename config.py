@@ -27,3 +27,6 @@ class Config(object):
 
     FISH_PER_PAGE = int(os.environ.get('FISH_PER_PAGE')) or 5
     CHANGES_PER_PAGE = int(os.environ.get('CHANGES_PER_PAGE')) or 10
+
+    SCHEDULER_API_ENABLED = True
+    SCHEDULER_TIMEZONE = 'UTC'
