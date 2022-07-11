@@ -36,22 +36,22 @@ class NewFish(FlaskForm):
         validators=[DataRequired()],
     )
     stock = StringField("Stock #", validators=[DataRequired()])
-    protocol = IntegerField("Protocol #")
-    comments = TextAreaField("Comments")
+    protocol = IntegerField("Protocol #", validators=[Optional()])
+    comments = TextAreaField("Comments", validators=[Optional()])
     source = SelectField("Source", choices=["Home", "Imported"])
     cross_type = StringField("Cross Type", validators=[DataRequired()])
 
     birthday = DateField("Birthday", validators=[DataRequired()])
-    date_of_arrival = DateField("Date of Arrival")
+    date_of_arrival = DateField("Date of Arrival", validators=[Optional()])
 
     user_code = SelectField("User Code", validators=[DataRequired()], coerce=str)
     project_license = SelectField(
         "Project License", validators=[DataRequired()], coerce=str
     )
 
-    allele = StringField("Allele")
+    allele = StringField("Allele",validators=[Optional()])
     mutant_gene = StringField("Mutant Gene", validators=[DataRequired()])
-    transgenes = StringField("Transgenes")
+    transgenes = StringField("Transgenes", validators=[Optional()])
 
     father_id = StringField("Father's ID", validators=[DataRequired()])
     mother_id = StringField("Mother's ID", validators=[DataRequired()])
