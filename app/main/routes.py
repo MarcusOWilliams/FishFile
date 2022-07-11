@@ -431,10 +431,13 @@ def newfish():
             carriers=form.carriers.data,
             total=form.total.data,
             source=form.source.data,
+            alert_date=form.alert_date.data,
+            alert_msg = form.alert_msg.data,
             father=father,
             mother=mother,
             user_code=fish_user,
             project_license_holder=license_holder,
+            
         )
         db.session.add(newfish)
 
@@ -689,6 +692,37 @@ def updatefish(id):
             fish.comments = form.comments.data
             change_count+=1
 
+        if fish.alert_date != form.alert_date.data:
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="reminder date",
+                field="alert_date",
+                old=fish.alert_date,
+                new=form.alert_date.data,
+                notification = notification
+            )
+            db.session.add(change)
+
+            fish.alert_date = form.alert_date.data
+            change_count+=1
+
+        if fish.alert_msg != form.alert_msg.data:
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="reminder message",
+                field="alert_msg",
+                old=fish.alert_msg,
+                new=form.alert_msg.data,
+                notification = notification
+            )
+            db.session.add(change)
+
+            fish.alert_msg = form.alert_msg.data
+            change_count+=1
 
         if fish.males != form.males.data:
             change = Change(

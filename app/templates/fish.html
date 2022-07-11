@@ -62,12 +62,23 @@
         <p class = "fishInfoPoint"><span class="pointHeader">Total: </span>{{fish.total}}</p>
     </div>
     <div class="fishInfoBlock">
-        <h2>Comments</h2>
-        {%if fish.comments != None%}
-            <p class = "fishInfoPoint">{{fish.comments}}</p>
+        <h2>Comments and Reminders</h2><br>
+        {%if fish.comments != None and fish.comments != ""%}
+            <p class = "fishInfoPoint"><span class="pointHeader">Comments: </span>{{fish.comments}}</p><br>
         {%else%}
-            <p class = "fishInfoPoint">No comments...</p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Comments: </span>No comments...</p><br>
         {%endif%}
+        {%if fish.alert_date != "" and fish.alert_msg !="" %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Reminder date: </span>{{fish.alert_date}}</p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Reminder message: </span>{{fish.alert_msg}}</p>
+        {%elif fish.alert_date != "" %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Reminder date: </span>{{fish.alert_date}}</p>
+        {%elif fish.alert_msg != "" %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Reminder message: </span>{{fish.alert_msg}}</p>
+        {%else%}
+            <p class = "fishInfoPoint">No reminders...</p>
+        {%endif%}
+
     </div>
     <div class="fishInfoBlock">
         <h2>More Options</h2>

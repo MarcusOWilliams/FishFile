@@ -101,6 +101,13 @@
                 <td>{{form.comments.label}} </td>
                 <td class="addFishInputField">{{form.comments(placeholder="Comments...")}}</td>   
             </tr> 
+            <tr>
+                <td>{{form.alert_date.label}}</td>
+                <td class="addFishInputField">{{form.alert_date}}</td>
+
+                <td>{{form.alert_msg.label}}</td>
+                <td class="addFishInputField">{{form.alert_msg(placeholder="e.g. turnover/split/use")}}</td>
+            </tr>
         </table>
         {% for field, errors in form.errors.items() %}
                 <div class = "formError">{{ form[field].label }}: {{ ', '.join(errors) }}</div>

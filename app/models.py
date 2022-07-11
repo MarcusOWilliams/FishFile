@@ -155,6 +155,9 @@ class Fish(db.Model):
     cross_type = db.Column(db.String(64), index=True)
     comments = db.Column(db.String(1000))
 
+    alert_date = db.Column(db.Date, index=True)
+    alert_msg = db.Column(db.String(64))
+
     father_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
     mother_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
     fathered = db.relationship(
@@ -250,7 +253,7 @@ class Settings(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User", backref=db.backref("settings", uselist=False))
 
-    emails = db.Column(db.Boolean, default=True)
+    emails = db.Column(db.Boolean, default=False)
     
     add_notifications = db.Column(db.Boolean, default=True)
     change_notifications = db.Column(db.Boolean, default=True)
