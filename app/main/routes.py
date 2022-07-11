@@ -991,7 +991,7 @@ def settings():
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def guides():
 
-    return render_template("guides.html", title="Tutorials")
+    return render_template("guides.html", title="Guides")
 
 @bp.route("/userlist/")
 @requires_roles("Owner")
