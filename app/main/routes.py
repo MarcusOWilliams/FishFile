@@ -270,9 +270,9 @@ def user(username):
     roleForm = RoleChange()
 
     if current_user.isOwner():
-        roleForm.role.choices = ["","Blocked", "Limited", "User", "Researcher", "Admin", "Owner"]
+        roleForm.role.choices = ["","Blocked", "User", "Researcher", "Admin", "Owner"]
     elif current_user.isAdmin():
-        roleForm.role.choices =  ["","Blocked", "Limited", "User", "Researcher"]
+        roleForm.role.choices =  ["","Blocked", "User", "Researcher"]
 
     
     if roleForm.validate_on_submit():
@@ -929,18 +929,12 @@ def settings():
         "settings.html", form=form, current_settings=current_settings
     )
 
-@bp.route("/admin/")
-@requires_roles("Admin","Owner")
-@login_required
-def admin():
 
-
-    return render_template('admin/adminhome.html', title = "Admin Home")
 
 @bp.route("/userlist/")
 @requires_roles("Owner")
 @login_required
-def admin_users():
+def user_list():
     users = User.query.order_by(User.id.desc())
 
     return render_template('Admin/user_list.html',users=users)

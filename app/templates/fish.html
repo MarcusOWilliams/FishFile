@@ -27,7 +27,7 @@
     <div class="fishInfoBlock">
         <h2>Genetics</h2>
         <p class = "fishInfoPoint"><span class="pointHeader">Mutant Gene: </span>{{fish.mutant_gene}}</p>
-        {%if fish.transgenes != None and fish.transgene != ""%}
+        {%if fish.transgenes != None and fish.transgenes != ""%}
             <p class = "fishInfoPoint"><span class="pointHeader">Transgenes: </span>{{fish.transgenes}}</p>
         {%endif%}
         {%if fish.allele != None and fish.allele != ""%}

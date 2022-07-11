@@ -25,7 +25,7 @@ change from sqlLite
 
 / flash message catagories
 
-make family tree
+/ make family tree
 
  / make user code and project licenece select field of all options
     NEED TO MAKE THIS JUST VERIFIED/ USERS OF CERTAIN ROLES
@@ -42,7 +42,7 @@ add validation on new fish form, e.g. check if certain fields exists already (ta
 
 / input current search conditions into search form on page load
 
- implement privledges
+/ implement privledges
     upload
     edit
     filter
@@ -50,11 +50,11 @@ add validation on new fish form, e.g. check if certain fields exists already (ta
 
 / add pagination
 
-Add data download
+/ Add data download
 
 Add more filter options (e.g. birthdath between)
 
-Make admin page
+/ Make admin page
 
 Add ability to flag fish with a comment
 
@@ -69,6 +69,8 @@ Add scheduled tasks:
  send required time based alerts
 
 / Add data deletion
+
+Add notification settings
 
 add tutorials
  How to get it on excel

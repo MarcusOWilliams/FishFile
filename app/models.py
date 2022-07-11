@@ -28,7 +28,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_verified = db.Column(db.Boolean, default=False)
     project_license = db.Column(db.String(120), index=True)
-    role = db.Column(db.String(64), default="Limited")
+    role = db.Column(db.String(64), default="User")
     code = db.Column(db.String(64), index=True)
     changes = db.relationship("Change", backref="user", lazy="dynamic")
 

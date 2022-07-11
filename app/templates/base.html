@@ -129,6 +129,25 @@
                     </li>
                   </ul>
                 </li>
+                
+                {%if current_user.isOwner()%}
+                  <li class="nav-item dropdown">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      href="#"
+                      id="ownerDropdown"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      Admin
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="ownerDropdown">
+                      <li><a class="dropdown-item" href="{{ url_for('main.newfish') }}">Add an entry</a></li>
+                      <li><a class="dropdown-item" href="{{url_for('main.user_list')}}">View all users</a></li>
+                    </ul>
+                  </li>
+                {%endif%}
                 <li class="nav-item dropdown">
                   <a class="nav-link"
                   href="#"
