@@ -986,7 +986,12 @@ def settings():
         "settings.html", form=form, current_settings=current_settings
     )
 
+@bp.route("/guides/")
+@login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
+def guides():
 
+    return render_template("guides.html", title="Tutorials")
 
 @bp.route("/userlist/")
 @requires_roles("Owner")

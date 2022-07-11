@@ -56,7 +56,7 @@ Add more filter options (e.g. birthdath between)
 
 / Make admin page
 
-Add ability to flag fish with a comment
+/ Add ability to flag fish with a comment
 
 / add info boxes on inputs
     project license in settings (only your own)
@@ -67,10 +67,15 @@ Add ability to flag fish with a comment
 Add scheduled tasks:
  clear old notifs
  send required time based alerts
+ check fish ages, send alerts
+ check reminders
 
 / Add data deletion
 
-Add notification settings
+/ Add notification settings
+
+
+add a footer, with link to guides
 
 add tutorials
  How to get it on excel
