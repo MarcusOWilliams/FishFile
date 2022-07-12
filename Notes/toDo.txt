@@ -88,9 +88,9 @@ allow reminders to be for multiple people
 
 order fish 
  / allfish
- projectlicense
+ / projectlicense
 / search
- user fish
+/  user fish
 
 update notification email template
 

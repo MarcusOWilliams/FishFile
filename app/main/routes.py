@@ -290,7 +290,7 @@ def simplesearch():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     title = user.username
-    user_fish = Fish.query.filter_by(user_code=user).filter(Fish.status != "Dead").all()
+    user_fish = Fish.query.filter_by(user_code=user).filter(Fish.status != "Dead").order_by(Fish.added.desc()).all()
     changes = Change.query.filter_by(user=user).order_by(Change.time.desc()).all()
 
     page = request.args.get("page", 1, type=int)
@@ -457,10 +457,10 @@ def newfish():
         ).first()
 
         newfish = Fish(
-            fish_id=form.fish_id.data,
-            tank_id=form.tank_id.data,
+            fish_id=form.fish_id.data.upper(),
+            tank_id=form.tank_id.data.upper(),
             status=form.status.data,
-            stock=form.stock.data,
+            stock=form.stock.data.upper(),
             protocol=form.protocol.data,
             birthday=form.birthday.data,
             date_of_arrival=form.date_of_arrival.data,
@@ -546,7 +546,7 @@ def updatefish(id):
 
 
         change_count=0
-        if fish.fish_id != form.fish_id.data:
+        if fish.fish_id != form.fish_id.data.upper():
             change = Change(
                 user=current_user,
                 fish=fish,
@@ -554,16 +554,16 @@ def updatefish(id):
                 contents="fish ID",
                 field="fish_id",
                 old=fish.fish_id,
-                new=form.fish_id.data,
+                new=form.fish_id.data.upper(),
                 notification = notification
             )
             db.session.add(change)
             
-            fish.fish_id = form.fish_id.data
+            fish.fish_id = form.fish_id.data.upper()
             change_count+=1
             
 
-        if fish.tank_id != form.tank_id.data:
+        if fish.tank_id != form.tank_id.data.upper():
             change = Change(
                 user=current_user,
                 fish=fish,
@@ -571,12 +571,12 @@ def updatefish(id):
                 contents="tank ID",
                 field="tank_id",
                 old=fish.tank_id,
-                new=form.tank_id.data,
+                new=form.tank_id.data.upper(),
                 notification = notification
             )
             db.session.add(change)
             
-            fish.tank_id = form.tank_id.data
+            fish.tank_id = form.tank_id.data.upper()
             change_count+=1
 
 
@@ -595,7 +595,7 @@ def updatefish(id):
             change_count+=1
             fish.status = form.status.data
 
-        if fish.stock != form.stock.data:
+        if fish.stock != form.stock.data.upper():
             change = Change(
                 user=current_user,
                 fish=fish,
@@ -603,13 +603,13 @@ def updatefish(id):
                 contents="stock",
                 field="stock",
                 old=fish.stock,
-                new=form.stock.data,
+                new=form.stock.data.upper(),
                 notification = notification
             )
             db.session.add(change)
             change_count+=1
 
-            fish.stock = form.stock.data
+            fish.stock = form.stock.data.upper()
 
         if fish.protocol != form.protocol.data:
             change = Change(
@@ -1021,10 +1021,20 @@ def allfish():
 
     return render_template('allfish.html', all_fish = fish, form = OrderForm())
 
-@bp.route("/projectlicense/<license>/")
+@bp.route("/projectlicense/<license>/", methods=["GET", "POST"])
 @login_required
 @requires_roles("User","Researcher", "Admin", "Owner")
 def project_license(license):
+
+    form = OrderForm()
+
+    
+    if form.validate_on_submit():
+        
+        session["order_by"]=form.order.data
+
+        return redirect(url_for('main.project_license', license=license))
+
     user = User.query.filter_by(project_license=license).first_or_404()
 
     page = request.args.get("page", 1, type=int)
@@ -1032,6 +1042,40 @@ def project_license(license):
     fish = Fish.query.filter_by(project_license_holder = user).paginate(
         page, current_app.config["FISH_PER_PAGE"], False
     )
+
+    order = session.get("order_by", "Fish ID")
+
+    form.order.data = order
+
+    if order == "Age ( young -> old )":
+        fish = Fish.query.filter_by(project_license_holder = user).order_by(Fish.birthday.desc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Age (old -> young)":
+        fish = Fish.query.filter_by(project_license_holder = user).order_by(Fish.birthday.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Fish ID":
+        fish = Fish.query.filter_by(project_license_holder = user).order_by(Fish.fish_id.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Tank ID":
+        fish = Fish.query.filter_by(project_license_holder = user).order_by(Fish.tank_id.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Stock":
+        fish = Fish.query.filter_by(project_license_holder = user).order_by(Fish.stock.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Newest Added":
+        fish = Fish.query.filter_by(project_license_holder = user).order_by(Fish.added.desc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    else:
+        
+        fish = Fish.query.filter_by(project_license_holder = user).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
 
     next_url = (
         url_for("main.project_license", license=license, page=fish.next_num) if fish.has_next else None
@@ -1041,8 +1085,7 @@ def project_license(license):
     )
     
 
-
-    return render_template("projectlicense.html", fish_list=fish.items ,user=user, next_url=next_url, prev_url=prev_url, pagination=fish)
+    return render_template("projectlicense.html", fish_list=fish.items ,user=user, next_url=next_url, prev_url=prev_url, pagination=fish, form=form)
 
 
 @bp.route("/settings/", methods=["GET", "POST"])

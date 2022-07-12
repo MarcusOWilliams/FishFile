@@ -4,7 +4,10 @@
 {% block content %}
     <h2>Project License: {{user.project_license}}</h2>
     <p>This project license is associated with <a href="{{url_for('main.user', username=user.username)}}">{{user.first_name}}</a></p>
-    
+    <form action = "", method="post">
+        {{form.hidden_tag()}}
+        {{form.order.label}} {{form.order()}} {{form.submit()}}
+    </form>
     {% if fish_list %}
         <div id="fishList">
             <h4>Fish on project license:</h4>

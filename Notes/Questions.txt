@@ -14,6 +14,9 @@ If someone was to get a new project license is i alright for all the fish to cha
 
 Should project license have a description?
 
+Are IDs always the same format e.g two upper case letters? would it matter if I made them all upper case?
+    same with tank_id
+    Same with stock (the s)
 
 
 
