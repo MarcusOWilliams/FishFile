@@ -32,7 +32,7 @@ change from sqlLite
 
 / make father and mother information required on form
 
-add dates till turnover required with notifs
+/ add dates till turnover required with notifs
 
 add validation on new fish form, e.g. check if certain fields exists already (tank/stock), use JS
 
@@ -66,9 +66,9 @@ Add more filter options (e.g. birthdath between)
 
 Add scheduled tasks:
  / clear old notifs
- send required time based alerts
+  / send required time based alerts
  check fish ages, send alerts
- check reminders
+  / check reminders
 
 / Add data deletion
 
