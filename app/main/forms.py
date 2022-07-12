@@ -164,7 +164,7 @@ class SearchFrom(FlaskForm):
     father_stock = StringField("Father's Stock #", validators=[Optional()])
     mother_stock = StringField("Mother's Stock #", validators=[Optional()])
     total = IntegerField("Total #", validators=[Optional()])
-    order = SelectField("Order By:", validators=[DataRequired()], choices=["Age ( young -> old )","Age (old -> young)", "Newest Added", "Fish ID", "Tank ID", "Stock"])
+    order = SelectField("Order By:", validators=[DataRequired()], choices=["Fish ID", "Tank ID","Age ( young -> old )","Age (old -> young)", "Newest Added", "Stock"])
     submit_search = SubmitField("Search")
 
 
