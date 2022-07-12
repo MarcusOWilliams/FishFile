@@ -74,6 +74,8 @@ def index():
 def search():
     form = SearchFrom()
 
+
+
     if form.validate_on_submit():
         search_dict = {}
         for fieldname, value in form.data.items():
@@ -82,7 +84,10 @@ def search():
                     search_dict[fieldname] = value
 
         session["search_dict"] = search_dict.copy()
+        session["order_by"] = form.order.data
+
         return redirect(url_for("main.search"))
+
 
     search_dict = session["search_dict"].copy()
 
@@ -205,11 +210,38 @@ def search():
                 .subquery()
             )
 
+        
     page = request.args.get("page", 1, type=int)
 
-    all_fish = Fish.query.select_entity_from(all_fish).paginate(
-        page, current_app.config["FISH_PER_PAGE"], False
-    )
+    #set the order of the fish, if not set they are sorted by most recently added
+    order = session.get("order_by", "Newest Added")
+
+
+    if order == "Age ( young -> old )":
+        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.birthday.desc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Age (old -> young)":
+        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.birthday.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Fish ID":
+        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.fish_id.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Tank ID":
+        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.tank_id.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Stock":
+        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.stock.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    else:
+        print(order, file = sys.stderr)
+        all_fish = Fish.query.select_entity_from(all_fish).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
 
     next_url = (
         url_for("main.search", page=all_fish.next_num) if all_fish.has_next else None
@@ -218,6 +250,12 @@ def search():
         url_for("main.search", page=all_fish.prev_num) if all_fish.has_prev else None
     )
 
+    for field in form:
+        if field.name != "csrf_token" and field.name != "submit":
+            if search_dict.get(field.name) != None and search_dict.get(field.name) != "":
+                field.data = search_dict[field.name]
+                    
+        
     return render_template(
         "search.html",
         form=form,
