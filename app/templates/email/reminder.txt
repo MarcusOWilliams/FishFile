@@ -1,0 +1,9 @@
+Dear {{ user.first_name }},
+
+    You have recieved a reminder from DanioDB
+
+    Reminder For: {{reminder.fish}}
+    
+    Reminder Message: {{reminder.message}}
+
+To view more please log in here: {{url_for('auth.login', _external=True)}}

@@ -14,6 +14,7 @@ import json
 from dateutil import relativedelta
 
 
+
 """
 This is the class for the User table  of the SQL database
 Each user row contains a unique id, names, email, username, hashed_password, last seen time, verification check, role 
@@ -281,7 +282,10 @@ class Settings(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User", backref=db.backref("settings", uselist=False))
 
+    #this is emails for notifications
     emails = db.Column(db.Boolean, default=False)
+
+    email_reminders = db.Column(db.Boolean, default=False)
     
     add_notifications = db.Column(db.Boolean, default=True)
     change_notifications = db.Column(db.Boolean, default=True)
@@ -333,12 +337,18 @@ class Reminder(db.Model):
     #send notification from reminder, can take more than one user
     def send_reminder(self, users = [user_id]):
 
+       
+        from app.main.email import send_reminder_email
+
         for user in users:
             user = User.query.filter_by(id=user).first()
             if user is None:
                 continue
             notification = Notification(user = user, fish = self.fish, category="Reminder", contents = self.message)
             db.session.add(notification)
+
+            if user.settings.email_reminders:
+                send_reminder_email(user, self)
 
         self.sent=True
         db.session.commit()

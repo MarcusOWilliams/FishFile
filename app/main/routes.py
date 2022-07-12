@@ -33,7 +33,7 @@ from app.main.forms import (
     SearchFrom,
     RoleChange
 )
-from app.main.email import send_notification_email
+from app.main.email import send_notification_email, send_reminder_email
 import sys
 
 # this route defines the landing page of the website
@@ -917,6 +917,7 @@ def updatefish(id):
             if reminder.date <= datetime.today().date():
                 reminder.send_reminder()
 
+
             db.session.commit()
 
         return redirect(url_for("main.fish", id=fish.id))
@@ -954,6 +955,7 @@ def settings():
 
     if form.validate_on_submit():
         current_user.settings.emails = form.emails.data
+        current_user.settings.email_reminders = form.email_reminders.data
 
         current_user.settings.add_notifications = form.add_notifications.data
         current_user.settings.change_notifications = form.change_notifications.data

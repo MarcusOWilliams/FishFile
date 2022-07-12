@@ -1,0 +1,8 @@
+<p>Dear {{ user.first_name }},</p>
+
+<p>You have recieved a reminder from DanioDB</p>
+
+<p><b>Reminder For: </b>{{reminder.fish}}</p>
+<p><b>Reminder Message: </b>{{reminder.message}}</p>
+
+<p>To view more please <a href="{{url_for('auth.login', _external=True)}}">Log In</a></p>

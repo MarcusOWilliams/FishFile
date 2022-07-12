@@ -23,3 +23,21 @@ def send_notification_email(user, notification):
             "email/notification.html", user=user, notification=notification
         ),
     )
+
+#This email take a user and a notification sends an email notification to the user 
+def send_reminder_email(user, reminder):
+    
+    if not user.settings.email_reminders:
+        return
+
+    send_email(
+        ("[DanioDB] Reminder"),
+        sender=current_app.config["MAIL_DEFAULT_SENDER"],
+        recipients=[user.email],
+        text_body=render_template(
+            "email/reminder.txt", user=user, reminder=reminder
+        ),
+        html_body=render_template(
+            "email/reminder.html", user=user, reminder=reminder
+        ),
+    )

@@ -18,6 +18,7 @@
         {{form.hidden_tag()}}
         <h4>Emails:</h4>
             {{form.emails.label}} {{form.emails(checked=current_user.settings.emails)}}<br>
+            {{form.email_reminders.label}} {{form.email_reminders(checked=current_user.settings.email_reminders)}}<br>
         <h4>Notifications:</h4>
             {{form.add_notifications.label}} {{form.add_notifications(checked=current_user.settings.add_notifications)}}<br>
             {{form.change_notifications.label}} {{form.change_notifications(checked=current_user.settings.change_notifications)}}<br>
