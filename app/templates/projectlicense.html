@@ -3,9 +3,11 @@
 
 {% block content %}
     <h2>Project License: {{user.project_license}}</h2>
+    <p>This project license is associated with <a href="{{url_for('main.user', username=user.username)}}">{{user.first_name}}</a></p>
+    
     {% if fish_list %}
         <div id="fishList">
-            <h4>Fish with project license allocated:</h4>
+            <h4>Fish on project license:</h4>
             {%for fish in fish_list%}
                 {%include 'subtemplates/_fish.html'%}
             {%endfor%}
