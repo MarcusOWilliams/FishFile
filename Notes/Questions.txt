@@ -12,6 +12,8 @@ What fields are not necessary for change filters?
 
 If someone was to get a new project license is i alright for all the fish to change over?
 
+Should project license have a description?
+
 
 
 

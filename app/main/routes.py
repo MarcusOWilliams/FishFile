@@ -947,6 +947,30 @@ def allfish():
 
     return render_template('allfish.html', all_fish = fish)
 
+@bp.route("/projectlicense/<license>/")
+@login_required
+@requires_roles("User","Researcher", "Admin", "Owner")
+def project_license(license):
+    user = User.query.filter_by(project_license=license).first_or_404()
+
+    page = request.args.get("page", 1, type=int)
+
+    fish = Fish.query.filter_by(project_license_holder = user).paginate(
+        page, current_app.config["FISH_PER_PAGE"], False
+    )
+
+    next_url = (
+        url_for("main.project_license", license=license, page=fish.next_num) if fish.has_next else None
+    )
+    prev_url = (
+        url_for("main.project_license", license=license, page=fish.prev_num) if fish.has_prev else None
+    )
+    
+
+
+    return render_template("projectlicense.html", fish_list=fish.items ,user=user, next_url=next_url, prev_url=prev_url, pagination=fish)
+
+
 @bp.route("/settings/", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
