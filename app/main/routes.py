@@ -243,7 +243,7 @@ def search():
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     else:
-        print(order, file = sys.stderr)
+        
         all_fish = Fish.query.select_entity_from(all_fish).paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
