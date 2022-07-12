@@ -86,6 +86,8 @@ add tooltips
 
 allow reminders to be for multiple people
 
+update notification email template
+
 WHEN DONE:
 
 change email sent from

@@ -454,10 +454,12 @@ def newfish():
         if newfish.user_code.settings.add_notifications:
             notification = Notification(user=newfish.user_code, fish=newfish, category="Added", contents="A new fish under your user code has been added")
             db.session.add(notification)
+            notification.send_email()
 
         if newfish.project_license_holder.settings.pl_add_notifications and newfish.user_code != newfish.project_license_holder:
             pl_notification = Notification(user=newfish.project_license_holder, fish=newfish, category="Added", contents="A new fish under your project license has been added") 
             db.session.add(pl_notification)
+            pl_notification.send_email()
         
         db.session.commit()
         flash("The new fish has been added to the database", "info")
@@ -498,7 +500,6 @@ def updatefish(id):
 
         
         notification = Notification(fish=fish, category="Change", contents="Changes have been made to one of your fish entries")
-        db.session.add(notification)
 
 
         change_count=0
@@ -906,6 +907,8 @@ def updatefish(id):
 
             if fish.user_code.settings.change_notifications:
                 notification.user = fish.user_code
+                notification.send_email()
+                db.session.add(notification)
                 db.session.commit()
             
             flash("Fish updated", "info")

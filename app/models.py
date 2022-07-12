@@ -2,6 +2,7 @@
 # This folder contains a class for each table in the database
 
 from email.policy import default
+import sys
 from unicodedata import category
 from app import db, bcrypt, login
 from flask_login import UserMixin, current_user
@@ -325,6 +326,14 @@ class Notification(db.Model):
 
     def __repr__(self):
         return f"<Notification for User:{self.user.username}>"
+
+    def send_email(self):
+        if self.user == None:
+            return
+        if self.user.settings.emails:
+            from app.main.email import send_notification_email
+            send_notification_email(self.user, self)
+ 
 
 class Reminder(db.Model):
     id = db.Column(db.Integer, primary_key=True)

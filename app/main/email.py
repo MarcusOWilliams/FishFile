@@ -9,6 +9,7 @@ from app.models import *
 
 #This email take a user and a notification sends an email notification to the user 
 def send_notification_email(user, notification):
+    
     if not user.settings.emails:
         return
 
@@ -24,7 +25,7 @@ def send_notification_email(user, notification):
         ),
     )
 
-#This email take a user and a notification sends an email notification to the user 
+#This email take a user and a reminder sends an email notification to the user 
 def send_reminder_email(user, reminder):
     
     if not user.settings.email_reminders:
