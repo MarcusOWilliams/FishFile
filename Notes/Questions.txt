@@ -18,8 +18,7 @@ Are IDs always the same format e.g two upper case letters? would it matter if I 
     same with tank_id
     Same with stock (the s)
 
-
-
+Roughly how many tanks would someone work on at a time? Just for the profile list?
 
 
 ANSWERED:
