@@ -164,7 +164,7 @@ class Fish(db.Model):
     transgenes = db.Column(db.String(64), index=True)
     cross_type = db.Column(db.String(64), index=True)
     comments = db.Column(db.Text())
-
+    added = db.Column(db.DateTime, default=datetime.utcnow)
 
     father_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
     mother_id = db.Column(db.Integer, db.ForeignKey("fish.id"))

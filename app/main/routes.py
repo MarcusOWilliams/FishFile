@@ -26,6 +26,7 @@ from flask import (
 from flask_login import current_user, login_required
 from app.main.forms import (
     EmptyForm,
+    OrderForm,
     SimpleSearch,
     NewFish,
     SettingsForm,
@@ -214,7 +215,7 @@ def search():
     page = request.args.get("page", 1, type=int)
 
     #set the order of the fish, if not set they are sorted by most recently added
-    order = session.get("order_by", "Newest Added")
+    order = session.get("order_by", "Fish ID")
 
 
     if order == "Age ( young -> old )":
@@ -235,6 +236,10 @@ def search():
             )
     elif order == "Stock":
         all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.stock.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Newest Added":
+        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.added.desc()).paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     else:
@@ -977,13 +982,44 @@ def updatefish(id):
 
     return render_template("updatefish.html", fish=fish, form=form, title=title, deleteReminderForm =deleteReminderForm )
 
-@bp.route("/allfish/")
+@bp.route("/allfish/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Admin", "Owner")
 def allfish():
-    fish = Fish.query.all()
+    form = OrderForm()
 
-    return render_template('allfish.html', all_fish = fish)
+    if form.validate_on_submit():
+        session["order_by"] = form.order.data
+
+        return redirect(url_for('main.allfish'))
+
+    
+
+    #set the order of the fish, if not set they are sorted by most recently added
+    order = session.get("order_by", "Fish ID")
+
+    form.order.data = order
+
+    if order == "Age ( young -> old )":
+        fish = Fish.query.order_by(Fish.birthday.desc()).all()
+    elif order == "Age (old -> young)":
+        fish = Fish.query.order_by(Fish.birthday.asc()).all()
+    elif order == "Fish ID":
+        fish = Fish.query.order_by(Fish.fish_id.asc()).all()
+
+    elif order == "Tank ID":
+        fish = Fish.query.order_by(Fish.tank_id.asc()).all()
+
+    elif order == "Stock":
+        fish = Fish.query.order_by(Fish.stock.asc()).all()
+    elif order == "Newest Added":
+        fish = Fish.query.order_by(Fish.added.desc()).all()
+    else:
+        fish = Fish.query.all()
+    
+        
+
+    return render_template('allfish.html', all_fish = fish, form = OrderForm())
 
 @bp.route("/projectlicense/<license>/")
 @login_required

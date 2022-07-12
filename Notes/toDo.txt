@@ -87,9 +87,9 @@ add tooltips
 allow reminders to be for multiple people
 
 order fish 
- allfish
+ / allfish
  projectlicense
- search
+/ search
  user fish
 
 update notification email template

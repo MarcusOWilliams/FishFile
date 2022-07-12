@@ -35,6 +35,11 @@
 {%endif%}
 
 <h2>Every database entry:</h2>
+
+<form action = "", method="post">
+    {{form.hidden_tag()}}
+    {{form.order.label}} {{form.order()}} {{form.submit()}}
+</form>
 {%for fish in all_fish%}
     {% include 'subtemplates/_fish.html'%}
 {%endfor%}
