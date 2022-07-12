@@ -1,6 +1,8 @@
 # This is the main folder for the database
 # This folder contains a class for each table in the database
 
+from email.policy import default
+from unicodedata import category
 from app import db, bcrypt, login
 from flask_login import UserMixin, current_user
 from time import time
@@ -30,12 +32,16 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_verified = db.Column(db.Boolean, default=False)
     project_license = db.Column(db.String(120), index=True)
-    role = db.Column(db.String(64), default="User")
-    code = db.Column(db.String(64), index=True)
+    role = db.Column(db.String(32), default="User")
+    code = db.Column(db.String(32), index=True)
     changes = db.relationship("Change", backref="user", lazy="dynamic")
 
     notifications = db.relationship("Notification", backref="user", lazy="dynamic", cascade="all, delete")
     last_notification_read_time = db.Column(db.DateTime)
+
+    reminders = db.relationship(
+        "Reminder", backref="user", lazy="dynamic", cascade="all, delete"
+    )
 
     def __repr__(self):
         return "<User {} {}>".format(self.first_name, self.last_name)
@@ -141,11 +147,11 @@ It also contains the methods required for the fish
 
 class Fish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fish_id = db.Column(db.String(64), index=True)
-    tank_id = db.Column(db.String(64), index=True)
-    status = db.Column(db.String(64), index=True, default="Alive")
-    stock = db.Column(db.String(64), index=True)
-    source = db.Column(db.String(64))
+    fish_id = db.Column(db.String(32), index=True)
+    tank_id = db.Column(db.String(32), index=True)
+    status = db.Column(db.String(32), index=True, default="Alive")
+    stock = db.Column(db.String(32), index=True)
+    source = db.Column(db.String(32))
 
     protocol = db.Column(db.Integer, index=True)
     birthday = db.Column(db.Date, index=True)
@@ -155,10 +161,8 @@ class Fish(db.Model):
     mutant_gene = db.Column(db.String(64), index=True)
     transgenes = db.Column(db.String(64), index=True)
     cross_type = db.Column(db.String(64), index=True)
-    comments = db.Column(db.String(1000))
+    comments = db.Column(db.Text())
 
-    alert_date = db.Column(db.Date, index=True)
-    alert_msg = db.Column(db.String(64))
 
     father_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
     mother_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
@@ -194,6 +198,10 @@ class Fish(db.Model):
     notifications = db.relationship(
         "Notification", backref="fish", lazy="dynamic", cascade="all, delete"
     )
+
+    reminders = db.relationship(
+        "Reminder", backref="fish", lazy="dynamic", cascade="all, delete"
+    )
     
 
     def __repr__(self):
@@ -219,7 +227,7 @@ class Fish(db.Model):
             return
         if self.birthday == None:
             return
-            
+
         today = datetime.today().date()
         birthday =  self.birthday
         age_difference = relativedelta.relativedelta(today,birthday)
@@ -310,6 +318,31 @@ class Notification(db.Model):
     changes =  db.relationship(
         "Change", backref="notification", lazy="dynamic", cascade="all, delete"
     )
+
     def __repr__(self):
         return f"<Notification for User:{self.user.username}>"
+
+class Reminder(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
+    date = db.Column(db.Date)
+    message = db.Column(db.String(64))
+    sent = db.Column(db.Boolean, default= False)
+
+    #send notification from reminder, can take more than one user
+    def send_reminder(self, users = [user_id]):
+
+        for user in users:
+            user = User.query.filter_by(id=user).first()
+            if user is None:
+                continue
+            notification = Notification(user = user, fish = self.fish, category="Reminder", contents = self.message)
+            db.session.add(notification)
+
+        self.sent=True
+        db.session.commit()
+
+
+
 

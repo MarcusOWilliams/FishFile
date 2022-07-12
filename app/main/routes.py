@@ -1,5 +1,6 @@
 
 from datetime import datetime
+from email import message
 from os import abort
 from turtle import title
 
@@ -10,7 +11,7 @@ from turtle import title
 from app import db
 from app.main import bp
 from app.main import email
-from app.models import Change, Fish, Notification, User, requires_roles
+from app.models import Change, Fish, Notification, Reminder, User, requires_roles
 from flask import (
     flash,
     redirect,
@@ -431,8 +432,6 @@ def newfish():
             carriers=form.carriers.data,
             total=form.total.data,
             source=form.source.data,
-            alert_date=form.alert_date.data,
-            alert_msg = form.alert_msg.data,
             father=father,
             mother=mother,
             user_code=fish_user,
@@ -443,6 +442,14 @@ def newfish():
 
         change = Change(user=current_user, fish=newfish, action="Added")
         db.session.add(change)
+
+
+        if form.alert_date.data or form.alert_msg.data:
+            reminder = Reminder(user = newfish.user_code, fish = newfish, date=form.alert_date.data, message=form.alert_msg.data)
+            db.session.add(reminder)
+            if reminder.date <= datetime.today().date():
+                reminder.send_reminder()
+        
 
         if newfish.user_code.settings.add_notifications:
             notification = Notification(user=newfish.user_code, fish=newfish, category="Added", contents="A new fish under your user code has been added")
@@ -464,6 +471,7 @@ def newfish():
 @requires_roles("Researcher", "Admin", "Owner")
 def updatefish(id):
     form = NewFish()
+    deleteReminderForm = EmptyForm()
     fish = Fish.query.filter_by(id=id).first_or_404()
     title = f"Update Fish ({fish.stock})"
 
@@ -692,38 +700,6 @@ def updatefish(id):
             fish.comments = form.comments.data
             change_count+=1
 
-        if fish.alert_date != form.alert_date.data:
-            change = Change(
-                user=current_user,
-                fish=fish,
-                action="Updated",
-                contents="reminder date",
-                field="alert_date",
-                old=fish.alert_date,
-                new=form.alert_date.data,
-                notification = notification
-            )
-            db.session.add(change)
-
-            fish.alert_date = form.alert_date.data
-            change_count+=1
-
-        if fish.alert_msg != form.alert_msg.data:
-            change = Change(
-                user=current_user,
-                fish=fish,
-                action="Updated",
-                contents="reminder message",
-                field="alert_msg",
-                old=fish.alert_msg,
-                new=form.alert_msg.data,
-                notification = notification
-            )
-            db.session.add(change)
-
-            fish.alert_msg = form.alert_msg.data
-            change_count+=1
-
         if fish.males != form.males.data:
             change = Change(
                 user=current_user,
@@ -922,7 +898,8 @@ def updatefish(id):
             fish.project_license_holder = license_holder
             change_count+=1
 
-
+        
+                
 
         if change_count>0:
             notification.change_count = change_count
@@ -933,7 +910,17 @@ def updatefish(id):
             
             flash("Fish updated", "info")
 
+        if form.alert_date.data or form.alert_msg.data:
+            reminder = Reminder(user = fish.user_code, fish = fish, date=form.alert_date.data, message=form.alert_msg.data)
+            db.session.add(reminder)
+
+            if reminder.date <= datetime.today().date():
+                reminder.send_reminder()
+
+            db.session.commit()
+
         return redirect(url_for("main.fish", id=fish.id))
+
 
     if fish.project_license_holder != None:
         form.project_license.data = fish.project_license_holder.project_license
@@ -946,7 +933,7 @@ def updatefish(id):
 
     form.comments.data = fish.comments
 
-    return render_template("updatefish.html", fish=fish, form=form, title=title)
+    return render_template("updatefish.html", fish=fish, form=form, title=title, deleteReminderForm =deleteReminderForm )
 
 @bp.route("/allfish/")
 @login_required
@@ -962,6 +949,9 @@ def allfish():
 def settings():
     form = SettingsForm()
     current_settings = current_user.settings
+
+    
+
     if form.validate_on_submit():
         current_user.settings.emails = form.emails.data
 
@@ -981,6 +971,9 @@ def settings():
         flash("Settings Applied", "info")
 
         return redirect(url_for("main.settings"))
+
+    if current_user.project_license is not None:
+        form.project_license.data = current_user.project_license
 
     return render_template(
         "settings.html", form=form, current_settings=current_settings
@@ -1019,6 +1012,17 @@ def deletefish(id):
     flash("The entry has been deleted", 'info')
     return redirect(url_for('main.index'))
 
+@bp.route('/deletereminder/<id>', methods=['POST'])
+@login_required
+@requires_roles("Researcher","Admin", "Owner")
+def deletereminder(id):
+    reminder = Reminder.query.filter_by(id=id).first()
+    fish_id = reminder.fish.id
+    db.session.delete(reminder)
+    db.session.commit()
+
+    flash("The reminder has been deleted", 'info')
+    return redirect(url_for('main.updatefish', id=fish_id))
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request

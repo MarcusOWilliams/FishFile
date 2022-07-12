@@ -19,6 +19,8 @@
             </ul>
             <br>
             view all previous changes <a href="{{url_for('main.fishchange', id = notification.fish.id, filters='all')}}">here</a>
+        {% elif notification.category == "Reminder" %}
+            You have a reminder about {{notification.fish}}. Reminder message "{{notification.contents}}".
         {%endif%}
     </p>
     <p class="notifTimestamp">{{moment(notification.time).fromNow()}}</p>

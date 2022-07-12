@@ -1,6 +1,6 @@
 from app import scheduler, db
 import sys
-from app.models import Fish, Notification
+from app.models import Fish, Notification, Reminder
 from datetime import datetime
 from dateutil import relativedelta
 
@@ -20,6 +20,18 @@ def delete_old_notifications():
         db.session.commit()
 
 
+@scheduler.task('cron', id='send_reminders',hour='5')
+def send_reminders():
+    with scheduler.app.app_context():
+        reminders = Reminder.query.all()
+        for reminder in reminders:
+            if reminder.sent:
+                continue
+            if reminder.date <= datetime.today().date():
+                reminder.send_reminder()
+
+
+        
 
 
     

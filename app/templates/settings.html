@@ -30,7 +30,7 @@
             {%endif%}
 
         <br>    
-        {{form.project_license.label}} {{form.project_license(placeholder="Your project license", value = current_user.project_license)}}<div class="plInfoPopup" onclick="popupShow()">&#x1F6C8;<span class="plPopupText" id="plInfoPopupText"> If you have your own project license enter it here, if don't have one/use someone else's, leave this blank (or as None)</span></div><br><br>
+        {{form.project_license.label}} {{form.project_license(placeholder="Your project license")}}<div class="plInfoPopup" onclick="popupShow()">&#x1F6C8;<span class="plPopupText" id="plInfoPopupText"> If you have your own project license enter it here, if don't have one/use someone else's, leave this blank (or as None)</span></div><br><br>
 
         {{form.submit}}
     </form>
