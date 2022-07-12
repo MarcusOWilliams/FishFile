@@ -9,6 +9,8 @@ from flask import current_app, abort
 from datetime import datetime
 from functools import wraps
 import json
+from dateutil import relativedelta
+
 
 """
 This is the class for the User table  of the SQL database
@@ -211,7 +213,25 @@ class Fish(db.Model):
             
 
         return sorted(ancestors, key=lambda x: x["level"])
+    
+    def getAge(self):
+        if self.status == "Dead":
+            return
+        if self.birthday == None:
+            return
+            
+        today = datetime.today().date()
+        birthday =  self.birthday
+        age_difference = relativedelta.relativedelta(today,birthday)
 
+        if age_difference.years>0:
+            age = f"{age_difference.years} years, {age_difference.months} months, {age_difference.days} days"
+        elif age_difference.months>0:
+            age = f"{age_difference.months} months, {age_difference.days} days"
+        else:
+            age = f"{age_difference.days} days"
+
+        return age
 
 """
 This is the class for the Change table of the SQL database, which is used to record changes to the database

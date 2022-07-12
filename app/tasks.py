@@ -2,8 +2,9 @@ from app import scheduler, db
 import sys
 from app.models import Fish, Notification
 from datetime import datetime
+from dateutil import relativedelta
 
-@scheduler.task('cron', id='do_job_1',hour='4')
+@scheduler.task('cron', id='clear_old_notifs',hour='4')
 def delete_old_notifications():
     with scheduler.app.app_context():
         notifications = Notification.query.all()
@@ -17,6 +18,8 @@ def delete_old_notifications():
         
 
         db.session.commit()
+
+
 
 
     
