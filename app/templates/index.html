@@ -4,14 +4,15 @@
 
     <h1>Hi {{ current_user.first_name }}, Welcome to DanioDB!</h1>
     <br>
-    <p id="introParagraph">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod, temporibus ducimus. Placeat blanditiis consequatur nulla consectetur, eligendi fugiat aliquid magni sunt dolorem soluta, quidem omnis amet voluptates repellendus nesciunt ex?</p>
+    <h6 id="introParagraph">DanioDB - named after the genus from which zebrafish belong - is a new relational database management system designed speciafically for researchers at the University of Bath, it's goal is to aid in the collection, storage, retrieval and analysis of data involving the zebrafish research carried out at the University.</h6>
     <br>
     <p style="font-weight:bold;">Quick Links:</p>
     <ul id="quickLinksMenu"> 
         <li><a href="{{url_for('main.newfish')}}" class="quickLinksItem">Add a new fish to the database</a></li>
-        <li><a href="#" class="quickLinksItem">Update details of an existing fish</a></li>
-        <li><a href="#" class="quickLinksItem">Search the database</a></li>
-        <li><a href="#" class="quickLinksItem">Download or print data</a></li>
+        <li><a href="{{url_for('main.index')}}" class="quickLinksItem">Search the database</a></li>
+        <li><a href="{{url_for('main.guides')}}" class="quickLinksItem">How to use the system</a></li>
+        <li><a href="{{url_for('main.user', username = current_user.username)}}" class="quickLinksItem">View my profile</a></li>
+        
     </ul>
     <h4>Search The Database:</h4>
     <div id="mainSearchForm">

@@ -166,6 +166,7 @@
     border: 1px gray solid;
     border-radius: 1em;
     padding: 5px;
+    margin-top:20px;
 }
 
 .seachFormField{
@@ -179,8 +180,8 @@
 }
 
 #searchFormSubmit{
-    padding:5px;
-    border-top:1px solid lightgray ;
+    margin-bottom: 10px;
+
 }
 
 #pageNavigation{
@@ -204,8 +205,7 @@
 }
 
 .notifTimestamp{
-    width:20%;
-    border-left: 1px gray solid;
+
     padding-left: 5px;
 }
 

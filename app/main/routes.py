@@ -986,7 +986,10 @@ def updatefish(id):
 @login_required
 @requires_roles("Admin", "Owner")
 def allfish():
+
     form = OrderForm()
+    
+    
 
     if form.validate_on_submit():
         session["order_by"] = form.order.data
@@ -998,6 +1001,7 @@ def allfish():
     #set the order of the fish, if not set they are sorted by most recently added
     order = session.get("order_by", "Fish ID")
 
+    
     form.order.data = order
 
     if order == "Age ( young -> old )":
@@ -1018,8 +1022,9 @@ def allfish():
         fish = Fish.query.all()
     
         
+    
 
-    return render_template('allfish.html', all_fish = fish, form = OrderForm())
+    return render_template('allfish.html', all_fish = fish, form = form)
 
 @bp.route("/projectlicense/<license>/", methods=["GET", "POST"])
 @login_required

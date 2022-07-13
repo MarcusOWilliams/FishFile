@@ -92,7 +92,7 @@ order fish
 / search
 /  user fish
 
-update notification email template
+/ update notification email template
 
 WHEN DONE:
 

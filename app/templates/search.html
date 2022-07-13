@@ -13,17 +13,18 @@
                         <span class="seachFormField"> <b>{{ field.label }}</b> {{ field }}</span>
                     {%endif%}
                     {% elif field.type == "SubmitField"%}
+                        <hr>
                         <div id="searchFormSubmit">{{ field }}</div>
                     {% endif %}
                 {%endfor%}
-
+                
                 {% for field, errors in form.errors.items() %}
                     <div class = "formError">{{ form[field].label }}: {{ ', '.join(errors) }}</div>
                 {% endfor %}
             </form>
     </div>
 
-    <p>Search Results:</p>
+    <h4 style="margin-top:20px;">Search Results:</h4>
     <div id="fishList">
         {% if all_fish %}
         {%for fish in all_fish%}

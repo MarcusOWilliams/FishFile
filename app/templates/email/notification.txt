@@ -2,4 +2,21 @@ Dear {{ user.first_name }},
 
 You have recieved a notification from DanioDB
 
+
+{% if notification.category == "Added" %}
+    Notification:
+    
+        {%if notification.user == notification.fish.user_code %}
+            You have been set as the user for a new fish entry
+        {%elif notification.user == notification.fish.project_license_holder%}
+            A new fish entry has been added under your project license 
+        {%else%}
+            A new fish entry has been added to the database 
+        {%endif%}
+    
+{% elif notification.category == "Change" %}
+    Notification:
+    Changes have been made to one of your tanks ({{notification.fish}})
+{%endif%}
+
 To view this notification log in here: {{url_for('auth.login', _external=True)}}
