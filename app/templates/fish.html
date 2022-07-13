@@ -66,7 +66,7 @@
         {%if fish.comments != None and fish.comments != ""%}
             <p class = "fishInfoPoint"><span class="pointHeader">Comments: </span>{{fish.comments}}</p><br>
         {%else%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Comments: </span>No comments...</p><br>
+            <p class = "fishInfoPoint"><span class="pointHeader">Comments: </span>No comments</p><br>
         {%endif%}
         {%if fish.reminders.count() >0%}
             <p class = "fishInfoPoint"><span class="pointHeader">Current reminders:</span>
@@ -75,7 +75,7 @@
                 {%endfor%}
             </p>
         {%else%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Reminders: </span>No reminders...</p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Reminders: </span>No reminders</p>
         {%endif%}
 
     </div>

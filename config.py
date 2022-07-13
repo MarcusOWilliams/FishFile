@@ -11,8 +11,7 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY')
 
     # Linking the database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'app.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_recycle': 299,
     }
