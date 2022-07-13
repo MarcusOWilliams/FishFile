@@ -1,5 +1,6 @@
 alembic==1.8.0
 amqp==5.1.1
+APScheduler==3.9.1
 async-timeout==4.0.2
 atomicwrites==1.4.0
 attrs==21.4.0
@@ -19,6 +20,7 @@ Deprecated==1.2.13
 dnspython==2.2.1
 email-validator==1.2.1
 Flask==2.1.2
+Flask-APScheduler==1.12.4
 Flask-Bcrypt==1.0.1
 Flask-Login==0.6.1
 Flask-Mail==0.9.1
@@ -49,15 +51,19 @@ pycparser==2.21
 PyJWT==2.4.0
 pyparsing==3.0.9
 pytest==7.1.2
+python-dateutil==2.8.2
 python-dotenv==0.20.0
 pytz==2022.1
+pytz-deprecation-shim==0.1.0.post0
 redis==4.3.4
 rq==1.10.1
 six==1.16.0
 SQLAlchemy==1.4.37
 toml==0.10.2
 tomli==2.0.1
-typing-extensions==4.2.0
+typing_extensions==4.2.0
+tzdata==2022.1
+tzlocal==4.2
 vine==5.0.0
 wcwidth==0.2.5
 Werkzeug==2.1.2
