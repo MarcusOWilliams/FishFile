@@ -1,24 +1,51 @@
 {%extends 'base.html'%}
 
 {%block content%}
+<div id="tutorialContainer">
     <h2>Useful Information and Guides about DanioDB</h2>
+    <h4>Contents</h4>
+    <div id="tutorialContentsList">
+      <span>(Click on a heading from the list below to scroll to the related tutorial)</span>
+      <a>Profile Settings</a>
+      <a>Searching the database</a>
+      <a>Updating an entry</a>
+      <a>Adding Fish to the database</a>
+      <a href="#excel_guide">Creating an excel spreadsheet</a>
+    </div>
+      
 
+    
+    <hr>
     <h4>Profile settings</h4>
     <p>Permissions</p>
-
+    <hr>
     <h4>Searching the database</h4>
     <p>There are two main ways to search for an entry in the database:
       The simplest way is to use the small search bar in the top right hand corner, this allows you to search for a specific fish tank by giving its stock number 
-      If you want a more detailed search you can use the search form on the home page, this will allow you to filter by a number of attributes of any entry and will return a list of all the entries that match your search</p>
-
+      If you want a more detailed search you can use the search form on the home page, this will allow you to filter by a number of attributes of any entry and will return a list of all the entries that match your search, but searching with none of the fields filled in you can get a list of every fish entry in the database</p>
+      <hr>
     <h4>Adding a fish to the database</h4>
     <p></p>
+    <hr>
+    <div id="excel_guide"></div>
+      <h4>Creating an Excel Spreadsheet From the Database</h4>
+    
+      <p>DanioDB gives you the ability to create a quick an easy excel spreadsheet from database entries, all you need to do is copy the data you require from the website and format it in an excel spreadsheet by following the steps below.</p>
+      
+      <p><b>Step 1:</b><br>Find the data you want to create your spreadsheet from, this can be found at the bottom of your search results, which will contain the information of all the entries that match the search or at the bottom of the page for an individual fish entry. Once you have filtered to the information you require, press the copy to clipboard button.<br><img class = "tutorialImage" src="{{url_for('static', filename = 'pictures/guides/excel_guide/copy_text_csv.png')}}", alt="Copy text to clipboard"></p>
 
-    <h4>Creating an excel file from the database</h4>
-    <p></p>
+      <p><b>Step 2:</b><br>Open a new excel document and paste the text into the first cell.<br><img class = "tutorialImage" src="{{url_for('static', filename = 'pictures/guides/excel_guide/paste_text_csv.png')}}"><br>Then click on "A" at the top of the first column to highlight the entire column.<br><img class = "tutorialImage" src="{{url_for('static', filename = 'pictures/guides/excel_guide/select_column_csv.png')}}"></p>
+      
+      <p><b>Step 3:</b><br>Select the data tab at the top of the screen.<br><img class = "tutorialImage" src="{{url_for('static', filename = 'pictures/guides/excel_guide/select_data_csv.png')}}"><br>In the data tools section, select text to columns.<br><img class = "tutorialImage" src="{{url_for('static', filename = 'pictures/guides/excel_guide/select_texttocolumn_csv.png')}}"></p>
+      
+      <p><b>Step 4:</b><br>A popup should appear, on the first screen cahnge the selected field from "Fixed width" to "Delimited".<br><img class = "tutorialImage" src="{{url_for('static', filename = 'pictures/guides/excel_guide/select_delimited_csv.png')}}"><br>Press next, on the next screen select the box next to "Comma".<br><img class = "tutorialImage" src="{{url_for('static', filename = 'pictures/guides/excel_guide/select_delimiter_csv.png')}}"><br> Finally you should be able to press finish and the spreadsheet shuold be correctly formatted.</p>
+
+      
+    </div>
 
     <h4>Extra Tips</h4>
     <ul>
         <li></li>
     </ul>
+  </div>
 {%endblock%}

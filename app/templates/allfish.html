@@ -40,7 +40,9 @@
     {{form.hidden_tag()}}
     {{form.order.label}} {{form.order()}} {{form.submit()}}
 </form>
-{%for fish in all_fish%}
-    {% include 'subtemplates/_fish.html'%}
-{%endfor%}
+<div id="fishList">
+    {%for fish in all_fish%}
+        {% include 'subtemplates/_fish.html'%}
+    {%endfor%}
+</div>
 {%endblock%}

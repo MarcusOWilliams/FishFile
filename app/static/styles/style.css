@@ -246,3 +246,28 @@
     margin: auto;
     margin-bottom: 40px;
 }
+
+#tutorialContainer{
+    width:80%;
+    margin:auto;
+    text-align: center;
+}
+#tutorialContainer h2{
+    text-decoration: underline;
+    text-align: center;
+}
+
+#tutorialContainer h4{
+    text-decoration: underline;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#tutorialContentsList a{
+    
+    display: block;
+    margin-top: 5px;
+    font-weight: bold;
+    
+
+}

@@ -217,34 +217,50 @@ def search():
     #set the order of the fish, if not set they are sorted by most recently added
     order = session.get("order_by", "Fish ID")
 
+    
 
     if order == "Age ( young -> old )":
-        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.birthday.desc()).paginate(
+        result = Fish.query.select_entity_from(all_fish).order_by(Fish.birthday.desc())
+        all_results = result.all()
+        all_fish = result.paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
+        
     elif order == "Age (old -> young)":
-        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.birthday.asc()).paginate(
+        result = Fish.query.select_entity_from(all_fish).order_by(Fish.birthday.asc())
+        all_results = result.all()
+        all_fish = result.paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     elif order == "Fish ID":
-        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.fish_id.asc()).paginate(
+        result = Fish.query.select_entity_from(all_fish).order_by(Fish.fish_id.asc())
+        all_results = result.all()
+        all_fish = result.paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
+        
     elif order == "Tank ID":
-        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.tank_id.asc()).paginate(
+        result = Fish.query.select_entity_from(all_fish).order_by(Fish.tank_id.asc())
+        all_results = result.all()
+        all_fish = result.paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     elif order == "Stock":
-        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.stock.asc()).paginate(
+        result = Fish.query.select_entity_from(all_fish).order_by(Fish.stock.asc())
+        all_results = result.all()
+        all_fish = result.paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     elif order == "Newest Added":
-        all_fish = Fish.query.select_entity_from(all_fish).order_by(Fish.added.desc()).paginate(
+        result = Fish.query.select_entity_from(all_fish).order_by(Fish.added.desc())
+        all_results = result.all()
+        all_fish = result.paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     else:
-        
-        all_fish = Fish.query.select_entity_from(all_fish).paginate(
+        result = Fish.query.select_entity_from(all_fish)
+        all_results = result.all()
+        all_fish = result.paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
 
@@ -270,6 +286,7 @@ def search():
         next_url=next_url,
         prev_url=prev_url,
         pagination=all_fish,
+        all_results=all_results
     )
 
 
