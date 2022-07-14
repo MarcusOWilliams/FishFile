@@ -12,11 +12,23 @@
     {%endif%}
 
     {%if current_user.isAdmin() and user != current_user%}
-        <p>Current role: {{user.role}}</p>
-        <form action="" method="post">
-            {{ roleForm.hidden_tag() }}
-            {{roleForm.role.label}} {{ roleForm.role() }} {{roleForm.submit()}}
-        </form>
+        {% if current_user.isOwner() %}
+            <p>Current role: {{user.role}}</p>
+            <form action="" method="post">
+                {{ roleForm.hidden_tag() }}
+                {{roleForm.role.label}} {{ roleForm.role() }} {{roleForm.submit()}}
+            </form>
+        {%elif not user.isAdmin() %}
+
+            <p>Current role: {{user.role}}</p>
+            <form action="" method="post">
+                {{ roleForm.hidden_tag() }}
+                {{roleForm.role.label}} {{ roleForm.role() }} {{roleForm.submit()}}
+            </form>
+        {%else%}
+            <p>Current role: {{user.role}}</p>
+            <p>You can not change the role of this user
+        {% endif %}
     {%endif%}
 
     {% if user_fish %}
