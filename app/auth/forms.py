@@ -14,13 +14,13 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    first_name = StringField("First Name", validators=[DataRequired()])
-    last_name = StringField("Surname", validators=[DataRequired()])
+    first_name = StringField("* First Name", validators=[DataRequired()])
+    last_name = StringField("* Surname", validators=[DataRequired()])
     # The Email() validator from WTForms requires an external dependency to be installed. email-validator
-    email = StringField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Password", validators=[DataRequired()])
+    email = StringField("* Email", validators=[DataRequired(), Email()])
+    password = PasswordField("* Password", validators=[DataRequired()])
     password2 = PasswordField(
-        "Confirm Password", validators=[DataRequired(), EqualTo("password", message="Passwords do not match.")]
+        "* Confirm Password", validators=[DataRequired(), EqualTo("password", message="Passwords do not match.")]
     )
     submit = SubmitField("Register")
 

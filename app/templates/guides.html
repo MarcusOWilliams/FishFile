@@ -24,10 +24,13 @@
       The simplest way is to use the small search bar in the top right hand corner, this allows you to search for a specific fish tank by giving its stock number 
       If you want a more detailed search you can use the search form on the home page, this will allow you to filter by a number of attributes of any entry and will return a list of all the entries that match your search, but searching with none of the fields filled in you can get a list of every fish entry in the database</p>
       <hr>
-    <h4>Adding a fish to the database</h4>
-    <p></p>
-    <hr>
-    <div id="excel_guide"></div>
+    <div id="adding_guide" >
+      <h4>Adding an entry to the database</h4>
+      <p>To add an entry to the database you must have the necessary permissions, if you believe you require these previlidges and do not have them then please contact the website admin using the infromation at the bottom of this page.
+        Once you have the correct permissions head over to <a href="{{url_for('main.newfish')}}">this page</a> where you will see the form to add a new database entry. Required fields are marked, everything else is optional. When entering the details for father and mother fish make sure that the details match to an entry that is already in the database. For all of the fish counts a number must be inputted to the associated fields, if there are no fish matching the count then just input 0.</p>
+      <hr>
+    </div>
+    <div id="excel_guide">
       <h4>Creating an Excel Spreadsheet From the Database</h4>
     
       <p>DanioDB gives you the ability to create a quick an easy excel spreadsheet from database entries, all you need to do is copy the data you require from the website and format it in an excel spreadsheet by following the steps below.</p>

@@ -28,41 +28,41 @@ class SimpleSearch(FlaskForm):
 
 
 class NewFish(FlaskForm):
-    fish_id = StringField("Fish ID", validators=[DataRequired()])
-    tank_id = StringField("Tank ID", validators=[DataRequired()])
+    fish_id = StringField("* Fish ID", validators=[DataRequired()])
+    tank_id = StringField("* Tank ID", validators=[DataRequired()])
     status = SelectField(
         "Status",
         choices=["Alive", "Alive (Healthy)", "Alive (Unhealthy)", "Dead"],
         validators=[DataRequired()],
     )
-    stock = StringField("Stock #", validators=[DataRequired()])
-    protocol = IntegerField("Protocol #", validators=[Optional()])
-    comments = TextAreaField("Comments", validators=[Optional()])
-    source = SelectField("Source", choices=["Home", "Imported"])
-    cross_type = StringField("Cross Type", validators=[DataRequired()])
+    stock = StringField("* Stock #", validators=[DataRequired()])
+    protocol = IntegerField("* Protocol #", validators=[Optional()])
+    comments = TextAreaField("* Comments", validators=[Optional()])
+    source = SelectField("* Source", choices=["Home", "Imported"])
+    cross_type = StringField("* Cross Type", validators=[DataRequired()])
 
-    birthday = DateField("Birthday", validators=[DataRequired()])
+    birthday = DateField("* Birthday", validators=[DataRequired()])
     date_of_arrival = DateField("Date of Arrival", validators=[Optional()])
 
-    user_code = SelectField("User Code", validators=[DataRequired()], coerce=str)
+    user_code = SelectField("* User Code", validators=[DataRequired()], coerce=str)
     project_license = SelectField(
-        "Project License", validators=[DataRequired()], coerce=str
+        "* Project License", validators=[DataRequired()], coerce=str
     )
 
     allele = StringField("Allele",validators=[Optional()])
-    mutant_gene = StringField("Mutant Gene", validators=[DataRequired()])
+    mutant_gene = StringField("* Mutant Gene", validators=[DataRequired()])
     transgenes = StringField("Transgenes", validators=[Optional()])
 
-    father_id = StringField("Father's ID", validators=[DataRequired()])
-    mother_id = StringField("Mother's ID", validators=[DataRequired()])
-    father_stock = StringField("Father's Stock #", validators=[DataRequired()])
-    mother_stock = StringField("Mother's Stock #", validators=[DataRequired()])
+    father_id = StringField("* Father's ID", validators=[DataRequired()])
+    mother_id = StringField("* Mother's ID", validators=[DataRequired()])
+    father_stock = StringField("* Father's Stock #", validators=[DataRequired()])
+    mother_stock = StringField("* Mother's Stock #", validators=[DataRequired()])
 
-    males = IntegerField("# Males")
-    females = IntegerField("# Females")
-    unsexed = IntegerField("# Unsexed")
-    carriers = IntegerField("# Carriers/Licenced")
-    total = IntegerField("Total #")
+    males = IntegerField("* # Males")
+    females = IntegerField("* # Females")
+    unsexed = IntegerField("* # Unsexed")
+    carriers = IntegerField("* # Carriers/Licenced")
+    total = IntegerField("* Total #")
 
     alert_date = DateField("Reminder date", validators=[Optional()])
     alert_msg = StringField("Reminder message", validators=[Optional()])
