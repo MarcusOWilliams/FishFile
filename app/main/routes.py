@@ -474,7 +474,7 @@ def newfish():
         ).first()
 
         newfish = Fish(
-            fish_id=form.fish_id.data.upper(),
+            fish_id=form.fish_id.data,
             tank_id=form.tank_id.data.upper(),
             status=form.status.data,
             stock=form.stock.data.upper(),
@@ -563,7 +563,7 @@ def updatefish(id):
 
 
         change_count=0
-        if fish.fish_id != form.fish_id.data.upper():
+        if fish.fish_id != form.fish_id.data:
             change = Change(
                 user=current_user,
                 fish=fish,
@@ -571,12 +571,12 @@ def updatefish(id):
                 contents="fish ID",
                 field="fish_id",
                 old=fish.fish_id,
-                new=form.fish_id.data.upper(),
+                new=form.fish_id.data,
                 notification = notification
             )
             db.session.add(change)
             
-            fish.fish_id = form.fish_id.data.upper()
+            fish.fish_id = form.fish_id.data
             change_count+=1
             
 

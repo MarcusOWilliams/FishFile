@@ -71,7 +71,7 @@ class NewFish(FlaskForm):
 
     def validate_father_stock(self, father_stock):
         fish = Fish.query.filter_by(
-            fish_id=self.father_id.data.upper(), stock=father_stock.data.upper()
+            fish_id=self.father_id.data, stock=father_stock.data
         ).first()
         if fish is None:
             raise ValidationError(
@@ -80,7 +80,7 @@ class NewFish(FlaskForm):
 
     def validate_mother_stock(self, mother_stock):
         fish = Fish.query.filter_by(
-            fish_id=self.mother_id.data.upper(), stock=mother_stock.data.upper()
+            fish_id=self.mother_id.data, stock=mother_stock.data
         ).first()
         if fish is None:
             raise ValidationError(
