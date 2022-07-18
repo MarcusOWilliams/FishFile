@@ -36,8 +36,8 @@ class NewFish(FlaskForm):
         validators=[DataRequired()],
     )
     stock = StringField("* Stock #", validators=[DataRequired()])
-    protocol = IntegerField("* Protocol #", validators=[Optional()])
-    comments = TextAreaField("* Comments", validators=[Optional()])
+    protocol = IntegerField("Protocol #", validators=[Optional()])
+    comments = TextAreaField("Comments", validators=[Optional()])
     source = SelectField("* Source", choices=["Home", "Imported"])
     cross_type = StringField("* Cross Type", validators=[DataRequired()])
 
@@ -71,7 +71,7 @@ class NewFish(FlaskForm):
 
     def validate_father_stock(self, father_stock):
         fish = Fish.query.filter_by(
-            fish_id=self.father_id.data, stock=father_stock.data
+            fish_id=self.father_id.data.upper(), stock=father_stock.data.upper()
         ).first()
         if fish is None:
             raise ValidationError(
@@ -80,7 +80,7 @@ class NewFish(FlaskForm):
 
     def validate_mother_stock(self, mother_stock):
         fish = Fish.query.filter_by(
-            fish_id=self.mother_id.data, stock=mother_stock.data
+            fish_id=self.mother_id.data.upper(), stock=mother_stock.data.upper()
         ).first()
         if fish is None:
             raise ValidationError(
