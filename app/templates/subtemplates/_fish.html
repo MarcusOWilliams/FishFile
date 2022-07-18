@@ -1,16 +1,16 @@
 <table class="fishSummaryTable">
     <tr>
-        <td colspan="3"><strong>Fish ID: {{fish.fish_id}}</strong></td>
+        <td colspan="3"><strong>Stock: {{fish.stock}}</strong></td>
     </tr>
     <tr>
+        <td>Fish ID: {{fish.fish_id}}</td>
         <td>Tank ID: {{fish.tank_id}}</td>
-        <td>Stock: {{fish.stock}}</td>
         <td>Status: {{fish.status}}</td>
     </tr>
     <tr>
         <td>Protocol: {{fish.protocol}}</td>
         <td>Total #: {{fish.total}}</td>
-        <td>User Code: <a href = "{{url_for('main.user', username = fish.user_code.username)}}">{{fish.user_code.code}}</a></td>
+        <td>Age: {{fish.getAge()}}</td>
     </tr>
     <tr>
         <td colspan="3"><a href = "{{url_for('main.fish', id=fish.id)}}">See More Details...</a></td>
