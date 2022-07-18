@@ -294,7 +294,7 @@ def search():
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def simplesearch():
-    fish = Fish.query.filter_by(stock=g.search_form.search.data.upper()).first()
+    fish = Fish.query.filter_by(tank_id=g.search_form.search.data.upper()).filter(Fish.status!="Dead").first()
     if fish is None:
         return redirect(url_for("main.fish", id=-1))
 
