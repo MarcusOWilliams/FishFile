@@ -31,7 +31,7 @@ class NewFish(FlaskForm):
     fish_id = StringField("* Fish ID", validators=[DataRequired()])
     tank_id = StringField("* Tank ID", validators=[DataRequired()])
     status = SelectField(
-        "Status",
+        "* Status",
         choices=["Alive", "Alive (Healthy)", "Alive (Unhealthy)", "Dead"],
         validators=[DataRequired()],
     )
@@ -172,13 +172,13 @@ class SettingsForm(FlaskForm):
     emails = BooleanField("Email notifications:")
     email_reminders = BooleanField("Email reminders:")
 
-    add_notifications = BooleanField("Fish added under your user code:")
+    add_notifications = BooleanField("Entry added under your user code:")
     change_notifications = BooleanField("Change made to entry under your user code:")
-    turnover_notifications = BooleanField("Fish alerts (e.g. split/turnover) due soon reminders:")
+    turnover_notifications = BooleanField("Custom reminders:")
     age_notifications = BooleanField("Alerts when fish under your user code reach a certain age:")
 
     pl_add_notifications = BooleanField("Fish added under your project license:")
-    pl_turnover_notifications = BooleanField("Fish alerts (e.g. split/turnover) due soon for all fish under your project license:")
+    pl_turnover_notifications = BooleanField("Custom reminders for all fish under your project license:")
     pl_age_notifications = BooleanField("Fish age reminders for all fish under your project license:")
 
     project_license = StringField("Project License:")
