@@ -222,7 +222,9 @@ class Fish(db.Model):
             ancestors = ancestors + self.mother.get_ancestors(generation, "Mother")
             
 
-        return sorted(ancestors, key=lambda x: x["level"])
+        ancestors = sorted(ancestors, key=lambda x: x["level"])
+
+        return ancestors
     
     def getAge(self):
         if self.status == "Dead":

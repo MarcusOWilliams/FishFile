@@ -1,43 +1,129 @@
 {% extends "base.html" %}
 
 {% block content %} 
+<div id = "familyTree">
+    <h2>Genetic history of: {{fish}}</h2>
+    <table>
+        <tr>
+            <td colspan="6"></td>
+            <td></td>
+            <td></td>
+            <td colspan="5"></td>
+            <td colspan="4"class = "fishCell" rowspan="2">{{fish}}<br><a href = "{{url_for('main.fish', id=fish.id)}}">(View fish)</a></td>
+            <td colspan="5"></td>
+            <td></td>
+            <td></td>
+            <td colspan="6"></td>
+        </tr>
+        {%if generations > 0%}
+            <tr>
+                <td colspan="7"></td>
+                <td class="horizontalFather" colspan="7">Father</td>
+                <td class="horizontalMother" colspan="6">Mother</td>
+                <td colspan="7"></td>
+            </tr>
+            <tr>
+                <td colspan="2" ></td>
+                <td></td>
+                <td></td>
+                <td colspan="2" ></td>
+                <td colspan="2" rowspan="2" class = "fishCell">{{fish.father}}<br><a href="{{url_for('main.fish', id=fish.father.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.father.id)}}">(View ancestors)</a></td>
+                <td colspan="2" ></td>
+                <td></td>
+                <td></td>
+                <td colspan="6"></td>
+                <td></td>
+                <td></td>
+                <td colspan="2" ></td>
+                <td colspan="2" rowspan="2" class = "fishCell">{{fish.mother}}<br><a href="{{url_for('main.fish', id=fish.mother.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.motherid)}}">(View ancestors)</a></td>
+                <td colspan="2" ></td>
+                <td></td>
+                <td></td>
+                <td colspan="2" ></td>
+            </tr>
+        {%endif%}
+        {%if generations > 1 %}
+        <tr>
+            <td colspan="3"></td>
+            <td colspan="3" class="horizontalFather">Father</td>
+            <td colspan="3" class="horizontalMother">Mother</td>
+            <td colspan="8"></td>
+            <td colspan="3" class="horizontalFather">Father</td>
+            <td colspan="3" class="horizontalMother">Mother</td>
+            <td colspan="3"></td>
 
-    {% set current_generation = [0]%}
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td colspan="2" rowspan="2" class = "fishCell">{{fish.father.father}}<br><a href="{{url_for('main.fish', id=fish.father.father.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.father.father.id)}}">(View ancestors)</a></td>
+            <td></td>
+            <td></td>
+            <td colspan="2" ></td>
+            <td></td>
+            <td></td>
+            <td colspan="2" rowspan="2" class = "fishCell">{{fish.father.mother}}<br><a href="{{url_for('main.fish', id=fish.father.mother.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.father.mother.id)}}">(View ancestors)</a></td>
+            <td></td>
+            <td></td>
+            <td colspan="2" ></td>
+            <td></td>
+            <td></td>
+            <td colspan="2" rowspan="2" class = "fishCell">{{fish.mother.father}}<br><a href="{{url_for('main.fish', id=fish.mother.father.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.mother.father.id)}}">(View ancestors)</a></td>
+            <td></td>
+            <td></td>
+            <td colspan="2" ></td>
+            <td></td>
+            <td></td>
+            <td colspan="2" rowspan="2" class = "fishCell">{{fish.mother.mother}}<br><a href="{{url_for('main.fish', id=fish.mother.mother.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.mother.mother.id)}}">(View ancestors)</a></td>
+            <td></td>
+            <td></td>
+        </tr>
 
-
-    {%for fish in fish_list%}
-        <div class = "ancestorFish">
-            
-            {%if fish["level"] != current_generation[0] %}
-                {% if current_generation.append(current_generation.pop() + 1) %}{% endif %}
-                <h3>Generation -{{current_generation[0]}}</h3>
-            {%endif%}
-            {%if current_generation[0] == 0%}
-                <h2>Genetic history of:</h2>
-            {%endif%}
-            {%if fish["relation"] != None %}
-                {%if fish["relation"] == "Father" %}
-                    <p>Father: <a href="{{url_for('main.fish', id = fish['fish'].id)}}" target="_blank">{{fish["fish"]}}</a></p>
-                {%else%}
-                <p>Mother: <a href="{{url_for('main.fish', id = fish['fish'].id)}}" target="_blank">{{fish["fish"]}}</a></p>
-                {%endif%}
-            {%else%}
-            <p><a href="{{url_for('main.fish', id = fish['fish'].id)}}" target="_blank">{{fish["fish"]}}</a></p>
-
-            {%endif%}
-            
-            <p>
-                {%if fish["fish"].father != None%}
-                (Father's stock = {{fish['fish'].father.stock}})
-                {%else%}
-                    (No Father)
-                {%endif%}
-                {%if fish["fish"].mother != None%}
-                (Mother's stock = {{fish['fish'].mother.stock}})
-                {%else%}
-                    (No Mother)
-                {%endif%}</p>
-        </div>
+        {%endif%}
+        {%if generations >2 %}
+        <tr>
+            <td colspan="2">Father</td>
+            <td colspan="2">Mother</td>
+            <td colspan="2"></td>
+            <td colspan="2">Father</td>
+            <td colspan="2">Mother</td>
+            <td colspan="1"></td>
+            <td colspan="3">Father</td>
+            <td colspan="2">Mother</td>
+            <td colspan="2"></td>
+            <td colspan="2">Father</td>
+            <td colspan="2">Mother</td>
         
-    {%endfor%}
+            
+            
+        </tr>
+        <tr>
+            
+            <td colspan="2" rowspan="2"  class = "fishCell">{{fish.father.father.father}}<br><a href="{{url_for('main.fish', id=fish.father.father.father.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.father.father.father.id)}}">(View ancestors)</a></td>
+            <td colspan="2" ></td>
+            <td colspan="2" rowspan="2"  class = "fishCell">{{fish.father.father.mother}}<br><a href="{{url_for('main.fish', id=fish.father.father.mother.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.father.father.mother.id)}}">(View ancestors)</a></td>
+            <td colspan="2" ></td>
+            <td colspan="2"  rowspan="2" class = "fishCell">{{fish.father.mother.father}}<br><a href="{{url_for('main.fish', id=fish.father.mother.father.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.father.mother.father.id)}}">(View ancestors)</a></td>
+            <td colspan="2" ></td>
+            <td colspan="2" rowspan="2"  class = "fishCell">{{fish.father.mother.mother}}<br><a href="{{url_for('main.fish', id=fish.father.mother.mother.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.father.mother.mother.id)}}">(View ancestors)</a></td>
+            <td colspan="2" ></td>
+            <td colspan="2"  rowspan="2" class = "fishCell">{{fish.mother.father.father}}<br><a href="{{url_for('main.fish', id=fish.mother.father.father.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.mother.father.father.id)}}">(View ancestors)</a></td>
+            <td colspan="2" ></td>
+            <td colspan="2"  rowspan="2" class = "fishCell">{{fish.mother.father.mother}}<br><a href="{{url_for('main.fish', id=fish.mother.father.mother.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.mother.father.mother.id)}}">(View ancestors)</a></td>
+            <td colspan="2" ></td>
+            <td colspan="2" rowspan="2" class = "fishCell">{{fish.mother.mother.father}}<br><a href="{{url_for('main.fish', id=fish.mother.mother.father.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.mother.mother.father.id)}}">(View ancestors)</a></td>
+            <td colspan="2" ></td>
+            <td colspan="2" rowspan="2" class = "fishCell">{{fish.mother.mother.mother}}<br><a href="{{url_for('main.fish', id=fish.mother.mother.mother.id)}}">(View fish)</a><br><a href="{{url_for('main.fishhistory', id=fish.mother.mother.mother.id)}}">(View ancestors)</a></td>
+        </tr>
+        <tr></tr>
+        {%else%}
+        <tr></tr>
+        <tr><td colspan ="30">No more generations</td></tr>
+        {%endif%}
+
+
+    </table>
+</div>
+
+
 {%endblock%}

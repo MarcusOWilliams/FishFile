@@ -271,3 +271,37 @@
     
 
 }
+
+#familyTree{
+    margin: auto;
+    overflow-x: scroll;
+    text-align: center;
+}
+#familyTree table{
+    margin: auto;
+}
+
+#familyTree td{
+    text-align: center;
+    width: 65px;
+    min-width: 65px;
+
+}
+
+#familyTree tr{
+    height: 50px;
+}
+
+#familyTree .horizontalFather{
+    border-top:2px solid black;
+    border-left:2px solid black;
+}
+
+#familyTree .horizontalMother{
+    border-top:2px solid black;
+    border-right:2px solid black;
+} 
+#familyTree .fishCell{
+    border:2px solid black;
+    min-width:130px;
+}
