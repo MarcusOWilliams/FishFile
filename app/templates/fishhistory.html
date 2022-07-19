@@ -1,5 +1,15 @@
 {% extends "base.html" %}
-
+{%block scripts%}
+<!-- Center the family tree -->
+<script>
+    window.addEventListener("load", function(e) {
+        var container = document.getElementById("familyTree");
+        var width = container.offsetWidth;
+        var middle = (container.offsetLeft + width)/2
+        container.scrollLeft += 100;
+      });
+</script>
+{%endblock%}
 {% block content %} 
 <div id = "familyTree">
     <h2>Genetic history of: {{fish}}</h2>
