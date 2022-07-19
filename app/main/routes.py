@@ -62,7 +62,8 @@ def index():
             if fieldname != "csrf_token" and fieldname != "submit":
                 if value != None and value != "":
                     search_dict[fieldname] = value
-
+                    
+        session["order_by"] = form.order.data
         session["search_dict"] = search_dict.copy()
         return redirect(url_for("main.search"))
 
@@ -84,8 +85,9 @@ def search():
                 if value != None and value != "":
                     search_dict[fieldname] = value
 
-        session["search_dict"] = search_dict.copy()
         session["order_by"] = form.order.data
+        session["search_dict"] = search_dict.copy()
+        
 
         return redirect(url_for("main.search"))
 
@@ -215,7 +217,7 @@ def search():
     page = request.args.get("page", 1, type=int)
 
     #set the order of the fish, if not set they are sorted by most recently added
-    order = session.get("order_by", "Fish ID")
+    order = session.get("order_by", "Newest Added")
 
     
 
@@ -1017,7 +1019,7 @@ def allfish():
     
 
     #set the order of the fish, if not set they are sorted by most recently added
-    order = session.get("order_by", "Fish ID")
+    order = session.get("order_by", "Newest Added")
 
     
     form.order.data = order
@@ -1066,7 +1068,7 @@ def project_license(license):
         page, current_app.config["FISH_PER_PAGE"], False
     )
 
-    order = session.get("order_by", "Fish ID")
+    order = session.get("order_by", "Newest Added")
 
     form.order.data = order
 
@@ -1133,7 +1135,25 @@ def settings():
         current_user.settings.pl_turnover_notifications = form.pl_turnover_notifications.data
         current_user.settings.pl_age_notifications = form.pl_age_notifications.data
         
-        current_user.project_license = form.project_license.data
+        if current_user.project_license != form.project_license.data:
+            fish = Fish.query.filter_by(project_license_holder = current_user).all()
+            old_license = current_user.project_license
+            current_user.project_license = form.project_license.data
+            for f in fish:
+                
+                change = Change(
+                    user=current_user,
+                    fish=f,
+                    action="Updated",
+                    contents="project license",
+                    field="project_license",
+                    old= old_license,
+                    new=current_user.project_license
+                )
+                db.session.add(change)
+                f.project_license_holder = current_user
+
+
 
         db.session.commit()
 
