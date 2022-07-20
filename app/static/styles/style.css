@@ -305,3 +305,34 @@
     border:2px solid black;
     min-width:130px;
 }
+
+#alleleBlock{
+    margin-left:40px;
+}
+#alleleTable{
+    text-align: center;
+}
+#alleleTable td{
+    border: 1px black solid;
+    padding:2px;
+}
+#alleleTable th{
+    border-right:1px black solid ;
+    padding:5px;
+}
+#alleleTable tr{
+    border-bottom: 1px black solid;
+    padding:2px;
+}
+#alleleTable .trueCell{
+    background-color: mediumseagreen;
+}
+
+#alleleTable .falseCell{
+    background-color: tomato;
+}
+
+#updateAllelsBlock{
+    margin: auto;
+    text-align: center;
+}

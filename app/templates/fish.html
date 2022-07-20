@@ -31,7 +31,35 @@
             <p class = "fishInfoPoint"><span class="pointHeader">Transgenes: </span>{{fish.transgenes}}</p>
         {%endif%}
         {%if fish.allele != None and fish.allele != ""%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Allele: </span>{{fish.allele}}</p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Allele: </span>
+                <div id="alleleBlock">
+                    <table id="alleleTable">
+                        <tr>
+                            <th>Name</th>
+                            <th>Unidentified</th>
+                            <th>Identified</th>
+                            <th>Heterozygous</th>
+                            <th>Homozygous</th>
+                            <th>Hemizygous</th>
+                        </tr>
+                        {%for allele in alleles%}
+                            <tr>
+                                <th>{{allele.name}}</th>
+                                <td {%if allele.unidentified %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
+                                <td {%if allele.identified %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
+                                <td {%if allele.heterozygous %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
+                                <td {%if allele.homozygous %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
+                                <td {%if allele.hemizygous %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
+                            </tr>
+                        {%endfor%}
+                    </table>
+                    {%if current_user.isResearcher()%}
+                        <a href="{{url_for('main.updatealleles', id=fish.id)}}">Update values</a>
+                    {%endif%}
+                </div>
+
+            </p>
+
         {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Type of Cross: </span>{{fish.cross_type}}</p>
         {%if fish.father != None%}

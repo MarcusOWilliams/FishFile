@@ -25,6 +25,7 @@ from flask import (
 )
 from flask_login import current_user, login_required
 from app.main.forms import (
+    AlleleForm,
     EmptyForm,
     OrderForm,
     SimpleSearch,
@@ -367,13 +368,14 @@ def user(username):
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def fish(id):
     fish = Fish.query.filter_by(id=id).first()
+    alleles = Allele.query.filter_by(fish=fish)
     if fish is None:
         title = "Fish Not Found"
     else:
         title = f"Fish ({fish.stock})"
     
 
-    return render_template("fish.html", fish=fish, title=title, form = EmptyForm())
+    return render_template("fish.html", fish=fish, title=title,alleles=alleles, form = EmptyForm())
 
 
 @bp.route("/fish/<id>/changes/<filters>", methods=["GET", "POST"])
@@ -449,6 +451,37 @@ def fishhistory(id):
     generations = max(ancestors, key = lambda x:x['level'])['level']
 
     return render_template("fishhistory.html", fish = fish, generations = generations, current_generation =0, title="Fish History")
+
+@bp.route("/fish/<id>/updatealleles/", methods=["GET", "POST"])
+@login_required
+@requires_roles("Researcher", "Admin", "Owner")
+def updatealleles(id):
+    fish = Fish.query.filter_by(id=id).first_or_404()
+    alleles = Allele.query.filter_by(fish=fish).all()
+
+    if request.method == "POST":
+
+        for allele in alleles:
+            
+            allele.unidentified= request.form.get(f"{allele.name.replace(' ', '')}Unidentified") == "on"
+
+            allele.identified = request.form.get(f"{allele.name.replace(' ', '')}Identified") == "on"
+
+            allele.heterozygous = request.form.get(f"{allele.name.replace(' ', '')}Heterozygous") == "on"
+
+            allele.homozygous = request.form.get(f"{allele.name.replace(' ', '')}Homozygous") == "on"
+
+            allele.hemizygous = request.form.get(f"{allele.name.replace(' ', '')}Hemizygous") == "on"
+
+
+        db.session.commit()
+
+        return redirect(url_for("main.fish", id=fish.id))
+    
+        
+
+    return render_template('updatealleles.html', fish=fish, alleles = alleles, title = "Update Alleles")
+
 
 @bp.route("/newfish/", methods=["GET", "POST"])
 @login_required
@@ -974,7 +1007,7 @@ def updatefish(id):
             for name in form.allele.data:
                 allele =Allele(name=name, fish=fish)
                 db.session.add(allele)
-                
+
             change_count+=1
 
         

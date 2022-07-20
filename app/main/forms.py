@@ -204,3 +204,11 @@ class OrderForm(FlaskForm):
 
 class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
+
+class AlleleForm(FlaskForm):
+    unidentified = BooleanField("Unidentified:")
+    identified = BooleanField("Identified:")
+    homozygous = BooleanField("Homozygous:")
+    heterozygous = BooleanField("Heterozygous:")
+    hemizygous = BooleanField("Hemizygous:")
+    submit = SubmitField('Update')

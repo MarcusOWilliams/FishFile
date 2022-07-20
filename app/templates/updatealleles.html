@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %} 
+<h2>Updating allele values for: {{fish}}</h2>
+<form action="{{url_for('main.updatealleles', id=fish.id)}}" method="POST">
+    <div id="updateAllelesBlock">
+        <table id="alleleTable" style="margin: auto; margin-top:20px;">
+            <tr>
+                <th>Name</th>
+                <th>Unidentified</th>
+                <th>Identified</th>
+                <th>Heterozygous</th>
+                <th>Homozygous</th>
+                <th>Hemizygous</th>
+            </tr>
+            {%for allele in alleles%}
+                <tr>
+                    <th>{{allele.name}}</th>
+                    <td><input type="checkbox" name = '{{allele.name.replace(" ", "")+"Unidentified"}}' {%if allele.unidentified %} checked {%endif%}></td>
+                    <td><input type="checkbox" name = '{{allele.name.replace(" ", "")+"Identified"}}' {%if allele.identified %} checked {%endif%}></td>
+                    <td><input type="checkbox" name = '{{allele.name.replace(" ", "")+"Heterozygous"}}' {%if allele.heterozygous %} checked {%endif%}></td>
+                    <td><input type="checkbox" name = '{{allele.name.replace(" ", "")+"Homozygous"}}' {%if allele.homozygous %} checked {%endif%}></td>
+                    <td><input type="checkbox" name = '{{allele.name.replace(" ", "")+"Hemizygous"}}' {%if allele.hemizygous %} checked {%endif%}></td>
+                </tr>
+            {%endfor%}
+        </table>
+    </div>
+    <input type="submit" class="btn btn-secondary" style="margin-top: 10px;", value="Update">
+</form>
+
+
+{%endblock%}

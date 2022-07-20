@@ -6,6 +6,6 @@ Making subqueries work
 Adding pagination
     Especially to changes because you had to start with an empty query, then union then, sort, then paginate all, nothing else works
 
-
+make allele changes work in a user friendly way
 
 Making the screen synamic to be nice on all screens
