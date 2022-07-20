@@ -192,6 +192,9 @@ class Fish(db.Model):
     carriers = db.Column(db.Integer)
     total = db.Column(db.Integer)
 
+    links = db.Column(db.Text())
+    photo_links = db.Column(db.Text())
+
     changes = db.relationship(
         "Change", backref="fish", lazy="dynamic", cascade="all, delete"
     )
@@ -207,7 +210,7 @@ class Fish(db.Model):
     alleles = db.relationship(
         "Allele", backref="fish", lazy="dynamic", cascade="all, delete"
     ) 
-    
+
 
     def __repr__(self):
         return f"Fish - ID: {self.fish_id}, Stock: {self.stock}, Tank: {self.tank_id}"
@@ -261,6 +264,10 @@ class Allele(db.Model):
 
     def __repr__(self):
         return f"Allele: {self.name} - Fish: {self.fish.stock}"
+
+
+
+
 """
 This is the class for the Change table of the SQL database, which is used to record changes to the database
 Each user row contains a ...

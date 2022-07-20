@@ -11,11 +11,20 @@ from wtforms import (
     DateField,
     TextAreaField,
     SelectMultipleField,
+    MultipleFileField
 )
 from wtforms.validators import DataRequired, ValidationError, Optional
+from flask_wtf.file import FileAllowed
 from app.models import Fish, User
 
 
+def FileSizeLimit(max_size):
+    max_bytes = max_size*1024*1024
+    def check_length(form, field):
+        if len(field.data.read()) > max_bytes:
+            raise ValidationError(f"File size must be less than {max_size}MB")
+    
+    return check_length
 
 class SimpleSearch(FlaskForm):
     search = StringField("Search by fish tank ID", validators=[DataRequired()])
@@ -40,6 +49,9 @@ class NewFish(FlaskForm):
     stock = StringField("* Stock #", validators=[DataRequired()])
     protocol = IntegerField("Protocol #", validators=[Optional()])
     comments = TextAreaField("Comments", validators=[Optional()])
+    links = TextAreaField("Additional links", validators=[Optional()])
+    photos = MultipleFileField("Related photos", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'],'File must have a .jpg, .jpeg or .png extension'), FileSizeLimit(max_size=1)])
+
     source = SelectField("* Source", choices=["Home", "Imported"])
     cross_type = StringField("* Cross Type", validators=[DataRequired()])
 
