@@ -30,7 +30,7 @@
         {%if fish.transgenes != None and fish.transgenes != ""%}
             <p class = "fishInfoPoint"><span class="pointHeader">Transgenes: </span>{{fish.transgenes}}</p>
         {%endif%}
-        {%if fish.allele != None and fish.allele != ""%}
+        {%if alleles | length>0%}
             <p class = "fishInfoPoint"><span class="pointHeader">Allele: </span>
                 <div id="alleleBlock">
                     <table id="alleleTable">
@@ -116,6 +116,16 @@
         {%endif%}
 
     </div>
+    {%if fish.photos != "" and fish.photos != None %}
+        <p>{{fish.photos}}</p>
+        <p>/static/pictures/fish/{{fish.id}}_{{picture}}</p>
+        <div class="fishInfoBlock">
+            <h2>Pictures</h2>
+            {%for picture in fish.photos.split(", ") %}
+                <img height = "100px" src="/static/pictures/fish/{{picture}}">
+            {%endfor%}
+        </div>
+    {%endif%}
     <div class="fishInfoBlock">
         <h2>More Options</h2>
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishhistory', id = fish.id)}}">View the genetic history of this fish</a></p>

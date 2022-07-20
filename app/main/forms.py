@@ -19,13 +19,7 @@ from flask_wtf.file import FileAllowed
 from app.models import Fish, User
 import validators
 
-def FileSizeLimit(max_size):
-    max_bytes = max_size*1024*1024
-    def check_length(form, field):
-        if len(field.data.read()) > max_bytes:
-            raise ValidationError(f"File size must be less than {max_size}MB")
-    
-    return check_length
+
 
 class SimpleSearch(FlaskForm):
     search = StringField("Search by fish tank ID", validators=[DataRequired()])
@@ -51,7 +45,7 @@ class NewFish(FlaskForm):
     protocol = IntegerField("Protocol #", validators=[Optional()])
     comments = TextAreaField("Comments", validators=[Optional()])
     links = TextAreaField("Additional links", validators=[Optional()])
-    photos = MultipleFileField("Related photos", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'],'File must have a .jpg, .jpeg or .png extension'), FileSizeLimit(max_size=1)])
+    photos = MultipleFileField("Related photos", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'],'File must have a .jpg, .jpeg or .png extension')])
 
     source = SelectField("* Source", choices=["Home", "Imported"])
     cross_type = StringField("* Cross Type", validators=[DataRequired()])
@@ -73,11 +67,11 @@ class NewFish(FlaskForm):
     father_stock = StringField("* Father's Stock #", validators=[DataRequired()])
     mother_stock = StringField("* Mother's Stock #", validators=[DataRequired()])
 
-    males = IntegerField("* # Males", validators=[DataRequired()])
-    females = IntegerField("* # Females", validators=[DataRequired()])
-    unsexed = IntegerField("* # Unsexed", validators=[DataRequired()])
-    carriers = IntegerField("* # Carriers/Licenced", validators=[DataRequired()])
-    total = IntegerField("* Total #", validators=[DataRequired()])
+    males = IntegerField("* # Males")
+    females = IntegerField("* # Females")
+    unsexed = IntegerField("* # Unsexed")
+    carriers = IntegerField("* # Carriers/Licenced")
+    total = IntegerField("* Total #")
 
     alert_date = DateField("Reminder date", validators=[Optional()])
     alert_msg = StringField("Reminder message", validators=[Optional()])
@@ -103,22 +97,32 @@ class NewFish(FlaskForm):
             )
 
     def validate_males(self, males):
+        if males.data == None or males.data == "":
+            raise ValidationError("This field is required")
         if males.data < 0:
             raise ValidationError("The number of males must not be negative")
 
     def validate_females(self, females):
+        if females.data == None or females.data == "":
+            raise ValidationError("This field is required")
         if females.data < 0:
             raise ValidationError("The number of females must not be negative")
 
     def validate_unsexed(self, unsexed):
+        if unsexed.data == None or unsexed.data == "":
+            raise ValidationError("This field is required")
         if unsexed.data < 0:
             raise ValidationError("The number of unsexed fish must not be negative")
 
     def validate_carriers(self, carriers):
+        if carriers.data == None or carriers.data == "":
+            raise ValidationError("This field is required")
         if carriers.data < 0:
             raise ValidationError("The number of carriers must not be negative")
 
     def validate_total(self, total):
+        if total.data == None or total.data == "":
+            raise ValidationError("This field is required")
         if total.data < 0:
             raise ValidationError("The total number of fish must not be negative")
 

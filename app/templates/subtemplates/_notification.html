@@ -14,7 +14,7 @@
             <b>Changes:</b>
             <ul>
                 {%for change in notification.changes%}
-                    {%if change.contents == 'links' %}  
+                    {%if change.contents in ['photos', 'links']%}  
                         <li>Updated {{change.contents}}</li>
                     {%else%}
                         <li>Updated {{change.contents}} from <b>{{change.old}}</b> to <b>{{change.new}}</b></li>

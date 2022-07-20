@@ -2,8 +2,11 @@
 # This folder contains a class for each table in the database
 
 from email.policy import default
+import os
 import sys
 from unicodedata import category
+
+from sqlalchemy import delete
 from app import db, bcrypt, login
 from flask_login import UserMixin, current_user
 from time import time
@@ -193,7 +196,7 @@ class Fish(db.Model):
     total = db.Column(db.Integer)
 
     links = db.Column(db.Text())
-    photo_links = db.Column(db.Text())
+    photos = db.Column(db.Text())
 
     changes = db.relationship(
         "Change", backref="fish", lazy="dynamic", cascade="all, delete"
@@ -251,6 +254,19 @@ class Fish(db.Model):
 
         return age
 
+    def delete_photo(self, photo_name):
+        if photo_name in self.photos.split(","):
+            filename = f"{self.id}_{photo_name}"
+            os.remove(os.path.join(current_app.config['FISH_PICTURES'], filename))
+
+
+    def delete_all_photos(self):
+        photos = os.listdir(current_app.config['FISH_PICTURES'])
+        for photo in photos:
+            if str(self.id) in photo:
+                os.remove(os.path.join(current_app.config['FISH_PICTURES'],photo))
+    
+        
 
 class Allele(db.Model):
     id = db.Column(db.Integer, primary_key=True)

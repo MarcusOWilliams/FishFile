@@ -35,8 +35,10 @@ from app.main.forms import (
     SearchFrom,
     RoleChange
 )
-from app.main.email import send_notification_email, send_reminder_email
-import sys
+import os
+from werkzeug.utils import secure_filename
+import urllib.parse
+
 
 # this route defines the landing page of the website
 
@@ -368,14 +370,14 @@ def user(username):
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def fish(id):
     fish = Fish.query.filter_by(id=id).first()
-    alleles = Allele.query.filter_by(fish=fish)
+    alleles = Allele.query.filter_by(fish=fish).all()
     if fish is None:
         title = "Fish Not Found"
     else:
         title = f"Fish ({fish.stock})"
     
 
-    return render_template("fish.html", fish=fish, title=title,alleles=alleles, form = EmptyForm())
+    return render_template("fish.html", fish=fish, title=title, alleles=alleles , form = EmptyForm())
 
 
 @bp.route("/fish/<id>/changes/<filters>", methods=["GET", "POST"])
@@ -500,6 +502,7 @@ def newfish():
     
 
     if form.validate_on_submit():
+        
         father = Fish.query.filter_by(
             fish_id=form.father_id.data, stock=form.father_stock.data
         ).first()
@@ -535,9 +538,9 @@ def newfish():
             mother=mother,
             user_code=fish_user,
             project_license_holder=license_holder,
-            
         )
         db.session.add(newfish)
+
         for name in form.allele.data:
             allele = Allele(name = name, fish=newfish)
             db.session.add(allele)
@@ -563,6 +566,18 @@ def newfish():
             pl_notification = Notification(user=newfish.project_license_holder, fish=newfish, category="Added", contents="A new fish under your project license has been added") 
             db.session.add(pl_notification)
             pl_notification.send_email()
+
+
+        file_names = [file.filename for file in form.photos.data]
+        
+        if file_names!=[""] and file_names!=None:
+            photos = []
+            for photo in form.photos.data:
+                file = photo
+                filename = secure_filename(f"{newfish.id}_{file.filename}")
+                photos.append(filename)
+                file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
+            newfish.photos = ", ".join(photos)
         
         db.session.commit()
         flash("The new fish has been added to the database", "info")
@@ -592,7 +607,7 @@ def updatefish(id):
     current_alleles = [allele.name for allele in fish.alleles]
 
     if form.validate_on_submit():
-
+        fish.delete_photo("logo.png")
         father = Fish.query.filter_by(
             fish_id=form.father_id.data, stock=form.father_stock.data
         ).first()
@@ -604,6 +619,7 @@ def updatefish(id):
             project_license=form.project_license.data
         ).first()
 
+        pictures = [file.filename for file in form.photos.data]
         
         notification = Notification(fish=fish, category="Change", contents="Changes have been made to one of your fish entries")
 
@@ -889,6 +905,8 @@ def updatefish(id):
 
 
             fish.total = form.total.data
+        
+        
 
         if fish.source != form.source.data:
             change = Change(
@@ -1025,8 +1043,34 @@ def updatefish(id):
 
             change_count+=1
 
+        if pictures != None and pictures != [""]:
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="photos",
+                field="photos",
+                notification = notification
+            )
+            db.session.add(change)
+            change_count+=1
+
+            if fish.photos != None and fish.photos != "":
+                current_pictures = fish.photos.split(", ")
+            else:
+                current_pictures = []
+            
+            if pictures !="" and pictures !=None:
+    
+                for photo in form.photos.data:
+                    file = photo
+                    filename = secure_filename(f"{fish.id}_{file.filename}")
+                    current_pictures.append(filename)
+                    file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
+            
+            file_names = [file.filename for file in form.photos.data]
         
-                
+            fish.photos = ", ".join(current_pictures)
 
         if change_count>0:
             notification.change_count = change_count
@@ -1063,6 +1107,7 @@ def updatefish(id):
 
     form.comments.data = fish.comments
     form.allele.data = current_alleles
+    form.links.data = fish.links
 
     
 
@@ -1262,6 +1307,7 @@ def reset_notifications():
 @requires_roles("Admin", "Owner")
 def deletefish(id):
     fish = Fish.query.filter_by(id=id).first()
+    fish.delete_all_photos()
     db.session.delete(fish)
     db.session.commit()
     flash("The entry has been deleted", 'info')

@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Update Fish Details</h1>
 
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {{form.hidden_tag()}}
         <table id="updateFishTable">
             <tr>
@@ -88,7 +88,7 @@
             </tr>
             <tr>
                 <td>{{form.total.label}}</td>
-                <td class="addFishInputField"> {{form.total(min=0)}}</td>
+                <td class="addFishInputField"> {{form.total(value=fish.total, min=0)}}</td>
 
                 <td>{{form.photos.label}} <div class="infoPopup" onclick="popupShow('photoInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="photoInfoPopupText"> Upload any related images here, they must end in one of the following extensions, .jpeg, .png, .jpg, and be no more than 4MB</span> </td>
                 <td class="addFishInputField"> {{form.photos()}}</td>   

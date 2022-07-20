@@ -29,3 +29,5 @@ class Config(object):
 
     SCHEDULER_API_ENABLED = True
     SCHEDULER_TIMEZONE = 'UTC'
+
+    FISH_PICTURES = os.environ.get('FISH_PICTURE_FOLDER')
