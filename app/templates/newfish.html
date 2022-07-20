@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block content %}
     <h2>Add a fish to the database</h2>
     <br>
@@ -56,11 +57,11 @@
                 <td>{{form.mutant_gene.label}} </td>
                 <td class="addFishInputField">{{form.mutant_gene(placeholder="Mutant Gene")}}</td>
 
-                <td>{{form.transgenes.label}}</td>
+                <td>{{form.transgenes.label}} <div class="infoPopup" onclick="popupShow('transgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="transgenesInfoPopupText"> To select multiple transgenes options, hold the Ctrl key whilst selecting them</span></div></td>
                 <td class="addFishInputField"> {{form.transgenes(placeholder="Transgenes")}}</td>
             </tr>
             <tr>
-                <td>{{form.allele.label}}</td>
+                <td>{{form.allele.label}}<div class="infoPopup" onclick="popupShow('alleleInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="alleleInfoPopupText"> To select multiple allele options, hold the Ctrl key whilst selecting them</span></div></td>
                 <td class="addFishInputField"> {{form.allele(placeholder="Allele", size="5")}}</td>
 
                 <td>{{form.cross_type.label}}</td>
@@ -113,7 +114,6 @@
                 <div class = "formError">{{ form[field].label }}: {{ ', '.join(errors) }}</div>
         {% endfor %}
         {{form.submit()}}
-
     </form>
     <p>* Required field</p>
 {%endblock%}

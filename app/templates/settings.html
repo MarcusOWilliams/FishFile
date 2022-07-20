@@ -4,14 +4,6 @@
     <link rel="stylesheet" href="{{url_for('static', filename='styles/settingsStyle.css')}}">
 {%endblock%}
 
-{%block scripts%}
-    <script>
-        function popupShow() {
-            var popup = document.getElementById("plInfoPopupText");
-            popup.classList.toggle("show");
-        }
-    </script>
-{%endblock%}
 {% block content %}
     <h2>Settings for {{current_user.username}}:</h2><br>
     <form action="" method="post" >
@@ -31,7 +23,7 @@
             {%endif%}
 
         <br>    
-        {{form.project_license.label}} {{form.project_license(placeholder="Your project license")}}<div class="plInfoPopup" onclick="popupShow()">&#x1F6C8;<span class="plPopupText" id="plInfoPopupText"> If you have your own project license enter it here, if don't have one/use someone else's, leave this blank (or as None)</span></div><br><br>
+        {{form.project_license.label}} {{form.project_license(placeholder="Your project license")}} <div class="infoPopup" onclick="popupShow('plInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="plInfoPopupText"> If you have your own project license enter it here, if don't have one/use someone else's, leave this blank (or as None)</span></div><br><br>
 
         {{form.submit}}
     </form>
