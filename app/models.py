@@ -255,16 +255,29 @@ class Fish(db.Model):
         return age
 
     def delete_photo(self, photo_name):
-        if photo_name in self.photos.split(","):
-            filename = f"{self.id}_{photo_name}"
-            os.remove(os.path.join(current_app.config['FISH_PICTURES'], filename))
+        if photo_name in self.photos.split(", "):
+
+            os.remove(os.path.join(current_app.config['FISH_PICTURES'], photo_name))
+
+            if len(self.photos.split(", "))>=2:
+                photo_list = self.photos.split(", ")
+                photo_list.remove(photo_name)
+                self.photos = ", ".join(photo_list)
+            else:
+                self.photos = ""
+
+            db.session.commit()
+            
 
 
     def delete_all_photos(self):
         photos = os.listdir(current_app.config['FISH_PICTURES'])
         for photo in photos:
-            if str(self.id) in photo:
+            if str(self.id) == photo[:2]:
                 os.remove(os.path.join(current_app.config['FISH_PICTURES'],photo))
+
+        self.photos=""
+        db.session.commit()
     
         
 

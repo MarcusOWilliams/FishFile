@@ -1,6 +1,13 @@
 {% extends "base.html" %}
     
+{%block styles%}
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/fishStyle.css')}}">
+{%endblock%}
+{%block scripts%}
+    <script>
 
+    </script>
+{%endblock%}
 {% block content %}
 {%if fish%}
 <div id="fishInformation">
@@ -117,14 +124,29 @@
 
     </div>
     {%if fish.photos != "" and fish.photos != None %}
-        <p>{{fish.photos}}</p>
-        <p>/static/pictures/fish/{{fish.id}}_{{picture}}</p>
-        <div class="fishInfoBlock">
+        {%set pic_num = [0] %}
+        <div class="fishInfoBlock" style="padding-bottom:20px;">
             <h2>Pictures</h2>
-            {%for picture in fish.photos.split(", ") %}
-                <img height = "100px" src="/static/pictures/fish/{{picture}}">
-            {%endfor%}
+                {%for picture in fish.photos.split(", ") %}
+                    {% if pic_num.append(pic_num.pop() + 1) %}{% endif %} 
+                    <span type="button" data-bs-toggle="modal" data-bs-target="#picture{{pic_num[0]}}Modal">
+                        <img height = "100px"  src="/static/pictures/fish/{{picture}}">
+                    </span>
+                    <div class="modal fade" id="picture{{pic_num[0]}}Modal" tabindex="-1" aria-labelledby="picture{{pic_num[0]}}Modal" aria-hidden="true">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="modal-dialog modal-dialog-centered" style="width:100%;">
+                          <div class="modal-content">
+                                
+                                <img src="/static/pictures/fish/{{picture}}">
+                            
+                          </div>
+                        </div>
+                      </div>
+                {%endfor%}
+            
         </div>
+        
+    
     {%endif%}
     <div class="fishInfoBlock">
         <h2>More Options</h2>

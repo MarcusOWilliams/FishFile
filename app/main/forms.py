@@ -45,7 +45,7 @@ class NewFish(FlaskForm):
     protocol = IntegerField("Protocol #", validators=[Optional()])
     comments = TextAreaField("Comments", validators=[Optional()])
     links = TextAreaField("Additional links", validators=[Optional()])
-    photos = MultipleFileField("Related photos", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'],'File must have a .jpg, .jpeg or .png extension')])
+    photos = MultipleFileField("Upload pictures", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'],'File must have a .jpg, .jpeg or .png extension')])
 
     source = SelectField("* Source", choices=["Home", "Imported"])
     cross_type = StringField("* Cross Type", validators=[DataRequired()])

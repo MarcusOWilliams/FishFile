@@ -94,6 +94,8 @@ order fish
 
 / update notification email template
 
+add image captions
+
 WHEN DONE:
 
 change email sent from

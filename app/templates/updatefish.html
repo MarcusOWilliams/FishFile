@@ -119,8 +119,8 @@
         {{form.submit(value="Update Fish")}}
         
     </form>
-    
-
+    <p>* Required field</p>
+    <h4>Reminders</h4>
     <table class ="table table-hover" style="width:50%;margin:auto;margin-bottom:50px;margin-top:30px;">
         {%if fish.reminders.count()>0%}
             <tr>
@@ -144,7 +144,14 @@
             </tr>
         {%endif%}
     </table>
-    <p>* Required field</p>
+    
+    {%if fish.photos != "" and fish.photos != None %}
+        <h4>Pictures</h4>
+        {%for picture in fish.photos.split(", ") %}
+            <img height = "100px" src="/static/pictures/fish/{{picture}}">
+            <form action="{{ url_for('main.deletephoto', fish_id = fish.id, photo=picture)}}" method="post">{{deletePhotoForm.hidden_tag()}}{{deletePhotoForm.submit(value="Delete")}}</form>
+        {%endfor%}
+    {%endif%}
 
 
 {%endblock%}

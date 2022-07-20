@@ -593,6 +593,7 @@ def newfish():
 def updatefish(id):
     form = NewFish()
     deleteReminderForm = EmptyForm()
+    deletePhotoForm = EmptyForm()
     fish = Fish.query.filter_by(id=id).first_or_404()
     title = f"Update Fish ({fish.stock})"
 
@@ -607,7 +608,6 @@ def updatefish(id):
     current_alleles = [allele.name for allele in fish.alleles]
 
     if form.validate_on_submit():
-        fish.delete_photo("logo.png")
         father = Fish.query.filter_by(
             fish_id=form.father_id.data, stock=form.father_stock.data
         ).first()
@@ -1111,7 +1111,7 @@ def updatefish(id):
 
     
 
-    return render_template("updatefish.html", fish=fish, form=form, title=title, deleteReminderForm =deleteReminderForm )
+    return render_template("updatefish.html", fish=fish, form=form, title=title, deleteReminderForm =deleteReminderForm, deletePhotoForm=deletePhotoForm )
 
 @bp.route("/allfish/", methods=["GET", "POST"])
 @login_required
@@ -1325,6 +1325,18 @@ def deletereminder(id):
     flash("The reminder has been deleted", 'info')
     return redirect(url_for('main.updatefish', id=fish_id))
 
+@bp.route('/fish/<fish_id>/deletephoto/<photo>', methods=['POST'])
+@login_required
+@requires_roles("Researcher","Admin", "Owner")
+def deletephoto(fish_id, photo):
+    
+    fish= Fish.query.filter_by(id=fish_id).first_or_404()
+
+    fish.delete_photo(photo)
+
+
+    flash("The picture has been deleted", 'info')
+    return redirect(url_for('main.fish', id=fish_id))
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request
 def before_request():
