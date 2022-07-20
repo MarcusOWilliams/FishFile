@@ -14,7 +14,11 @@
             <b>Changes:</b>
             <ul>
                 {%for change in notification.changes%}
-                <li>Updated {{change.contents}} from <b>{{change.old}}</b> to <b>{{change.new}}</b></li>
+                    {%if change.contents == 'links' %}  
+                        <li>Updated {{change.contents}}</li>
+                    {%else%}
+                        <li>Updated {{change.contents}} from <b>{{change.old}}</b> to <b>{{change.new}}</b></li>
+                    {%endif%}
                 {%endfor%}
             </ul>
             <br>

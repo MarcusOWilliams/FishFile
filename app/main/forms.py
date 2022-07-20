@@ -1,6 +1,7 @@
 from flask import request
 from flask_wtf import FlaskForm
 from flask_login import current_user
+import validators
 from wtforms import (
     StringField,
     SubmitField,
@@ -16,7 +17,7 @@ from wtforms import (
 from wtforms.validators import DataRequired, ValidationError, Optional
 from flask_wtf.file import FileAllowed
 from app.models import Fish, User
-
+import validators
 
 def FileSizeLimit(max_size):
     max_bytes = max_size*1024*1024
@@ -72,11 +73,11 @@ class NewFish(FlaskForm):
     father_stock = StringField("* Father's Stock #", validators=[DataRequired()])
     mother_stock = StringField("* Mother's Stock #", validators=[DataRequired()])
 
-    males = IntegerField("* # Males")
-    females = IntegerField("* # Females")
-    unsexed = IntegerField("* # Unsexed")
-    carriers = IntegerField("* # Carriers/Licenced")
-    total = IntegerField("* Total #")
+    males = IntegerField("* # Males", validators=[DataRequired()])
+    females = IntegerField("* # Females", validators=[DataRequired()])
+    unsexed = IntegerField("* # Unsexed", validators=[DataRequired()])
+    carriers = IntegerField("* # Carriers/Licenced", validators=[DataRequired()])
+    total = IntegerField("* Total #", validators=[DataRequired()])
 
     alert_date = DateField("Reminder date", validators=[Optional()])
     alert_msg = StringField("Reminder message", validators=[Optional()])
@@ -121,6 +122,11 @@ class NewFish(FlaskForm):
         if total.data < 0:
             raise ValidationError("The total number of fish must not be negative")
 
+    def validate_links(self, links):
+        link_list = links.data.split("\n")
+        for link in link_list:
+            if not validators.url(link.strip()):
+                raise ValidationError(f'The link "{link}" is not a valid URL')
 
 
 class FilterChanges(FlaskForm):

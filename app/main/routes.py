@@ -524,6 +524,7 @@ def newfish():
             transgenes=form.transgenes.data,
             cross_type=form.cross_type.data,
             comments=form.comments.data,
+            links = form.links.data,
             males=form.males.data,
             females=form.females.data,
             unsexed=form.unsexed.data,
@@ -788,6 +789,20 @@ def updatefish(id):
             db.session.add(change)
 
             fish.comments = form.comments.data
+            change_count+=1
+
+        if fish.links != form.links.data:
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="links",
+                field="links",
+                notification = notification
+            )
+            db.session.add(change)
+
+            fish.links = form.links.data
             change_count+=1
 
         if fish.males != form.males.data:

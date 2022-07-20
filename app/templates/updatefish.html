@@ -48,12 +48,12 @@
                 <td>{{form.mutant_gene.label}}
                 </td><td class="updateFormInputField"> {{form.mutant_gene(placeholder="Mutant Gene", value = fish.mutant_gene)}}</td>
 
-                <td>{{form.transgenes.label}}
+                <td>{{form.transgenes.label}}<div class="infoPopup" onclick="popupShow('transgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="transgenesInfoPopupText"> To select multiple transgenes options, hold the Ctrl key whilst selecting them</span></div>
                 </td><td class="updateFormInputField"> {{form.transgenes(placeholder="Transgenes", value = fish.transgenes)}}</td>
             </tr>
             <tr>
-                <td>{{form.allele.label}} 
-                </td><td class="updateFormInputField">{{form.allele(placeholder="Allele", value = fish.allele)}}</td>
+                <td>{{form.allele.label}}<div class="infoPopup" onclick="popupShow('alleleInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="alleleInfoPopupText"> To select multiple allele options, hold the Ctrl key whilst selecting them</span></div></td> 
+                <td class="updateFormInputField">{{form.allele(placeholder="Allele", value = fish.allele)}}</td>
 
                 <td>{{form.cross_type.label}}
                 </td><td class="updateFormInputField"> {{form.cross_type(placeholder="Cross Type", value = fish.cross_type)}}</td>
@@ -87,11 +87,20 @@
                 </td><td class="updateFormInputField"> {{form.carriers(value = fish.carriers, min=0)}}</td>
             </tr>
             <tr>
-                <td>{{form.total.label}}
-                </td><td class="updateFormInputField"> {{form.total(value = fish.total, min=0)}}</td>
+                <td>{{form.total.label}}</td>
+                <td class="addFishInputField"> {{form.total(min=0)}}</td>
 
-                <td>{{form.comments.label}} 
-                </td><td class="updateFormInputField">{{form.comments(placeholder="Comments...")}}</td>   
+                <td>{{form.photos.label}} <div class="infoPopup" onclick="popupShow('photoInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="photoInfoPopupText"> Upload any related images here, they must end in one of the following extensions, .jpeg, .png, .jpg, and be no more than 4MB</span> </td>
+                <td class="addFishInputField"> {{form.photos()}}</td>   
+                    
+            </tr> 
+            <tr>
+                <td>{{form.links.label}} <div class="infoPopup" onclick="popupShow('linksInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="linksInfoPopupText"> Paste links to exernal URLs here, if you want multiple links, put each one on a new line</span></td>
+                <td class="addFishInputField"> {{form.links(placeholder="Additional URLs")}}</td>
+                
+                <td>{{form.comments.label}} </td>
+                <td class="addFishInputField">{{form.comments(placeholder="Comments...")}}</td>  
+                
             </tr> 
             <tr>
                 <td><label for="alert_date">New reminder date</label></td>
