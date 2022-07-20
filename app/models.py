@@ -159,7 +159,6 @@ class Fish(db.Model):
     birthday = db.Column(db.Date, index=True)
     date_of_arrival = db.Column(db.Date, index=True)
 
-    allele = db.Column(db.String(64), index=True)
     mutant_gene = db.Column(db.String(64), index=True)
     transgenes = db.Column(db.String(64), index=True)
     cross_type = db.Column(db.String(64), index=True)
@@ -204,6 +203,10 @@ class Fish(db.Model):
     reminders = db.relationship(
         "Reminder", backref="fish", lazy="dynamic", cascade="all, delete"
     )
+
+    alleles = db.relationship(
+        "Allele", backref="fish", lazy="dynamic", cascade="all, delete"
+    ) 
     
 
     def __repr__(self):
@@ -245,6 +248,19 @@ class Fish(db.Model):
 
         return age
 
+
+class Allele(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
+    name = db.Column(db.String(128))
+    unidentified = db.Column(db.Boolean, default=True)
+    identified = db.Column(db.Boolean, default=False)
+    homozygous = db.Column(db.Boolean, default=False)
+    heterozygous = db.Column(db.Boolean, default=False)
+    hemizygous = db.Column(db.Boolean, default=False) 
+
+    def __repr__(self):
+        return f"Allele: {self.name} - Fish: {self.fish.stock}"
 """
 This is the class for the Change table of the SQL database, which is used to record changes to the database
 Each user row contains a ...

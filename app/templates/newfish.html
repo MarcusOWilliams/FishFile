@@ -61,7 +61,7 @@
             </tr>
             <tr>
                 <td>{{form.allele.label}}</td>
-                <td class="addFishInputField"> {{form.allele(placeholder="Allele")}}</td>
+                <td class="addFishInputField"> {{form.allele(placeholder="Allele", size="5")}}</td>
 
                 <td>{{form.cross_type.label}}</td>
                 <td class="addFishInputField"> {{form.cross_type(placeholder="Cross Type")}}</td>
@@ -113,7 +113,7 @@
                 <div class = "formError">{{ form[field].label }}: {{ ', '.join(errors) }}</div>
         {% endfor %}
         {{form.submit()}}
-        
+
     </form>
     <p>* Required field</p>
 {%endblock%}

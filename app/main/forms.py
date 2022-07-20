@@ -10,9 +10,11 @@ from wtforms import (
     BooleanField,
     DateField,
     TextAreaField,
+    SelectMultipleField,
 )
 from wtforms.validators import DataRequired, ValidationError, Optional
 from app.models import Fish, User
+
 
 
 class SimpleSearch(FlaskForm):
@@ -49,7 +51,7 @@ class NewFish(FlaskForm):
         "* Project License", validators=[DataRequired()], coerce=str
     )
 
-    allele = StringField("Allele",validators=[Optional()])
+    allele = SelectMultipleField("Allele",choices=["Allele 1", "Allele 2", "Allele 3"], validators=[Optional()])
     mutant_gene = StringField("* Mutant Gene", validators=[DataRequired()])
     transgenes = StringField("Transgenes", validators=[Optional()])
 

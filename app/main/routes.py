@@ -11,7 +11,7 @@ from turtle import title
 from app import db
 from app.main import bp
 from app.main import email
-from app.models import Change, Fish, Notification, Reminder, User, requires_roles
+from app.models import Allele, Change, Fish, Notification, Reminder, User, requires_roles
 from flask import (
     flash,
     redirect,
@@ -464,6 +464,8 @@ def newfish():
     licenses = [""] + list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
 
+    
+
     if form.validate_on_submit():
         father = Fish.query.filter_by(
             fish_id=form.father_id.data, stock=form.father_stock.data
@@ -475,6 +477,7 @@ def newfish():
         license_holder = User.query.filter_by(
             project_license=form.project_license.data
         ).first()
+       
 
         newfish = Fish(
             fish_id=form.fish_id.data,
@@ -484,7 +487,6 @@ def newfish():
             protocol=form.protocol.data,
             birthday=form.birthday.data,
             date_of_arrival=form.date_of_arrival.data,
-            allele=form.allele.data,
             mutant_gene=form.mutant_gene.data,
             transgenes=form.transgenes.data,
             cross_type=form.cross_type.data,
@@ -502,10 +504,14 @@ def newfish():
             
         )
         db.session.add(newfish)
+        for name in form.allele.data:
+            allele = Allele(name = name, fish=newfish)
+            db.session.add(allele)
 
         change = Change(user=current_user, fish=newfish, action="Added")
         db.session.add(change)
 
+        
 
         if form.alert_date.data or form.alert_msg.data:
             reminder = Reminder(user = newfish.user_code, fish = newfish, date=form.alert_date.data, message=form.alert_msg.data)
@@ -528,6 +534,7 @@ def newfish():
         flash("The new fish has been added to the database", "info")
         return redirect(url_for("main.fish", id=newfish.id))
 
+
     return render_template("newfish.html", form=form, title="New Fish")
 
 
@@ -547,6 +554,8 @@ def updatefish(id):
     licenses_values = [user.project_license for user in all_users]
     licenses = [""] + list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
+
+    current_alleles = [allele.name for allele in fish.alleles]
 
     if form.validate_on_submit():
 
@@ -679,22 +688,6 @@ def updatefish(id):
             fish.date_of_arrival = form.date_of_arrival.data
             change_count+=1
 
-
-        if fish.allele != form.allele.data:
-            change = Change(
-                user=current_user,
-                fish=fish,
-                action="Updated",
-                contents="allele",
-                field="allele",
-                old=fish.allele,
-                new=form.allele.data,
-                notification = notification
-            )
-            db.session.add(change)
-
-            fish.allele = form.allele.data
-            change_count+=1
 
 
         if fish.mutant_gene != form.mutant_gene.data:
@@ -961,6 +954,28 @@ def updatefish(id):
             db.session.add(change)
             fish.project_license_holder = license_holder
             change_count+=1
+        
+
+        if current_alleles != form.allele.data:
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="allele",
+                field="allele",
+                old=", ".join(current_alleles),
+                new=", ".join(form.allele.data),
+                notification = notification
+            )
+            db.session.add(change)
+
+            Allele.query.filter_by(fish=fish).delete()
+
+            for name in form.allele.data:
+                allele =Allele(name=name, fish=fish)
+                db.session.add(allele)
+                
+            change_count+=1
 
         
                 
@@ -999,6 +1014,9 @@ def updatefish(id):
         form.source.data = fish.source
 
     form.comments.data = fish.comments
+    form.allele.data = current_alleles
+
+    
 
     return render_template("updatefish.html", fish=fish, form=form, title=title, deleteReminderForm =deleteReminderForm )
 
