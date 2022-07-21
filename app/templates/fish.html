@@ -130,7 +130,7 @@
                 {%for picture in fish.photos %}
                     {% if pic_num.append(pic_num.pop() + 1) %}{% endif %} 
                     <span type="button" data-bs-toggle="modal" data-bs-target="#picture{{pic_num[0]}}Modal" style="text-align:center;">
-                        <img height = "100px"  src="/static/pictures/fish/{{picture.name}}"><br>
+                        <img height = "100px"  src="/static/uploads/fish/{{picture.name}}"><br>
                         {%if current_user.isResearcher()%}<a href="{{url_for('main.editcaption', fish_id = fish.id, photo_id = picture.id)}}">Add/Update caption</a>{%endif%}
                     </span>
                     
@@ -139,7 +139,7 @@
                         <div class="modal-dialog modal-dialog-centered modal-xl" style="width:100%;">
                           <div class="modal-content">
                                 
-                                <img src="/static/pictures/fish/{{picture.name}}">
+                                <img src="/static/uploads/fish/{{picture.name}}">
                             {%if picture.caption != None and picture.caption != ""%}
                                 <div class="modal-footer photocaption">
                                     <p><b>Caption: </b>{{picture.caption}}</p>

@@ -195,6 +195,7 @@ class Fish(db.Model):
     protocol = db.Column(db.Integer, index=True)
     birthday = db.Column(db.Date, index=True)
     date_of_arrival = db.Column(db.Date, index=True)
+    months = db.Column(db.Integer, default = 0)
     age_reminder = db.Column(db.String(64), default = "Not sent")
 
     mutant_gene = db.Column(db.String(64), index=True)

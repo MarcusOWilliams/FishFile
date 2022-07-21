@@ -142,12 +142,10 @@ def search():
                 .filter_by(cross_type=search_dict[key])
                 .subquery()
             )
-        elif key == "birthday":
-            formatted_date = " ".join(search_dict[key].split(" ")[1:4]).strip()
-            date = datetime.strptime(formatted_date, '%d %b %Y').date()
+        elif key == "age":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter(Fish.birthday < date, Fish.status!="Dead")
+                .filter(Fish.months >= search_dict[key], Fish.status!="Dead")
                 .subquery()
             )
             
@@ -546,6 +544,7 @@ def newfish():
         )
         db.session.add(newfish)
 
+
         for name in form.allele.data:
             allele = Allele(name = name, fish=newfish)
             db.session.add(allele)
@@ -584,7 +583,8 @@ def newfish():
                 photo = Photo(fish=newfish, name=filename)
                 db.session.add(photo)
             
-        
+        newfish.months = newfish.getMonths()
+
         db.session.commit()
         flash("The new fish has been added to the database", "info")
         return redirect(url_for("main.fish", id=newfish.id))
@@ -725,6 +725,7 @@ def updatefish(id):
             db.session.add(change)
 
             fish.birthday = form.birthday.data
+            fish.months = fish.getMonths()
             change_count+=1
 
 
