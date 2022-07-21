@@ -32,8 +32,28 @@ def send_reminders():
 
 
 
+@scheduler.task('interval', id='send_age_reminders',seconds=10)
+def send_age_reminders():
+    with scheduler.app.app_context():
+        all_fish = Fish.query.all()
+        for fish in all_fish:
 
-        
+            if fish.status == "Dead":
+                continue
+
+            elif fish.getMonths()>=23 and fish.age_reminder != "23 Months":
+                    fish.send_age_reminder(23)
+
+            elif fish.getMonths()>=17 and fish.age_reminder != "17 Months":
+                    fish.send_age_reminder(17)
+
+            elif fish.getMonths()>=11 and fish.age_reminder != "11 Months":
+                    fish.send_age_reminder(11)
+            
+            elif fish.getMonths()>=5 and fish.age_reminder != "5 Months":
+                    fish.send_age_reminder(5)
+        print("task done")
+
 
 
     

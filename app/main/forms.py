@@ -209,11 +209,11 @@ class SettingsForm(FlaskForm):
 
     add_notifications = BooleanField("Entry added under your user code:")
     change_notifications = BooleanField("Change made to entry under your user code:")
-    turnover_notifications = BooleanField("Custom reminders:")
+    custom_reminders = BooleanField("Custom reminders:")
     age_notifications = BooleanField("Alerts when fish under your user code reach a certain age:")
 
     pl_add_notifications = BooleanField("Fish added under your project license:")
-    pl_turnover_notifications = BooleanField("Custom reminders for all fish under your project license:")
+    pl_custom_reminders = BooleanField("Custom reminders for all fish under your project license:")
     pl_age_notifications = BooleanField("Fish age reminders for all fish under your project license:")
 
     personal_license = StringField("Personal License:")

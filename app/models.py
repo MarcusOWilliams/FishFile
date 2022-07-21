@@ -2,6 +2,7 @@
 # This folder contains a class for each table in the database
 
 from email.policy import default
+from math import remainder
 import os
 import sys
 from unicodedata import category
@@ -12,7 +13,7 @@ from flask_login import UserMixin, current_user
 from time import time
 import jwt
 from flask import current_app, abort
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 import json
 from dateutil import relativedelta
@@ -190,6 +191,7 @@ class Fish(db.Model):
     protocol = db.Column(db.Integer, index=True)
     birthday = db.Column(db.Date, index=True)
     date_of_arrival = db.Column(db.Date, index=True)
+    age_reminder = db.Column(db.String(64), default = "Not sent")
 
     mutant_gene = db.Column(db.String(64), index=True)
     transgenes = db.Column(db.String(64), index=True)
@@ -286,19 +288,18 @@ class Fish(db.Model):
 
         return age
         
-    def getMonths(self, cutoff):
-        print(self.birthday)
-        if self.status == "Dead":
-            return False
+    def getMonths(self):
 
+        if self.status == "Dead":
+            return 0
         try:
             today = datetime.today().date()
             birthday =  self.birthday
             age_difference = relativedelta.relativedelta(today,birthday)
             
-            return age_difference.months >= cutoff
+            return age_difference.months
         except:
-            return False
+            return 0
         
     def delete_photo(self, photo_name):
         
@@ -320,7 +321,14 @@ class Fish(db.Model):
 
         db.session.commit()
     
-        
+    def send_age_reminder(self, months):
+        message = f"The tank is now {months} months old."
+        reminder = Reminder(user = self.user_code, fish=self, message=message)
+        db.session.add(reminder)
+        self.age_reminder = f"{months} Months"
+        db.session.commit()
+        reminder.send_reminder(users = [self.project_license_holder.id], category="Age reminder")
+
 
 class Allele(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -396,11 +404,11 @@ class Settings(db.Model):
     
     add_notifications = db.Column(db.Boolean, default=True)
     change_notifications = db.Column(db.Boolean, default=True)
-    turnover_notifications = db.Column(db.Boolean, default=True)
+    custom_reminder = db.Column(db.Boolean, default=True)
     age_notifications = db.Column(db.Boolean, default=True)
     
     pl_add_notifications = db.Column(db.Boolean, default=False)
-    pl_turnover_notifications = db.Column(db.Boolean, default=False)
+    pl_custom_reminder = db.Column(db.Boolean, default=True)
     pl_age_notifications = db.Column(db.Boolean, default=False)
 
 
@@ -450,17 +458,30 @@ class Reminder(db.Model):
     sent = db.Column(db.Boolean, default= False)
 
     #send notification from reminder, can take more than one user
-    def send_reminder(self, users = [user_id]):
+    def send_reminder(self, users = [], category="Reminder"):
 
        
         from app.main.email import send_reminder_email
+
+        users.append(self.user_id)
 
         for user in users:
             user = User.query.filter_by(id=user).first()
             if user is None:
                 continue
-            notification = Notification(user = user, fish = self.fish, category="Reminder", contents = self.message)
-            db.session.add(notification)
+
+            
+            if category == "Reminder" and (user.settings.custom_reminder or user.settings.pl_custom_reminder):
+
+                notification = Notification(user = user, fish = self.fish, category="Reminder", contents = self.message)
+                db.session.add(notification)
+            elif category == "Age reminder" and (user.settings.age_notifications or user.settings.pl_age_notifications) :
+                notification = Notification(user = user, fish = self.fish, category="Reminder", contents = self.message)
+                db.session.add(notification)
+
+        
+
+
 
             if user.settings.email_reminders:
                 send_reminder_email(user, self)

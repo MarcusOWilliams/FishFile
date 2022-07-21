@@ -28,11 +28,11 @@
         <h4>Notifications:</h4>
             {{form.add_notifications.label}} {{form.add_notifications(checked=current_user.settings.add_notifications)}}<br>
             {{form.change_notifications.label}} {{form.change_notifications(checked=current_user.settings.change_notifications)}}<br>
-            {{form.turnover_notifications.label}} {{form.turnover_notifications(checked=current_user.settings.turnover_notifications)}}<br>
+            {{form.custom_reminders.label}} {{form.custom_reminders(checked=current_user.settings.custom_reminders)}}<br>
             {{form.age_notifications.label}} {{form.age_notifications(checked=current_user.settings.age_notifications)}}<br>
             {% if current_user.project_license != None and current_user.project_license != "" %}
                 {{form.pl_add_notifications.label}} {{form.pl_add_notifications(checked=current_user.settings.pl_add_notifications)}}<br>
-                {{form.pl_turnover_notifications.label}} {{form.pl_turnover_notifications(checked=current_user.settings.pl_turnover_notifications)}}<br>
+                {{form.pl_custom_reminders.label}} {{form.pl_custom_reminders(checked=current_user.settings.pl_custom_reminders)}}<br>
                 {{form.pl_age_notifications.label}} {{form.pl_age_notifications(checked=current_user.settings.pl_age_notifications)}}<br>
             {%endif%}
 

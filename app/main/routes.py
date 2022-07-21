@@ -1306,11 +1306,11 @@ def settings():
 
         current_user.settings.add_notifications = form.add_notifications.data
         current_user.settings.change_notifications = form.change_notifications.data
-        current_user.settings.turnover_notifications = form.turnover_notifications.data
+        current_user.settings.custom_reminder = form.custom_reminders.data
         current_user.settings.age_notifications = form.age_notifications.data
 
         current_user.settings.pl_add_notifications = form.pl_add_notifications.data
-        current_user.settings.pl_turnover_notifications = form.pl_turnover_notifications.data
+        current_user.settings.pl_custom_reminder = form.pl_custom_reminders.data
         current_user.settings.pl_age_notifications = form.pl_age_notifications.data
 
         current_user.personal_license = form.personal_license.data
@@ -1319,6 +1319,7 @@ def settings():
             fish = Fish.query.filter_by(project_license_holder = current_user).all()
             old_license = current_user.project_license
             current_user.project_license = form.project_license.data
+            
             for f in fish:
                 
                 change = Change(
@@ -1332,6 +1333,7 @@ def settings():
                 )
                 db.session.add(change)
                 f.project_license_holder = current_user
+                
 
 
         if form.personal_license_file.data:
