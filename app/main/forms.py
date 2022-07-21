@@ -234,3 +234,7 @@ class AlleleForm(FlaskForm):
     heterozygous = BooleanField("Heterozygous:")
     hemizygous = BooleanField("Hemizygous:")
     submit = SubmitField('Update')
+
+class PhotoCaptionForm(FlaskForm):
+    caption = TextAreaField("Caption:")
+    submit = SubmitField("Apply")

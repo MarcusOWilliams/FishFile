@@ -123,22 +123,28 @@
         {%endif%}
 
     </div>
-    {%if fish.photos != "" and fish.photos != None %}
+    {%if fish.photos.count() > 0%}
         {%set pic_num = [0] %}
         <div class="fishInfoBlock" style="padding-bottom:20px;">
             <h2>Pictures</h2>
-                {%for picture in fish.photos.split(", ") %}
+                {%for picture in fish.photos %}
                     {% if pic_num.append(pic_num.pop() + 1) %}{% endif %} 
-                    <span type="button" data-bs-toggle="modal" data-bs-target="#picture{{pic_num[0]}}Modal">
-                        <img height = "100px"  src="/static/pictures/fish/{{picture}}">
+                    <span type="button" data-bs-toggle="modal" data-bs-target="#picture{{pic_num[0]}}Modal" style="text-align:center;">
+                        <img height = "100px"  src="/static/pictures/fish/{{picture.name}}"><br>
+                        {%if current_user.isResearcher()%}<a href="{{url_for('main.editcaption', fish_id = fish.id, photo_id = picture.id)}}">Add/Update caption</a>{%endif%}
                     </span>
+                    
                     <div class="modal fade" id="picture{{pic_num[0]}}Modal" tabindex="-1" aria-labelledby="picture{{pic_num[0]}}Modal" aria-hidden="true">
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <div class="modal-dialog modal-dialog-centered" style="width:100%;">
+                        <div class="modal-dialog modal-dialog-centered modal-xl" style="width:100%;">
                           <div class="modal-content">
                                 
-                                <img src="/static/pictures/fish/{{picture}}">
-                            
+                                <img src="/static/pictures/fish/{{picture.name}}">
+                            {%if picture.caption != None and picture.caption != ""%}
+                                <div class="modal-footer">
+                                    <p><b>Caption: </b>{{picture.caption}}</p>
+                                </div>
+                            {%endif%}
                           </div>
                         </div>
                       </div>

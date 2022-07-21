@@ -196,7 +196,7 @@ class Fish(db.Model):
     total = db.Column(db.Integer)
 
     links = db.Column(db.Text())
-    photos = db.Column(db.Text())
+
 
     changes = db.relationship(
         "Change", backref="fish", lazy="dynamic", cascade="all, delete"
@@ -212,6 +212,9 @@ class Fish(db.Model):
 
     alleles = db.relationship(
         "Allele", backref="fish", lazy="dynamic", cascade="all, delete"
+    ) 
+    photos = db.relationship(
+        "Photo", backref="fish", lazy="dynamic", cascade="all, delete"
     ) 
 
 
@@ -255,28 +258,23 @@ class Fish(db.Model):
         return age
 
     def delete_photo(self, photo_name):
-        if photo_name in self.photos.split(", "):
-
+        
+        photo = Photo.query.filter_by(fish = self, name = photo_name).first()
+        if photo != None:
             os.remove(os.path.join(current_app.config['FISH_PICTURES'], photo_name))
 
-            if len(self.photos.split(", "))>=2:
-                photo_list = self.photos.split(", ")
-                photo_list.remove(photo_name)
-                self.photos = ", ".join(photo_list)
-            else:
-                self.photos = ""
-
+            db.session.delete(photo)
             db.session.commit()
             
 
 
     def delete_all_photos(self):
-        photos = os.listdir(current_app.config['FISH_PICTURES'])
+        photos = Photo.query.filter_by(fish = self).all()
         for photo in photos:
-            if str(self.id) == photo[:2]:
-                os.remove(os.path.join(current_app.config['FISH_PICTURES'],photo))
 
-        self.photos=""
+            os.remove(os.path.join(current_app.config['FISH_PICTURES'],photo.name))
+            db.session.delete(photo)
+
         db.session.commit()
     
         
@@ -295,8 +293,16 @@ class Allele(db.Model):
         return f"Allele: {self.name} - Fish: {self.fish.stock}"
 
 
+class Photo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
+    name = db.Column(db.String(128))
+    caption = db.Column(db.Text())
 
-
+    def delete(self):
+        os.remove(os.path.join(current_app.config['FISH_PICTURES'],self.name))
+        db.session.delete(self)
+        db.session.commit()
 """
 This is the class for the Change table of the SQL database, which is used to record changes to the database
 Each user row contains a ...

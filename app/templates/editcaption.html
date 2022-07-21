@@ -1,0 +1,21 @@
+{% extends 'base.html'%}
+
+{%block content%}
+<h2>Edit Picture Caption</h2>
+<h4>{{fish}}</h4>
+<h4>Picture: {{photo.name}}</h4>
+
+<img width = "50%"  src="/static/pictures/fish/{{photo.name}}">
+
+<form action="" method="post" width = "50%">
+    {{form.hidden_tag()}}
+
+    {{form.caption.label}}<br>
+    {{form.caption(placeholder="Picture caption", style="width:50%")}}<br>
+
+    {{form.submit()}}
+
+
+</form>
+
+{%endblock%}

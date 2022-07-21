@@ -11,7 +11,7 @@ from turtle import title
 from app import db
 from app.main import bp
 from app.main import email
-from app.models import Allele, Change, Fish, Notification, Reminder, User, requires_roles
+from app.models import Allele, Change, Fish, Notification, Reminder, User, requires_roles, Photo
 from flask import (
     flash,
     redirect,
@@ -28,6 +28,7 @@ from app.main.forms import (
     AlleleForm,
     EmptyForm,
     OrderForm,
+    PhotoCaptionForm,
     SimpleSearch,
     NewFish,
     SettingsForm,
@@ -571,13 +572,14 @@ def newfish():
         file_names = [file.filename for file in form.photos.data]
         
         if file_names!=[""] and file_names!=None:
-            photos = []
+            
             for photo in form.photos.data:
                 file = photo
                 filename = secure_filename(f"{newfish.id}_{file.filename}")
-                photos.append(filename)
                 file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
-            newfish.photos = ", ".join(photos)
+                photo = Photo(fish=newfish, name=filename)
+                db.session.add(photo)
+            
         
         db.session.commit()
         flash("The new fish has been added to the database", "info")
@@ -608,6 +610,7 @@ def updatefish(id):
     current_alleles = [allele.name for allele in fish.alleles]
 
     if form.validate_on_submit():
+        print(fish.photos.count())
         father = Fish.query.filter_by(
             fish_id=form.father_id.data, stock=form.father_stock.data
         ).first()
@@ -1055,22 +1058,16 @@ def updatefish(id):
             db.session.add(change)
             change_count+=1
 
-            if fish.photos != None and fish.photos != "":
-                current_pictures = fish.photos.split(", ")
-            else:
-                current_pictures = []
             
-            if pictures !="" and pictures !=None:
+            
     
-                for photo in form.photos.data:
-                    file = photo
-                    filename = secure_filename(f"{fish.id}_{file.filename}")
-                    current_pictures.append(filename)
-                    file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
-            
-            file_names = [file.filename for file in form.photos.data]
-        
-            fish.photos = ", ".join(current_pictures)
+            for photo in form.photos.data:
+                file = photo
+                filename = secure_filename(f"{fish.id}_{file.filename}")
+                file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
+                photo = Photo(fish=fish, name=filename)
+                db.session.add(photo)
+             
 
         if change_count>0:
             notification.change_count = change_count
@@ -1278,6 +1275,26 @@ def settings():
     return render_template(
         "settings.html", form=form, current_settings=current_settings
     )
+@bp.route("/fish/<fish_id>/photo/<photo_id>/editcaption/", methods=["GET", "POST"])
+@login_required
+@requires_roles("Researcher", "Admin", "Owner")
+def editcaption(fish_id, photo_id):
+    fish =Fish.query.filter_by(id=fish_id).first_or_404()
+    photo = Photo.query.filter_by(id=photo_id).first_or_404()
+    form = PhotoCaptionForm()
+
+    if form.validate_on_submit():
+        photo.caption=form.caption.data
+        db.session.commit()
+
+        return redirect(url_for('main.fish', id=fish.id))
+    
+    if photo.caption != None and photo.caption != "":
+        form.caption.data = photo.caption
+
+    return render_template("editcaption.html", form=form, fish=fish, photo=photo, title = "Edit Caption")
+
+
 
 @bp.route("/guides/")
 @login_required
@@ -1328,15 +1345,14 @@ def deletereminder(id):
 @bp.route('/fish/<fish_id>/deletephoto/<photo>', methods=['POST'])
 @login_required
 @requires_roles("Researcher","Admin", "Owner")
-def deletephoto(fish_id, photo):
-    
-    fish= Fish.query.filter_by(id=fish_id).first_or_404()
-
-    fish.delete_photo(photo)
+def deletephoto(fish_id, photo_id):
+    fish =Fish.query.filter_by(id=fish_id).first_or_404()
+    photo = Photo.query.filter_by(id=photo_id).first_or_404()
+    photo.delete()
 
 
     flash("The picture has been deleted", 'info')
-    return redirect(url_for('main.fish', id=fish_id))
+    return redirect(url_for('main.fish', id=fish.id))
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request
 def before_request():
