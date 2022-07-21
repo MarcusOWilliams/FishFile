@@ -6,7 +6,7 @@ import os
 import sys
 from unicodedata import category
 
-from sqlalchemy import delete
+from sqlalchemy import delete, false
 from app import db, bcrypt, login
 from flask_login import UserMixin, current_user
 from time import time
@@ -38,6 +38,8 @@ class User(UserMixin, db.Model):
     is_verified = db.Column(db.Boolean, default=False)
     project_license = db.Column(db.String(120))
     personal_license = db.Column(db.String(120))
+    personal_document = db.Column(db.Boolean, default=False)
+    project_document = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(32), default="User")
     code = db.Column(db.String(32), index=True)
     changes = db.relationship("Change", backref="user", lazy="dynamic")
@@ -52,7 +54,33 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return "<User {} {}>".format(self.first_name, self.last_name)
     
-    
+    def delete_personal_document(self):
+        if not self.personal_document:
+            return
+
+        try:
+            os.remove(os.path.join(current_app.config['PERSONAL_LICENSES'], f"{self.id}.pdf"))
+
+        except:
+
+            return
+            
+
+        self.personal_document = False
+        db.session.commit()
+
+    def delete_project_document(self):
+        if not self.project_document:
+            return
+
+        try:
+            os.remove(os.path.join(current_app.config['PROJECT_LICENSES'], f"{self.id}.pdf"))
+            
+        except:
+            return
+
+        self.project_document = False
+        db.session.commit()
 
     def isOwner(self):
         return self.role == "Owner"
@@ -91,7 +119,7 @@ class User(UserMixin, db.Model):
     def new_notifications(self):
         last_read_time = self.last_notification_read_time or datetime(1900, 1, 1)
         return Notification.query.filter_by(user=self).filter(Notification.time > last_read_time).count()
-        
+    
     # this is used to verify a password reset token, it decodes the link and checks the id of the user exists
     @staticmethod
     def verify_reset_password_token(token):

@@ -1295,6 +1295,8 @@ def stock(stock):
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def settings():
     form = SettingsForm()
+    deletePersonalForm = EmptyForm()
+    deleteProjectForm = EmptyForm()
     current_settings = current_user.settings
 
     
@@ -1311,7 +1313,7 @@ def settings():
         current_user.settings.pl_add_notifications = form.pl_add_notifications.data
         current_user.settings.pl_turnover_notifications = form.pl_turnover_notifications.data
         current_user.settings.pl_age_notifications = form.pl_age_notifications.data
-        
+
         current_user.personal_license = form.personal_license.data
         
         if current_user.project_license != form.project_license.data:
@@ -1333,7 +1335,23 @@ def settings():
                 f.project_license_holder = current_user
 
 
-            
+        if form.personal_license_file.data:
+            file = form.personal_license_file.data
+            if file.filename != "":
+                current_user.delete_personal_document()
+                filename = secure_filename(f"{current_user.id}.pdf")
+                file.save(os.path.join(current_app.config['PERSONAL_LICENSES'], filename))
+                current_user.personal_document = True
+                db.session.commit()
+
+        if form.project_license_file.data:
+            file = form.project_license_file.data
+            if file.filename != "":
+                current_user.delete_project_document()
+                filename = secure_filename(f"{current_user.id}.pdf")
+                file.save(os.path.join(current_app.config['PROJECT_LICENSES'], filename))
+                current_user.project_document = True
+
 
         db.session.commit()
 
@@ -1348,7 +1366,7 @@ def settings():
         form.personal_license.data = current_user.personal_license
 
     return render_template(
-        "settings.html", form=form, current_settings=current_settings
+        "settings.html", form=form, current_settings=current_settings, deletePersonalForm = deletePersonalForm, deleteProjectForm =deleteProjectForm
     )
 @bp.route("/fish/<fish_id>/photo/<photo_id>/editcaption/", methods=["GET", "POST"])
 @login_required
@@ -1428,6 +1446,30 @@ def deletephoto(fish_id, photo_id):
 
     flash("The picture has been deleted", 'info')
     return redirect(url_for('main.fish', id=fish.id))
+
+
+@bp.route('/user/<user_id>/deleteprojectlicense/', methods=["POST"])
+@login_required
+@requires_roles("User","Researcher","Admin", "Owner")
+def deleteprojectlicense(user_id):
+
+    user = User.query.filter_by(id = user_id).first_or_404()
+
+    user.delete_project_document()
+
+    return redirect(url_for('main.settings'))
+
+@bp.route('/user/<user_id>/deletepersonallicense/', methods=["POST"])
+@login_required
+@requires_roles("User","Researcher","Admin", "Owner")
+def deletepersonallicense(user_id):
+
+    user = User.query.filter_by(id = user_id).first_or_404()
+
+    user.delete_personal_document()
+
+    return redirect(url_for('main.settings'))
+
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request
 def before_request():

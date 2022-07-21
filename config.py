@@ -31,3 +31,6 @@ class Config(object):
     SCHEDULER_TIMEZONE = 'UTC'
 
     FISH_PICTURES = os.environ.get('FISH_PICTURE_FOLDER')
+    PERSONAL_LICENSES = os.environ.get('PERSONAL_LICENSES_FOLDER')
+    PROJECT_LICENSES = os.environ.get('PROJECT_LICENSES_FOLDER')
+
