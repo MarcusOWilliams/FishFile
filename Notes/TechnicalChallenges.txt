@@ -9,3 +9,5 @@ Adding pagination
 make allele changes work in a user friendly way
 
 Making the screen synamic to be nice on all screens
+
+Sending delete forms with javascript post requests

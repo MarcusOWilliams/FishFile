@@ -1295,6 +1295,7 @@ def stock(stock):
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def settings():
     form = SettingsForm()
+    deletePersonalForm = EmptyForm()
     current_settings = current_user.settings
 
     
@@ -1364,7 +1365,7 @@ def settings():
         form.personal_license.data = current_user.personal_license
 
     return render_template(
-        "settings.html", form=form, current_settings=current_settings
+        "settings.html", form=form, current_settings=current_settings, deletePersonalForm = deletePersonalForm 
     )
 @bp.route("/fish/<fish_id>/photo/<photo_id>/editcaption/", methods=["GET", "POST"])
 @login_required
@@ -1446,27 +1447,21 @@ def deletephoto(fish_id, photo_id):
     return redirect(url_for('main.fish', id=fish.id))
 
 
-@bp.route('/user/<user_id>/deleteprojectlicense/', methods=["POST"])
+
+@bp.route('/deletedocument', methods=["POST"])
 @login_required
 @requires_roles("User","Researcher","Admin", "Owner")
-def deleteprojectlicense(user_id):
+def deletepersonallicense():
 
-    user = User.query.filter_by(id = user_id).first_or_404()
+    jsdata = request.form['data']
 
-    user.delete_project_document()
+    if jsdata == "Personal":
+        current_user.delete_personal_document()
 
-    return redirect(url_for('main.settings'))
+    elif jsdata == "Project":
+        current_user.delete_project_document()
 
-@bp.route('/user/<user_id>/deletepersonallicense/', methods=["POST"])
-@login_required
-@requires_roles("User","Researcher","Admin", "Owner")
-def deletepersonallicense(user_id):
-
-    user = User.query.filter_by(id = user_id).first_or_404()
-
-    user.delete_personal_document()
-
-    return redirect(url_for('main.settings'))
+    return jsdata
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request

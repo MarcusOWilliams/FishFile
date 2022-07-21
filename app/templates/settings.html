@@ -3,7 +3,18 @@
 {%block styles%}
     <link rel="stylesheet" href="{{url_for('static', filename='styles/settingsStyle.css')}}">
 {%endblock%}
+{%block scripts%}
+    <script>
+        function sendPostDelete(category){
+            
+            $.post( "/deletedocument", {
+                data: category
+            });
 
+            location.reload();
+        }
+    </script>
+{%endblock%}
 {% block content %}
     <h2>Settings for {{current_user.username}}:</h2><br>
 
@@ -32,14 +43,16 @@
 
         {{form.personal_license_file.label}} <div class="infoPopup" onclick="popupShow('plInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="plInfoPopupText"> If you would like to attach a pdf to your personal license, do so here, you can only have one personal license pdf associated yo your account, if you upload a second then it will replace the current document</span></div>
         {{form.personal_license_file()}}<br><br>
-        {%if current_user.personal_document ==True %}<p><a target="_blank" href="/static/files/personal_licenses/{{current_user.id}}.pdf">Current personal license document</a></p><br>{%endif%}
+        {%if current_user.personal_document ==True %}
+            <p><a target="_blank" href="/static/files/personal_licenses/{{current_user.id}}.pdf">Current personal license document</a>  <button class="btn btn-secondary" onclick='sendPostDelete("Personal")'>Delete</button></p>
+            {%endif%}
 
         
         {{form.project_license.label}} <div class="infoPopup" onclick="popupShow('plInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="plInfoPopupText"> If you have your own project license enter it here, if don't have one/use someone else's, leave this blank (or as None)</span></div>
         {{form.project_license(placeholder="Your project license")}} <br><br>
         {{form.project_license_file.label}} <div class="infoPopup" onclick="popupShow('plInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="plInfoPopupText"> If you would like to attach a pdf to your project license, do so here, you can only have one prpject license pdf associated yo your account, if you upload a second then it will replace the current document</span></div>
         {{form.project_license_file()}}<br><br>
-        {%if current_user.project_document ==True %}<p><a target="_blank" href="/static/files/project_licenses/{{current_user.id}}.pdf">Current project license document</a></p><br>{%endif%}
+        {%if current_user.project_document ==True %}<p><a target="_blank" href="/static/files/project_licenses/{{current_user.id}}.pdf">Current project license document</a>  <button class="btn btn-secondary" onclick='sendPostDelete("Project")'>Delete</button></p><br>{%endif%}
 
         
         {{form.submit}}
