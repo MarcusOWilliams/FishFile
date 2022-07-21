@@ -23,10 +23,10 @@
                 {% endfor %}
             </form>
     </div>
-
-    <h4 style="margin-top:20px;">Search Results:</h4>
+    <h4 style="margin-top:20px;">Search Results ({{all_results|length}} results):</h4>
     <div id="fishList">
         {% if all_fish %}
+        
         {%for fish in all_fish%}
             {% include 'subtemplates/_fish.html'%}
         {%endfor%}

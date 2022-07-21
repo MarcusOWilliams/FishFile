@@ -142,10 +142,12 @@ def search():
                 .filter_by(cross_type=search_dict[key])
                 .subquery()
             )
-        elif key == "age":
+        elif key == "birthday":
+            formatted_date = " ".join(search_dict[key].split(" ")[1:4]).strip()
+            date = datetime.strptime(formatted_date, '%d %b %Y').date()
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter(Fish.getMonths(Fish, search_dict[key]))
+                .filter(Fish.birthday < date, Fish.status!="Dead")
                 .subquery()
             )
             
@@ -227,14 +229,14 @@ def search():
     
 
     if order == "Age ( young -> old )":
-        result = Fish.query.select_entity_from(all_fish).order_by(Fish.birthday.desc())
+        result = Fish.query.select_entity_from(all_fish).filter(Fish.birthday!=None, Fish.status!="Dead").order_by(Fish.birthday.desc())
         all_results = result.all()
         all_fish = result.paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
         
     elif order == "Age (old -> young)":
-        result = Fish.query.select_entity_from(all_fish).order_by(Fish.birthday.asc())
+        result = Fish.query.select_entity_from(all_fish).filter(Fish.birthday!=None, Fish.status!="Dead").order_by(Fish.birthday.asc())
         all_results = result.all()
         all_fish = result.paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
@@ -279,7 +281,8 @@ def search():
     )
 
     for field in form:
-        if field.name != "csrf_token" and field.name != "submit":
+
+        if field.name not in ("csrf_token", "submit", "birthday", "date_of_arrival"):
             if search_dict.get(field.name) != None and search_dict.get(field.name) != "":
                 field.data = search_dict[field.name]
                     
@@ -1064,10 +1067,16 @@ def updatefish(id):
             for photo in form.photos.data:
                 file = photo
                 filename = secure_filename(f"{fish.id}_{file.filename}")
-                file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
-                photo = Photo(fish=fish, name=filename)
-                db.session.add(photo)
-             
+                current = Photo.query.filter_by(fish=fish, name=filename).first()
+                if current == None:
+                    file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
+                    photo = Photo(fish=fish, name=filename)
+                    db.session.add(photo)
+                else:
+                    current.delete()
+                    file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
+                    photo = Photo(fish=fish, name=filename)
+                    db.session.add(photo)
 
         if change_count>0:
             notification.change_count = change_count
@@ -1133,9 +1142,9 @@ def allfish():
     form.order.data = order
 
     if order == "Age ( young -> old )":
-        fish = Fish.query.order_by(Fish.birthday.desc()).all()
+        fish = Fish.query.filter(Fish.birthday!=None, Fish.status!="Dead").order_by(Fish.birthday.desc()).all()
     elif order == "Age (old -> young)":
-        fish = Fish.query.order_by(Fish.birthday.asc()).all()
+        fish = Fish.query.filter(Fish.birthday!=None, Fish.status!="Dead").order_by(Fish.birthday.asc()).all()
     elif order == "Fish ID":
         fish = Fish.query.order_by(Fish.fish_id.asc()).all()
 
@@ -1178,11 +1187,11 @@ def project_license(license):
     form.order.data = order
 
     if order == "Age ( young -> old )":
-        fish = Fish.query.filter_by(project_license_holder = user).order_by(Fish.birthday.desc()).paginate(
+        fish = Fish.query.filter_by(project_license_holder = user).filter(Fish.birthday!=None, Fish.status!="Dead").order_by(Fish.birthday.desc()).paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     elif order == "Age (old -> young)":
-        fish = Fish.query.filter_by(project_license_holder = user).order_by(Fish.birthday.asc()).paginate(
+        fish = Fish.query.filter_by(project_license_holder = user).filter(Fish.birthday!=None, Fish.status!="Dead").order_by(Fish.birthday.asc()).paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     elif order == "Fish ID":
@@ -1241,11 +1250,11 @@ def stock(stock):
     form.order.data = order
 
     if order == "Age ( young -> old )":
-        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead").order_by(Fish.birthday.desc()).paginate(
+        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead", Fish.birthday!=None).order_by(Fish.birthday.desc()).paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     elif order == "Age (old -> young)":
-        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead").order_by(Fish.birthday.asc()).paginate(
+        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead", Fish.birthday!=None).order_by(Fish.birthday.asc()).paginate(
                 page, current_app.config["FISH_PER_PAGE"], False
             )
     elif order == "Fish ID":

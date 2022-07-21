@@ -240,9 +240,9 @@ class Fish(db.Model):
     
     def getAge(self):
         if self.status == "Dead":
-            return
+            return "Dead"
         if self.birthday == None or self.birthday=="":
-            return
+            return "None"
 
         today = datetime.today().date()
         birthday =  self.birthday
@@ -317,6 +317,9 @@ class Photo(db.Model):
         os.remove(os.path.join(current_app.config['FISH_PICTURES'],self.name))
         db.session.delete(self)
         db.session.commit()
+
+    def __repr__(self):
+        return f"Photo - {self.name}"
 """
 This is the class for the Change table of the SQL database, which is used to record changes to the database
 Each user row contains a ...

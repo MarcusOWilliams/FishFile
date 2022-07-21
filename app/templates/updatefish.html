@@ -151,7 +151,7 @@
             {%for picture in fish.photos %}
                 <tr>
                     <td><img height = "100px" src="/static/pictures/fish/{{picture.name}}"></td>
-                    <td>Caption: {{picture.caption}}</picture></td>
+                    <td >Caption: {{picture.caption}}</picture></td>
                     <td><a href="{{url_for('main.editcaption', fish_id=fish.id, photo_id = picture.id)}}">Add/Update caption</a></td>
                     <td><form action="{{ url_for('main.deletephoto',fish_id=fish.id, photo_id=picture.id)}}" method="post">{{deletePhotoForm.hidden_tag()}}{{deletePhotoForm.submit(value="Delete")}}</form></td>
                 </tr>
