@@ -241,7 +241,7 @@ class Fish(db.Model):
     def getAge(self):
         if self.status == "Dead":
             return
-        if self.birthday == None:
+        if self.birthday == None or self.birthday=="":
             return
 
         today = datetime.today().date()
@@ -257,17 +257,19 @@ class Fish(db.Model):
 
         return age
         
-    def getMonths(self):
+    def getMonths(self, cutoff):
+        print(self.birthday)
         if self.status == "Dead":
-            return
-        if self.birthday == None:
-            return
+            return False
 
-        today = datetime.today().date()
-        birthday =  self.birthday
-        age_difference = relativedelta.relativedelta(today,birthday)
-
-        return age_difference.months
+        try:
+            today = datetime.today().date()
+            birthday =  self.birthday
+            age_difference = relativedelta.relativedelta(today,birthday)
+            
+            return age_difference.months >= cutoff
+        except:
+            return False
         
     def delete_photo(self, photo_name):
         

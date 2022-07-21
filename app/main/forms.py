@@ -15,7 +15,6 @@ from wtforms import (
     MultipleFileField
 )
 from wtforms.validators import DataRequired, ValidationError, Optional
-from flask_wtf.file import FileAllowed
 from app.models import Fish, User
 import validators
 
@@ -45,7 +44,7 @@ class NewFish(FlaskForm):
     protocol = IntegerField("Protocol #", validators=[Optional()])
     comments = TextAreaField("Comments", validators=[Optional()])
     links = TextAreaField("Additional links", validators=[Optional()])
-    photos = MultipleFileField("Upload pictures", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'],'File must have a .jpg, .jpeg or .png extension')])
+    photos = MultipleFileField("Upload pictures", validators=[Optional()])
 
     source = SelectField("* Source", choices=["Home", "Imported"])
     cross_type = StringField("* Cross Type", validators=[DataRequired()])
@@ -134,8 +133,12 @@ class NewFish(FlaskForm):
 
     def validate_photos(self, photos):
         for file in photos.data:
-            if len(file.read())>(3*1024*1024):
+            if file.filename.split(".")[-1] not in ("jpg", "jpeg", "png"):
+                raise ValidationError('File must have a .jpg, .jpeg or .png extension')
+            if len(file.read()) > 3*1024*1024:
                 raise ValidationError(f"File size must be less than 3MB for each file")
+            file.seek(0)
+
 
 class FilterChanges(FlaskForm):
     fish_id = BooleanField("Fish ID")

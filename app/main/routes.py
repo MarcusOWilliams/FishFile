@@ -83,12 +83,13 @@ def search():
 
 
     if form.validate_on_submit():
+        
         search_dict = {}
         for fieldname, value in form.data.items():
             if fieldname != "csrf_token" and fieldname != "submit":
                 if value != None and value != "":
                     search_dict[fieldname] = value
-
+        
         session["order_by"] = form.order.data
         session["search_dict"] = search_dict.copy()
         
@@ -97,7 +98,6 @@ def search():
 
 
     search_dict = session["search_dict"].copy()
-
     all_fish = Fish.query.filter(id != None).subquery()
     for key in search_dict:
         if key == "fish_id":
@@ -145,9 +145,10 @@ def search():
         elif key == "age":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter(Fish.getMonths() >= search_dict[key])
+                .filter(Fish.getMonths(Fish, search_dict[key]))
                 .subquery()
             )
+            
         elif key == "date_of_arrival":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
