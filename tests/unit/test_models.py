@@ -41,16 +41,6 @@ def test_new_fish(new_fish):
     assert new_fish.transgenes == None
     assert new_fish.comments == "Its a fish..."
 
-def test_new_(new_tank):
-    """
-    GIVEN a Tank  model
-    WHEN a new Tank is created
-    THEN check the properties are defined correctly
-    """
-    assert new_tank.tank_id == 1
-    assert new_tank.males == 1
-    assert new_tank.females == 1
-    assert new_tank.total == 2
     
 
 def test_new_change(new_change):
@@ -61,7 +51,6 @@ def test_new_change(new_change):
     """
     assert new_change.user_id == 1
     assert new_change.fish_id == 1
-    assert new_change.tank_id == 1
     assert new_change.action == "test"
     assert new_change.contents == "this is a test"
 

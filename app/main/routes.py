@@ -1369,6 +1369,7 @@ def settings():
     return render_template(
         "settings.html", form=form, current_settings=current_settings, deletePersonalForm = deletePersonalForm 
     )
+
 @bp.route("/fish/<fish_id>/photo/<photo_id>/editcaption/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Researcher", "Admin", "Owner")

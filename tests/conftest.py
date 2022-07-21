@@ -64,29 +64,13 @@ def new_fish():
         birthday=datetime(2016, 4, 30, 3, 20, 6),
         date_of_arrival=datetime(2016, 4, 30, 3, 20, 6),
         stock="ABC123",
-        project_license="QWERTY",
         status="Alive",
-        allele="aa",
         protocol=1,
         comments="Its a fish..."
     )
 
     return fish
 
-
-@pytest.fixture(scope='module')
-def new_tank():
-    """
-    THIS IS USED TO CREATE A TANK FOR OTHER TESTS USING PYTEST
-    """
-    tank = Tank(
-        tank_id=1,
-        males=1,
-        females=1,
-        total=2
-    )
-
-    return tank
 
 
 @pytest.fixture(scope='module')
@@ -97,7 +81,6 @@ def new_change():
     change = Change(
         user_id=1,
         fish_id=1,
-        tank_id=1,
         action="test",
         contents="this is a test"
     )

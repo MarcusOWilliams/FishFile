@@ -99,3 +99,7 @@ add image captions
 WHEN DONE:
 
 change email sent from
+
+REMOVE testing check from wrapper
+
+Update env to production, remove debug
