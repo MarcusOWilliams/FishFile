@@ -132,10 +132,6 @@ class NewFish(FlaskForm):
             if not validators.url(link.strip()):
                 raise ValidationError(f'The link "{link}" is not a valid URL')
 
-    def validate_photos(self, photos):
-        for file in photos.data:
-            if len(file.read())>(3*1024*1024):
-                raise ValidationError(f"File size must be less than 3MB for each file")
 
 class FilterChanges(FlaskForm):
     fish_id = BooleanField("Fish ID")
@@ -180,7 +176,7 @@ class SearchFrom(FlaskForm):
         "Source", choices=["", "Home", "Imported"], validators=[Optional()]
     )
     cross_type = StringField("Cross Type", validators=[Optional()])
-    age = IntegerField("Min. Age (months)", validators=[Optional()])
+    birthday = DateField("Birthday", validators=[Optional()])
     date_of_arrival = DateField("Date of Arrival", validators=[Optional()])
     user_code = StringField("User Code", validators=[Optional()])
     project_license = StringField("Project License", validators=[Optional()])

@@ -256,19 +256,7 @@ class Fish(db.Model):
             age = f"{age_difference.days} days"
 
         return age
-        
-    def getMonths(self):
-        if self.status == "Dead":
-            return
-        if self.birthday == None:
-            return
 
-        today = datetime.today().date()
-        birthday =  self.birthday
-        age_difference = relativedelta.relativedelta(today,birthday)
-
-        return age_difference.months
-        
     def delete_photo(self, photo_name):
         
         photo = Photo.query.filter_by(fish = self, name = photo_name).first()
