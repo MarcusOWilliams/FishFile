@@ -32,7 +32,7 @@ def send_reminders():
 
 
 
-@scheduler.task('interval', id='send_age_reminders',seconds=10)
+@scheduler.task('cron', id='send_age_reminders',hour='6')
 def send_age_reminders():
     with scheduler.app.app_context():
         all_fish = Fish.query.all()

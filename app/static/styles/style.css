@@ -407,3 +407,9 @@
     overflow-x: hidden;
     text-overflow: ellipsis;
 }
+
+.modal-footer p{
+    overflow-x: hidden;
+    word-wrap: break-word;
+    
+}

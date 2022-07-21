@@ -4,6 +4,7 @@
 {% block content %}
     <h2>Project License: {{user.project_license}}</h2>
     <p>This project license is associated with <a href="{{url_for('main.user', username=user.username)}}">{{user.first_name}}</a></p>
+    {%if user.project_document%}<p>Find the associated project license document <a href="/static/files/project_licenses/{{user.id}}.pdf" target="_blank">here</a></p>{%endif%}
     <form action = "", method="post">
         {{form.hidden_tag()}}
         {{form.order.label}} {{form.order()}} {{form.submit()}}

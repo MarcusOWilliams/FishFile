@@ -5,6 +5,15 @@
     <p>Email: <a href="mailto:{{user.email}}">{{user.email}}</a></p>
     {%if user.project_license != "" and user.project_license != None%}
         <p>Project License: <a href="{{url_for('main.project_license', license = user.project_license)}}">{{user.project_license}}</a></p>
+        {%if user.project_document  %}
+            <p>View project license document <a href="/static/files/project_licenses/{{user.id}}.pdf">here</a></p>
+        {%endif%}
+    {%endif%}
+    {%if user.personal_license != "" and user.personl_license != None%}
+        <p>Personal License: {{user.personal_license}}</p>
+        {%if user.personal_document and (current_user.isResearcher() or user==curent_user) %}
+            <p>View personal license document <a href="/static/files/personal_licenses/{{user.id}}.pdf">here</a></p>
+        {%endif%}
     {%endif%}
     <p></p>
     {%if user == current_user %}
