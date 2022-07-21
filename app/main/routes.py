@@ -142,10 +142,10 @@ def search():
                 .filter_by(cross_type=search_dict[key])
                 .subquery()
             )
-        elif key == "birthday":
+        elif key == "age":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(birthday=search_dict[key])
+                .filter(Fish.getMonths() >= search_dict[key])
                 .subquery()
             )
         elif key == "date_of_arrival":
@@ -610,7 +610,6 @@ def updatefish(id):
     current_alleles = [allele.name for allele in fish.alleles]
 
     if form.validate_on_submit():
-        print(fish.photos.count())
         father = Fish.query.filter_by(
             fish_id=form.father_id.data, stock=form.father_stock.data
         ).first()
