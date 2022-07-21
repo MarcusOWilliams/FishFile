@@ -187,7 +187,8 @@ class SearchFrom(FlaskForm):
         "Source", choices=["", "Home","UK", "International"], validators=[Optional()]
     )
     cross_type = StringField("Cross Type", validators=[Optional()])
-    age = IntegerField("Older Than (months)", validators=[Optional()])
+    age_older = IntegerField("Older Than (months)", validators=[Optional()])
+    age_younger = IntegerField("Younger Than (months)", validators=[Optional()])
     date_of_arrival = DateField("Date of Arrival", validators=[Optional()])
     user_code = StringField("User Code", validators=[Optional()])
     project_license = StringField("Project License", validators=[Optional()])

@@ -142,13 +142,20 @@ def search():
                 .filter_by(cross_type=search_dict[key])
                 .subquery()
             )
-        elif key == "age":
+        elif key == "age_older":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
                 .filter(Fish.months >= search_dict[key], Fish.status!="Dead")
                 .subquery()
             )
-            
+
+        elif key == "age_younger":
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(Fish.months < search_dict[key], Fish.status!="Dead")
+                .subquery()
+            )
+
         elif key == "date_of_arrival":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
