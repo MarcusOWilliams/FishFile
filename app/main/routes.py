@@ -1295,8 +1295,6 @@ def stock(stock):
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def settings():
     form = SettingsForm()
-    deletePersonalForm = EmptyForm()
-    deleteProjectForm = EmptyForm()
     current_settings = current_user.settings
 
     
@@ -1366,7 +1364,7 @@ def settings():
         form.personal_license.data = current_user.personal_license
 
     return render_template(
-        "settings.html", form=form, current_settings=current_settings, deletePersonalForm = deletePersonalForm, deleteProjectForm =deleteProjectForm
+        "settings.html", form=form, current_settings=current_settings
     )
 @bp.route("/fish/<fish_id>/photo/<photo_id>/editcaption/", methods=["GET", "POST"])
 @login_required
