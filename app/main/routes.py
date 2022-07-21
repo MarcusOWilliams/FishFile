@@ -1312,6 +1312,8 @@ def settings():
         current_user.settings.pl_turnover_notifications = form.pl_turnover_notifications.data
         current_user.settings.pl_age_notifications = form.pl_age_notifications.data
         
+        current_user.personal_license = form.personal_license.data
+        
         if current_user.project_license != form.project_license.data:
             fish = Fish.query.filter_by(project_license_holder = current_user).all()
             old_license = current_user.project_license
@@ -1331,6 +1333,7 @@ def settings():
                 f.project_license_holder = current_user
 
 
+            
 
         db.session.commit()
 
@@ -1340,6 +1343,9 @@ def settings():
 
     if current_user.project_license is not None:
         form.project_license.data = current_user.project_license
+
+    if current_user.personal_license is not None:
+        form.personal_license.data = current_user.personal_license
 
     return render_template(
         "settings.html", form=form, current_settings=current_settings

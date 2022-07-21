@@ -31,6 +31,8 @@ def send_reminders():
                 reminder.send_reminder()
 
 
+
+
         
 
 

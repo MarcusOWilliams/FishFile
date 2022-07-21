@@ -6,7 +6,7 @@
 
 {% block content %}
     <h2>Settings for {{current_user.username}}:</h2><br>
-    <form action="" method="post" >
+    <form action="" method="post" enctype="multipart/form-data">
         {{form.hidden_tag()}}
         <h4>Emails:</h4>
             {{form.emails.label}} {{form.emails(checked=current_user.settings.emails)}}<br>
@@ -22,9 +22,14 @@
                 {{form.pl_age_notifications.label}} {{form.pl_age_notifications(checked=current_user.settings.pl_age_notifications)}}<br>
             {%endif%}
 
-        <br>    
+        <br> 
+        
+        {{form.personal_license.label}} {{form.personal_license(placeholder="Your personal license")}} <div class="infoPopup" onclick="popupShow('personalInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="personalInfoPopupText"> Enter your own personal license here</span></div><br><br>
+        {{form.personal_license_file.label}} {{form.personal_license_file()}}<br><br>
+        
         {{form.project_license.label}} {{form.project_license(placeholder="Your project license")}} <div class="infoPopup" onclick="popupShow('plInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="plInfoPopupText"> If you have your own project license enter it here, if don't have one/use someone else's, leave this blank (or as None)</span></div><br><br>
-
+        {{form.project_license_file.label}} {{form.project_license_file()}}<br><br>
+        
         {{form.submit}}
     </form>
     {% for field, errors in form.errors.items() %}

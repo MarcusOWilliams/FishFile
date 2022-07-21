@@ -12,11 +12,12 @@ from wtforms import (
     DateField,
     TextAreaField,
     SelectMultipleField,
-    MultipleFileField
+    MultipleFileField,
+    FileField
 )
 from wtforms.validators import DataRequired, ValidationError, Optional
 from app.models import Fish, User
-import validators
+from flask_wtf.file import FileAllowed
 
 
 
@@ -46,7 +47,7 @@ class NewFish(FlaskForm):
     links = TextAreaField("Additional links", validators=[Optional()])
     photos = MultipleFileField("Upload pictures", validators=[Optional()])
 
-    source = SelectField("* Source", choices=["Home", "Imported"])
+    source = SelectField("* Source", choices=["Home", "UK", "International"])
     cross_type = StringField("* Cross Type", validators=[DataRequired()])
 
     birthday = DateField("* Birthday", validators=[DataRequired()])
@@ -183,7 +184,7 @@ class SearchFrom(FlaskForm):
     stock = StringField("Stock #", validators=[Optional()])
     protocol = IntegerField("Protocol #", validators=[Optional()])
     source = SelectField(
-        "Source", choices=["", "Home", "Imported"], validators=[Optional()]
+        "Source", choices=["", "Home","UK", "International"], validators=[Optional()]
     )
     cross_type = StringField("Cross Type", validators=[Optional()])
     birthday = DateField("Birthday before", validators=[Optional()])
@@ -215,7 +216,12 @@ class SettingsForm(FlaskForm):
     pl_turnover_notifications = BooleanField("Custom reminders for all fish under your project license:")
     pl_age_notifications = BooleanField("Fish age reminders for all fish under your project license:")
 
+    personal_license = StringField("Personal License:")
+    personal_license_file = FileField("Personal Licence PDF", validators=[Optional()])
+    
     project_license = StringField("Project License:")
+    project_license_file = FileField("Project Licence PDF", validators=[Optional()])
+
 
     submit = SubmitField("Apply")
 
@@ -224,6 +230,26 @@ class SettingsForm(FlaskForm):
             user = User.query.filter_by(project_license = project_license.data).first()
             if user is not None and user != current_user:
                 raise ValidationError("This project license is already associated with another user")
+
+    def validate_personal_license_file(self, personal_license_file):
+        if not personal_license_file.data or personal_license_file.data.filename == "":
+            return
+        if personal_license_file.data.filename.split(".")[-1] not in ("pdf"):
+            raise ValidationError("The file must be a pdf file ending in .pdf")
+        if len(personal_license_file.data.read()) > 2*1024*1024:
+            raise ValidationError(f"File size must be less than 2MB")
+        personal_license_file.data.seek(0)
+
+    def validate_project_license_file(self, project_license_file):
+        if not project_license_file.data or project_license_file.data.filename == "":
+            return
+        if project_license_file.data.filename.split(".")[-1] not in ("pdf"):
+            raise ValidationError("The file must be a pdf file ending in .pdf")
+        if len(project_license_file.data.read()) > 2*1024*1024:
+            raise ValidationError(f"File size must be less than 2MB")
+        project_license_file.data.seek(0)
+
+
 
 
 class RoleChange(FlaskForm):
