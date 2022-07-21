@@ -1172,9 +1172,6 @@ def project_license(license):
 
     page = request.args.get("page", 1, type=int)
 
-    fish = Fish.query.filter_by(project_license_holder = user).paginate(
-        page, current_app.config["FISH_PER_PAGE"], False
-    )
 
     order = session.get("order_by", "Newest Added")
 
@@ -1218,7 +1215,70 @@ def project_license(license):
     )
     
 
-    return render_template("projectlicense.html", fish_list=fish.items ,user=user, next_url=next_url, prev_url=prev_url, pagination=fish, form=form)
+    return render_template("projectlicense.html", fish_list=fish.items ,user=user, next_url=next_url, prev_url=prev_url, pagination=fish, form=form, title = f"Project License ({license})")
+
+@bp.route("/stock/<stock>/", methods=["GET", "POST"])
+@login_required
+@requires_roles("User","Researcher", "Admin", "Owner")
+def stock(stock):
+
+    form = OrderForm()
+
+    
+    if form.validate_on_submit():
+        
+        session["order_by"]=form.order.data
+
+        return redirect(url_for('main.stock', stock=stock))
+
+
+    page = request.args.get("page", 1, type=int)
+
+
+
+    order = session.get("order_by", "Newest Added")
+
+    form.order.data = order
+
+    if order == "Age ( young -> old )":
+        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead").order_by(Fish.birthday.desc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Age (old -> young)":
+        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead").order_by(Fish.birthday.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Fish ID":
+        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead").order_by(Fish.fish_id.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Tank ID":
+        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead").order_by(Fish.tank_id.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Stock":
+        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead").order_by(Fish.stock.asc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    elif order == "Newest Added":
+        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead").order_by(Fish.added.desc()).paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+    else:
+        
+        fish = Fish.query.filter_by(stock = stock).filter(Fish.status != "Dead").paginate(
+                page, current_app.config["FISH_PER_PAGE"], False
+            )
+
+    next_url = (
+        url_for("main.stock", stock = stock , page=fish.next_num) if fish.has_next else None
+    )
+    prev_url = (
+        url_for("main.stock", stock = stock, page=fish.prev_num) if fish.has_prev else None
+    )
+    
+
+    return render_template("stock.html", fish_list=fish.items , next_url=next_url, prev_url=prev_url, pagination=fish, form=form, title = f"Stock ({stock})")
 
 
 @bp.route("/settings/", methods=["GET", "POST"])
@@ -1342,7 +1402,7 @@ def deletereminder(id):
     flash("The reminder has been deleted", 'info')
     return redirect(url_for('main.updatefish', id=fish_id))
 
-@bp.route('/fish/<fish_id>/deletephoto/<photo>', methods=['POST'])
+@bp.route('/fish/<fish_id>/deletephoto/<photo_id>', methods=['POST'])
 @login_required
 @requires_roles("Researcher","Admin", "Owner")
 def deletephoto(fish_id, photo_id):

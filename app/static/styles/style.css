@@ -398,3 +398,8 @@
 .modal-footer {
     justify-content: space-between;
 }
+
+#updatePictureTable td{
+    vertical-align: middle;
+    text-align: left;
+}
