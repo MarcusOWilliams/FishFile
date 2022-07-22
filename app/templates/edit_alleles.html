@@ -1,0 +1,42 @@
+{%extends 'base.html'%}
+
+{%block content%}
+    <h2>Update alleles list</h2>
+
+    <p><strong>Current Alleles</strong></p>
+    {%if allele_list%}
+        <div id="alleleList">
+            {%for allele in allele_list%}
+                <div class="alleleItem">
+                    <p>{{allele}}</p>
+                    <hr>
+                </div>
+            {%endfor%}
+        </div>
+    {%else%}
+        <p>There are currently no alleles in the database...</p>
+    {%endif%}
+    <div id="alleleFormDiv">
+        <form action = "" method="post" id="alleleForm">
+            {{form.hidden_tag()}}
+            <table id="alleleFormTable">
+                <tr>
+                    <td><b>{{form.add.label}}</b> </td>
+                    <td>{{form.add()}}</td>
+                </tr>
+                <tr>
+                    <td><b>{{form.remove.label}}</b></td>
+                    <td>{{form.remove()}}</td>
+                </tr>
+                <tr><td colspan="2"><span style="color: red;">Warning: Removing an allele will remove it from all associated entries</span></td></tr>
+            </table>
+            {% for field, errors in form.errors.items() %}
+                    <div class = "formError">{{ form[field].label }}: {{ ', '.join(errors) }}</div>
+            {% endfor %}
+
+            {{form.submit()}}
+        </form>
+    </div>
+
+
+{%endblock%}

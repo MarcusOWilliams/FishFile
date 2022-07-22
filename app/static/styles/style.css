@@ -417,3 +417,33 @@
 .fishInfoSubPoint{
     margin-left:50px;
 }
+
+#alleleList{
+    margin: auto;
+    border: 1px grey solid;
+    width: 20%;
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+.alleleItem{
+    padding:5px;
+}
+
+.alleleItem hr{
+    margin: 0;
+}
+.alleleItem:hover{
+    background-color: whitesmoke;
+}
+
+#alleleFormDiv{
+    margin: auto;
+
+}
+#alleleFormTable{
+    margin: auto;
+}
+#alleleForm{
+    text-align: center;
+}

@@ -280,7 +280,7 @@ class PhotoCaptionForm(FlaskForm):
 class EditAlleles(FlaskForm):
     add = StringField("Add an allele:", validators=[Optional()])
     remove = StringField("Remove an allele:", validators=[Optional()])
-    submit = StringField("Apply")
+    submit = SubmitField("Apply")
 
     def validate_add(self, add):
         if add in get_all_allele_names():

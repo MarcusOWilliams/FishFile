@@ -511,7 +511,7 @@ def newfish():
     licenses = [""] + list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
 
-    form.allele.choices = list(get_all_allele_names()).sort()
+    form.allele.choices = sorted(list(get_all_allele_names()))
 
     
 
@@ -622,7 +622,7 @@ def updatefish(id):
     licenses = [""] + list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
 
-    form.allele.choices = list(get_all_allele_names()).sort()
+    form.allele.choices = sorted(list(get_all_allele_names()))
 
 
     current_alleles = [allele.name for allele in fish.alleles]
@@ -1428,10 +1428,25 @@ def user_list():
 @login_required
 @requires_roles("Owner")
 def edit_alleles():
+
     form = EditAlleles()
+    allele_list = sorted(list(get_all_allele_names()))
 
     if form.validate_on_submit():
-        pass
+        if form.add.data != None and form.add.data != "":
+            new_allele = Allele(name = form.add.data)
+            db.session.add(new_allele)
+
+        if form.remove.data != None and form.remove.data != "":
+            remove_all = Allele.query.filter_by(name = form.remove.data).all()
+
+            for allele in remove_all:
+                db.session.delete(allele)
+                
+        db.session.commit()
+        return redirect(url_for('main.edit_alleles'))
+
+    return render_template('edit_alleles.html', allele_list=allele_list, form=form, title="Edit Alleles")
 
 @bp.route('/reset_notifications', methods=['POST'])
 @login_required

@@ -62,7 +62,7 @@
             </tr>
             <tr>
                 <td>{{form.allele.label}}<div class="infoPopup" onclick="popupShow('alleleInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="alleleInfoPopupText"> To select multiple allele options, hold the Ctrl key whilst selecting them</span></div>
-                {%if current_user.isOwner()%}<br><a>Add new allele</a>{%endif%}</td>
+                {%if current_user.isOwner()%}<br><a href="{{url_for('main.edit_alleles')}}">Edit Alleles List</a>{%endif%}</td>
                 <td class="addFishInputField"> {{form.allele(placeholder="Allele")}}</td>
 
                 <td>{{form.cross_type.label}}</td>
