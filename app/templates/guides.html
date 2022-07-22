@@ -3,31 +3,46 @@
 {%block content%}
 <div id="tutorialContainer">
     <h2>Useful Information and Guides about DanioDB</h2>
+    <br>
+    <p style="width:60%; margin:auto;">This page is here to explain some of the common uses of the system and how to use it correctly, the list of tutorials on this page is shown below. If your questions are not answered by the tutorials on this page, or you have another problem, please contact the person in charge of looking after your fish, who will then contact the database engineer if required.</p>
+    <br>
     <h4>Contents</h4>
     <div id="tutorialContentsList">
       <span>(Click on a heading from the list below to scroll to the related tutorial)</span>
-      <a>Profile Settings</a>
-      <a>Searching the database</a>
-      <a>Updating an entry</a>
-      <a>Adding Fish to the database</a>
+      <a href="#profile_guide">Profile Settings</a>
+      <a href="#searching_guide">Searching the database</a>
+      <a href="#adding_guide">Adding Fish to the database</a>
       <a href="#excel_guide">Creating an excel spreadsheet</a>
     </div>
       
 
     
     <hr>
-    <h4>Profile settings</h4>
-    <p>Permissions</p>
+    <h4 id="profile_guide">Profile settings</h4>
+      <p><strong>Settings</strong><br>Each user is given a default username which matches the first part of the University of Bath email address, the username can be used to access your profile page using the link /user/username or by clicking the link on the navigation bar.<br><br> From your profile page you can edit the settings of you account (or click <a href="{{url_for('main.settings')}}">this link</a>). This includes notification, password and email settings along with the option to upload documents for your personal license and project licenses if you have them.</p>
+      <p><Strong>Permissions</Strong><br>There are a number of different levels of permissions, allowing different access to the data base, so if you are unable to use any of the functionality it may be becuase you don't have the necessary permissions<br>Your current level of permissions is {{current_user.permissions}}. The list of levels of permissions is:
+         <ul style="list-style: none; width:60%;margin:auto;">
+          <li><b>User</b> - Users simply have the permissions to view the database, they are not able to update any details of database entries, add new entries or delete entries</li>
+          <li><b>Researcher</b> - Researchers have all of the same permissions as users, but they also have the ability to update information about database entries, they do not have permission to add or delete entries</li>
+          <li><b>Admin</b> - Admins, have all previously described permissions, they can also add and remove entries from the database and can change the permission levels of other users (can not make another user an admin, only a few select users can do this)</li>
+        </ul>
+        </p>
     <hr>
-    <h4>Searching the database</h4>
+    <h4 id="searching_guide">Searching the database</h4>
     <p>There are two main ways to search for an entry in the database:
-      The simplest way is to use the small search bar in the top right hand corner, this allows you to search for a specific fish tank by giving its stock number 
-      If you want a more detailed search you can use the search form on the home page, this will allow you to filter by a number of attributes of any entry and will return a list of all the entries that match your search, but searching with none of the fields filled in you can get a list of every fish entry in the database</p>
+      The simplest way is to use the small search bar in the top right hand corner, this allows you to search for a specific fish tank by giving its tank ID
+      If you want a more detailed search you can use the search form on the home page, this will allow you to filter by a number of attributes of any entry and will return a list of all the entries that match your search, but searching with none of the fields filled in you can get a list of every fish entry in the database<br><br>
+      There are also pages associated with each project license and stock to quickly see all fish that match the respecitve attribute.<br><br>
+
+      At the bottom of each page for a given entry you will find links that will lead you to extra information about each entry, this includes a family tree of the given fish line and a record of all changes that have been made to the entry. <br>
+      Depending on your permissions this is also where you will find the options to update details of an entry and to remove an entry.
+    </p>
       <hr>
+
     <div id="adding_guide" >
       <h4>Adding an entry to the database</h4>
-      <p>To add an entry to the database you must have the necessary permissions, if you believe you require these previlidges and do not have them then please contact the website admin using the infromation at the bottom of this page.
-        Once you have the correct permissions head over to <a href="{{url_for('main.newfish')}}">this page</a> where you will see the form to add a new database entry. Required fields are marked, everything else is optional. When entering the details for father and mother fish make sure that the details match to an entry that is already in the database. For all of the fish counts a number must be inputted to the associated fields, if there are no fish matching the count then just input 0.</p>
+      <p>To add an entry to the database you must have the necessary permissions, if you believe you require these previlidges and do not have them then please contact a website admin.
+        Once you have the correct permissions head over to <a href="{{url_for('main.newfish')}}">this page</a> where you will see the form to add a new database entry.<br><br> Required fields are marked, everything else is optional. When entering the details for father and mother fish make sure that the details match to an entry that is already in the database. For all of the fish counts a number must be inputted to the associated fields, if there are no fish matching the count then just input 0.</p>
       <hr>
     </div>
     <div id="excel_guide">
@@ -45,10 +60,5 @@
 
       
     </div>
-
-    <h4>Extra Tips</h4>
-    <ul>
-        <li></li>
-    </ul>
   </div>
 {%endblock%}

@@ -74,7 +74,6 @@ Add scheduled tasks:
 
 / Add notification settings
 
-add a clear notifications button
 
 add a footer, with link to guides
 
@@ -82,7 +81,7 @@ add tutorials
  How to get it on excel
  simple search
 
-add tooltips
+/ add tooltips
 
 allow reminders to be for multiple people
 

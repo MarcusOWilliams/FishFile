@@ -6,14 +6,6 @@
     <br>
     <h6 id="introParagraph">DanioDB - named after the genus which zebrafish belong to - is a new relational database management system designed speciafically for researchers at the University of Bath, it's goal is to aid in the collection, storage, retrieval and analysis of data involving the zebrafish research carried out at the University.</h6>
     <br>
-    <p style="font-weight:bold;">Quick Links:</p>
-    <ul id="quickLinksMenu"> 
-        <li><a href="{{url_for('main.newfish')}}" class="quickLinksItem">Add a new fish to the database</a></li>
-        <li><a href="{{url_for('main.index')}}" class="quickLinksItem">Search the database</a></li>
-        <li><a href="{{url_for('main.guides')}}" class="quickLinksItem">How to use the system</a></li>
-        <li><a href="{{url_for('main.user', username = current_user.username)}}" class="quickLinksItem">View my profile</a></li>
-        
-    </ul>
     <h4>Search The Database:</h4>
     <div id="mainSearchForm">
         <form action="", method = "post">
