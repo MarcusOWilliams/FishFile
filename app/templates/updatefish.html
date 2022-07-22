@@ -45,10 +45,10 @@
                 </td><td class="updateFormInputField"> {{form.source(value=fish.source)}}</td>
             </tr>
             <tr>
-                <td>{{form.mutant_gene.label}}
+                <td>{{form.mutant_gene.label}} <div class="infoPopup" onclick="popupShow('mutantgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="mutantgenesInfoPopupText"> If you want to add multiple mutant genes, put each one on a new line</span></div>
                 </td><td class="updateFormInputField"> {{form.mutant_gene(placeholder="Mutant Gene", value = fish.mutant_gene)}}</td>
 
-                <td>{{form.transgenes.label}}<div class="infoPopup" onclick="popupShow('transgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="transgenesInfoPopupText"> To select multiple transgenes options, hold the Ctrl key whilst selecting them</span></div>
+                <td>{{form.transgenes.label}}<div class="infoPopup" onclick="popupShow('transgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="transgenesInfoPopupText"> If you want to add multiple transgenes, put each one on a new line</span>
                 </td><td class="updateFormInputField"> {{form.transgenes(placeholder="Transgenes", value = fish.transgenes)}}</td>
             </tr>
             <tr>

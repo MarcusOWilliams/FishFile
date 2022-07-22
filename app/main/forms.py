@@ -59,8 +59,8 @@ class NewFish(FlaskForm):
     )
 
     allele = SelectMultipleField("Allele",choices=["Allele 1", "Allele 2", "Allele 3"], validators=[Optional()])
-    mutant_gene = StringField("* Mutant Gene", validators=[DataRequired()])
-    transgenes = StringField("Transgenes", validators=[Optional()])
+    mutant_gene = TextAreaField("* Mutant Gene", validators=[DataRequired()])
+    transgenes = TextAreaField("Transgenes", validators=[Optional()])
 
     father_id = StringField("* Father's ID", validators=[DataRequired()])
     mother_id = StringField("* Mother's ID", validators=[DataRequired()])

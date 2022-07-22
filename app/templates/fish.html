@@ -33,9 +33,16 @@
     </div>
     <div class="fishInfoBlock">
         <h2>Genetics</h2>
-        <p class = "fishInfoPoint"><span class="pointHeader">Mutant Gene: </span>{{fish.mutant_gene}}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Mutant Gene: </span>
+            {% for gene in fish.mutant_gene.split("\n")%}
+                <p class = "fishInfoSubPoint">{{gene}}</p>
+            {%endfor%}</p>
         {%if fish.transgenes != None and fish.transgenes != ""%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Transgenes: </span>{{fish.transgenes}}</p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Transgenes: </span>
+                {% for gene in fish.transgenes.split("\n")%}
+                    <p class = "fishInfoSubPoint">{{gene}}</p>
+                {%endfor%}
+            </p>
         {%endif%}
         {%if alleles | length>0%}
             <p class = "fishInfoPoint"><span class="pointHeader">Allele: </span>

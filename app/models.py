@@ -198,9 +198,9 @@ class Fish(db.Model):
     months = db.Column(db.Integer, default = 0)
     age_reminder = db.Column(db.String(64), default = "Not sent")
 
-    mutant_gene = db.Column(db.String(64), index=True)
-    transgenes = db.Column(db.String(64), index=True)
-    cross_type = db.Column(db.String(64), index=True)
+    mutant_gene = db.Column(db.Text())
+    transgenes = db.Column(db.Text())
+    cross_type = db.Column(db.String(64))
     comments = db.Column(db.Text())
     added = db.Column(db.DateTime, default=datetime.utcnow)
 

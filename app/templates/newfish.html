@@ -54,14 +54,15 @@
                 <td class="addFishInputField">{{form.source()}}</td>
             </tr>
             <tr>
-                <td>{{form.mutant_gene.label}} </td>
+                <td>{{form.mutant_gene.label}} <div class="infoPopup" onclick="popupShow('mutantgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="mutantgenesInfoPopupText"> If you want to add multiple mutant genes, put each one on a new line</span></div></td>
                 <td class="addFishInputField">{{form.mutant_gene(placeholder="Mutant Gene")}}</td>
 
-                <td>{{form.transgenes.label}} <div class="infoPopup" onclick="popupShow('transgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="transgenesInfoPopupText"> To select multiple transgenes options, hold the Ctrl key whilst selecting them</span></div></td>
+                <td>{{form.transgenes.label}} <div class="infoPopup" onclick="popupShow('transgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="transgenesInfoPopupText"> If you want to add multiple transgenes, put each one on a new line</span></div></td>
                 <td class="addFishInputField"> {{form.transgenes(placeholder="Transgenes")}}</td>
             </tr>
             <tr>
-                <td>{{form.allele.label}}<div class="infoPopup" onclick="popupShow('alleleInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="alleleInfoPopupText"> To select multiple allele options, hold the Ctrl key whilst selecting them</span></div></td>
+                <td>{{form.allele.label}}<div class="infoPopup" onclick="popupShow('alleleInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="alleleInfoPopupText"> To select multiple allele options, hold the Ctrl key whilst selecting them</span></div>
+                {%if current_user.isOwner()%}<br><a>Add new allele</a>{%endif%}</td>
                 <td class="addFishInputField"> {{form.allele(placeholder="Allele")}}</td>
 
                 <td>{{form.cross_type.label}}</td>
