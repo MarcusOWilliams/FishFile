@@ -271,6 +271,7 @@ class Fish(db.Model):
     old_fStock = db.Column(db.String(64))
     old_birthday = db.Column(db.String(64))
     old_arrival = db.Column(db.String(64))
+    old_allele = db.Column(db.String(64))
 
 
 
