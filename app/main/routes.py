@@ -163,7 +163,7 @@ def search():
         elif key == "user_code":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter(Fish.user_code.has(code=search_dict[key]))
+                .join(Fish.user_code, aliased=True).filter(User.code.contains(search_dict[key]))
                 .subquery()
             )
         elif key == "project_license":
@@ -177,19 +177,20 @@ def search():
         elif key == "allele":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(allele=search_dict[key])
+                .join(Fish.alleles, aliased=True).filter(Allele.name == search_dict[key])
                 .subquery()
+                
             )
         elif key == "mutant_gene":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(mutant_gene=search_dict[key])
+                .filter(Fish.mutant_gene.contains(search_dict[key]))
                 .subquery()
             )
         elif key == "transgenes":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(transgenes=search_dict[key])
+                .filter(Fish.transgenes.contains(search_dict[key]))
                 .subquery()
             )
 
