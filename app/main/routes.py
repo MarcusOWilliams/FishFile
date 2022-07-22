@@ -3,15 +3,16 @@ from datetime import datetime
 from email import message
 from os import abort
 from turtle import title
+from xml.dom import ValidationErr
 
-
+from wtforms.validators import DataRequired, ValidationError
 
 
 
 from app import db
 from app.main import bp
 from app.main import email
-from app.models import Allele, Change, Fish, Notification, Reminder, User, requires_roles, Photo
+from app.models import Allele, Change, Fish, Notification, Reminder, User, get_all_allele_names, requires_roles, Photo
 from flask import (
     flash,
     redirect,
@@ -26,6 +27,7 @@ from flask import (
 from flask_login import current_user, login_required
 from app.main.forms import (
     AlleleForm,
+    EditAlleles,
     EmptyForm,
     OrderForm,
     PhotoCaptionForm,
@@ -509,6 +511,8 @@ def newfish():
     licenses = [""] + list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
 
+    form.allele.choices = list(get_all_allele_names()).sort()
+
     
 
     if form.validate_on_submit():
@@ -618,9 +622,13 @@ def updatefish(id):
     licenses = [""] + list(filter(None, licenses_values))
     form.project_license.choices = sorted(licenses)
 
+    form.allele.choices = list(get_all_allele_names()).sort()
+
+
     current_alleles = [allele.name for allele in fish.alleles]
 
     if form.validate_on_submit():
+
         father = Fish.query.filter_by(
             fish_id=form.father_id.data, stock=form.father_stock.data
         ).first()
@@ -1122,6 +1130,8 @@ def updatefish(id):
     form.comments.data = fish.comments
     form.allele.data = current_alleles
     form.links.data = fish.links
+    form.mutant_gene.data = fish.mutant_gene
+    form.transgenes.data = fish.transgenes
 
     
 
@@ -1414,6 +1424,14 @@ def user_list():
 
     return render_template('Admin/user_list.html',users=users)
 
+@bp.route("/editalleles/")
+@login_required
+@requires_roles("Owner")
+def edit_alleles():
+    form = EditAlleles()
+
+    if form.validate_on_submit():
+        pass
 
 @bp.route('/reset_notifications', methods=['POST'])
 @login_required

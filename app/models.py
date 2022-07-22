@@ -348,7 +348,12 @@ class Allele(db.Model):
     def __repr__(self):
         return f"Allele: {self.name} - Fish: {self.fish.stock}"
 
-
+def get_all_allele_names():
+    
+    alleles = Allele.query.with_entities(Allele.name).distinct()
+    names = set(allele[0] for allele in alleles)
+    return names
+    
 class Photo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))

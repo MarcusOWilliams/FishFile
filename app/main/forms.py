@@ -1,3 +1,4 @@
+from optparse import Option
 from flask import request
 from flask_wtf import FlaskForm
 from flask_login import current_user
@@ -16,7 +17,7 @@ from wtforms import (
     FileField
 )
 from wtforms.validators import DataRequired, ValidationError, Optional
-from app.models import Fish, User
+from app.models import Allele, Fish, User, get_all_allele_names
 from flask_wtf.file import FileAllowed
 
 
@@ -58,7 +59,7 @@ class NewFish(FlaskForm):
         "* Project License", validators=[DataRequired()], coerce=str
     )
 
-    allele = SelectMultipleField("Allele",choices=["Allele 1", "Allele 2", "Allele 3"], validators=[Optional()])
+    allele = SelectMultipleField("Allele", coerce=str, validators=[Optional()])
     mutant_gene = TextAreaField("* Mutant Gene", validators=[DataRequired()])
     transgenes = TextAreaField("Transgenes", validators=[Optional()])
 
@@ -275,3 +276,16 @@ class AlleleForm(FlaskForm):
 class PhotoCaptionForm(FlaskForm):
     caption = TextAreaField("Caption:")
     submit = SubmitField("Apply")
+
+class EditAlleles(FlaskForm):
+    add = StringField("Add an allele:", validators=[Optional()])
+    remove = StringField("Remove an allele:", validators=[Optional()])
+    submit = StringField("Apply")
+
+    def validate_add(self, add):
+        if add in get_all_allele_names():
+            raise ValidationError("This allele name is already in the list")
+
+    def validate_remove(self, remove):
+        if remove not in get_all_allele_names():
+            raise ValidationError("This allele name is not in the list, so can not be removed")
