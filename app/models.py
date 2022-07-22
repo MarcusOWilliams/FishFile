@@ -194,7 +194,7 @@ It also contains the methods required for the fish
 
 class Fish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fish_id = db.Column(db.String(32), index=True)
+    fish_id = db.Column(db.String(264), index=True)
     tank_id = db.Column(db.String(32), index=True)
     status = db.Column(db.String(32), index=True, default="Alive")
     stock = db.Column(db.String(32), index=True)
@@ -260,6 +260,18 @@ class Fish(db.Model):
     photos = db.relationship(
         "Photo", backref="fish", lazy="dynamic", cascade="all, delete"
     ) 
+
+    #The following attributes are to make fish from the old system compatiable on the new database
+    system = db.Column(db.String(64), default = "New")
+    old_code = db.Column(db.String(64))
+    old_license = db.Column(db.String(64))
+    old_mID = db.Column(db.String(64))
+    old_mStock = db.Column(db.String(64))
+    old_fID = db.Column(db.String(64))
+    old_fStock = db.Column(db.String(64))
+    old_birthday = db.Column(db.String(64))
+    old_arrival = db.Column(db.String(64))
+
 
 
     def __repr__(self):
