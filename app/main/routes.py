@@ -12,7 +12,7 @@ from wtforms.validators import DataRequired, ValidationError
 from app import db
 from app.main import bp
 from app.main import email
-from app.models import Allele, Change, Fish, Notification, Reminder, User, get_all_allele_names, requires_roles, Photo
+from app.models import Allele, Change, Fish, Notification, Reminder, User, get_all_allele_names, get_all_user_codes, get_all_user_licenses, requires_roles, Photo
 from flask import (
     flash,
     redirect,
@@ -62,6 +62,11 @@ def landing():
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def index():
     form = SearchFrom()
+
+    form.user_code.choices = [""] + get_all_user_codes()
+
+    form.project_license.choices = [""]+ get_all_user_licenses()
+    
     if form.validate_on_submit():
         search_dict = {}
         for fieldname, value in form.data.items():
@@ -158,12 +163,6 @@ def search():
                 .subquery()
             )
 
-        elif key == "date_of_arrival":
-            all_fish = (
-                Fish.query.select_entity_from(all_fish)
-                .filter_by(date_of_arrival=search_dict[key])
-                .subquery()
-            )
         elif key == "user_code":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
@@ -196,34 +195,11 @@ def search():
                 .filter_by(transgenes=search_dict[key])
                 .subquery()
             )
-        elif key == "father_id":
-            all_fish = (
-                Fish.query.select_entity_from(all_fish)
-                .filter(Fish.father.has(fish_id=search_dict[key]))
-                .subquery()
-            )
-        elif key == "father_stock":
-            all_fish = (
-                Fish.query.select_entity_from(all_fish)
-                .filter(Fish.father.has(stock=search_dict[key]))
-                .subquery()
-            )
-        elif key == "mother_id":
-            all_fish = (
-                Fish.query.select_entity_from(all_fish)
-                .filter(Fish.mother.has(fish_id=search_dict[key]))
-                .subquery()
-            )
-        elif key == "mother_stock":
-            all_fish = (
-                Fish.query.select_entity_from(all_fish)
-                .filter(Fish.mother.has(stock=search_dict[key]))
-                .subquery()
-            )
+
         elif key == "total":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(total=search_dict[key])
+                .filter(Fish.total >=search_dict[key])
                 .subquery()
             )
 
@@ -503,13 +479,9 @@ def updatealleles(id):
 def newfish():
     form = NewFish()
 
-    all_users = User.query.filter_by(is_verified=True).all()
-    user_codes = [""] + [user.code for user in all_users]
-    form.user_code.choices = sorted(user_codes)
+    form.user_code.choices = [""] + get_all_user_codes()
 
-    licenses_values = [user.project_license for user in all_users]
-    licenses = [""] + list(filter(None, licenses_values))
-    form.project_license.choices = sorted(licenses)
+    form.project_license.choices = [""]+ get_all_user_licenses()
 
     form.allele.choices = sorted(list(get_all_allele_names()))
 
@@ -614,13 +586,10 @@ def updatefish(id):
     fish = Fish.query.filter_by(id=id).first_or_404()
     title = f"Update Fish ({fish.stock})"
 
-    all_users = User.query.filter_by(is_verified=True).all()
-    user_codes = [""] + [user.code for user in all_users]
-    form.user_code.choices = sorted(user_codes)
+    form.user_code.choices = [""] + get_all_user_codes()
 
-    licenses_values = [user.project_license for user in all_users]
-    licenses = [""] + list(filter(None, licenses_values))
-    form.project_license.choices = sorted(licenses)
+ 
+    form.project_license.choices = [""]+ get_all_user_licenses()
 
     form.allele.choices = sorted(list(get_all_allele_names()))
 

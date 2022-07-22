@@ -52,7 +52,7 @@ add validation on new fish form, e.g. check if certain fields exists already (ta
 
 / Add data download
 
-Add more filter options (e.g. birthdath between)
+/ Add more filter options (e.g. birthdath between)
 
 / Make admin page
 
@@ -75,9 +75,8 @@ Add scheduled tasks:
 / Add notification settings
 
 
-add a footer, with link to guides
 
-add tutorials
+/ add tutorials
  How to get it on excel
  simple search
 
@@ -93,7 +92,7 @@ order fish
 
 / update notification email template
 
-add image captions
+/ add image captions
 
 WHEN DONE:
 

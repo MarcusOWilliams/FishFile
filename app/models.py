@@ -144,7 +144,15 @@ class User(UserMixin, db.Model):
 
 
 # METHODS ASSOCIATED WITH USERS ---------------------------------------------
+def get_all_user_codes():
+    all_codes = User.query.with_entities(User.code).distinct()
+    codes = [code[0] for code in all_codes]
+    return sorted(filter(lambda x: x!= None and x!="", codes))
 
+def get_all_user_licenses():
+    all_licenses = User.query.with_entities(User.project_license).distinct()
+    licenses = [license[0] for license in all_licenses]
+    return sorted(filter(lambda x: x!= None and x!="", licenses))
 # flask_login keeps track of logged in users, the users ID is loaded into memeory each time the load a new page
 # flask_login doesn't know about the database so this function gives it the user ID
 @login.user_loader
