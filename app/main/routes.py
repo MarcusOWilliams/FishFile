@@ -63,10 +63,7 @@ def landing():
 def index():
     form = SearchFrom()
 
-    form.user_code.choices = [""] + get_all_user_codes()
 
-    form.project_license.choices = [""]+ get_all_user_licenses()
-    
     if form.validate_on_submit():
         search_dict = {}
         for fieldname, value in form.data.items():
