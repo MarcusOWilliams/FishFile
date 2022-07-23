@@ -13,9 +13,9 @@
         <p class = "fishInfoPoint"><span class="pointHeader">Tank ID: </span>{{fish.tank_id}}</p>
         <p class = "fishInfoPoint"><span class="pointHeader">Stock#: </span><a href="{{url_for('main.stock', stock=fish.stock)}}">{{fish.stock}}</a></p>
         <p class = "fishInfoPoint"><span class="pointHeader">Status: </span>{{fish.status}}</p>
-        {%if fish.protocol != None and fish.protocol != ""%}
-            <P class = "fishInfoPoint"><span class="pointHeader">Protocol: </span>{{fish.protocol}}</P>
-        {%endif%}
+        
+        <p class = "fishInfoPoint"><span class="pointHeader">Protocol: </span>{{fish.protocol}}</p>
+        
         <p class = "fishInfoPoint"><span class="pointHeader">Birthday: </span>{{fish.birthday}} {%if fish.getAge()%}(Age: {{fish.getAge()}}){%endif%}</p>
         {%if fish.date_of_arrival != None and fish.date_of_arrival != ""%}
             <p class = "fishInfoPoint"><span class="pointHeader">Date of Arrival: </span>{{fish.date_of_arrival}}</p>

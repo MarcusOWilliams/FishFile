@@ -113,13 +113,13 @@ def search():
         elif key == "tank_id":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(tank_id=search_dict[key])
+                .filter_by(tank_id=search_dict[key].upper())
                 .subquery()
             )
         elif key == "stock":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(stock=search_dict[key])
+                .filter_by(stock=search_dict[key].upper())
                 .subquery()
             )
         elif key == "status":
@@ -175,24 +175,29 @@ def search():
                 .subquery()
             )
         elif key == "allele":
-            all_fish = (
-                Fish.query.select_entity_from(all_fish)
-                .join(Fish.alleles, aliased=True).filter(Allele.name == search_dict[key])
-                .subquery()
-                
-            )
+            for search in search_dict[key].split(","):
+                search = search.strip()
+                all_fish = (
+                    Fish.query.select_entity_from(all_fish)
+                    .join(Fish.alleles, aliased=True).filter(Allele.name == search)
+                    .subquery()
+                )
         elif key == "mutant_gene":
-            all_fish = (
-                Fish.query.select_entity_from(all_fish)
-                .filter(Fish.mutant_gene.contains(search_dict[key]))
-                .subquery()
-            )
+            for search in search_dict[key].split(","):
+                search = search.strip()
+                all_fish = (
+                    Fish.query.select_entity_from(all_fish)
+                    .filter(Fish.mutant_gene.contains(search))
+                    .subquery()
+                )
         elif key == "transgenes":
-            all_fish = (
-                Fish.query.select_entity_from(all_fish)
-                .filter(Fish.transgenes.contains(search_dict[key]))
-                .subquery()
-            )
+            for search in search_dict[key].split(","):
+                search = search.strip()
+                all_fish = (
+                    Fish.query.select_entity_from(all_fish)
+                    .filter(Fish.transgenes.contains(search))
+                    .subquery()
+                )
 
         elif key == "total":
             all_fish = (
