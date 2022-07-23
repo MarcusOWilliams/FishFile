@@ -5,116 +5,116 @@
 
     <form action="" method="post" enctype="multipart/form-data">
         {{form.hidden_tag()}}
-        <table id="updateFishTable">
+        <table id="updateFishTable" class="fishFormTable">
             <tr>
-                <td>
+                <td class="fishFormLabel" style="width:18%">
                     {{form.fish_id.label}} 
-                </td><td class="updateFormInputField">
+                </td><td class="updateFormInputField" style="width:32%">
                     {{form.fish_id(placeholder="Fish ID", value = fish.fish_id)}} 
                 </td>
             
-                <td>{{form.tank_id.label}}
-                </td><td class="updateFormInputField">{{form.tank_id(placeholder="Tank ID", value = fish.tank_id)}}</td>
+                <td class="fishFormLabel" style="width:18%">{{form.tank_id.label}}
+                </td><td class="updateFormInputField" style="width:32%">{{form.tank_id(placeholder="Tank ID", value = fish.tank_id)}}</td>
             </tr>
             <tr>
-                <td>{{form.stock.label}} 
+                <td class="fishFormLabel">{{form.stock.label}} 
                 </td><td class="updateFormInputField">{{form.stock(placeholder="Stock", value = fish.stock)}}</td>
 
                 <td>{{form.status.label}} 
                 </td><td class="updateFormInputField">{{form.status(value = fish.status)}}</td>
             </tr>
             <tr>
-                <td>{{form.project_license.label}} 
+                <td class="fishFormLabel">{{form.project_license.label}} 
                 </td><td class="updateFormInputField">{{form.project_license(placeholder="Project License", value = fish.project_license_holder.project_license)}}</td>
 
-                <td>{{form.user_code.label}}
+                <td class="fishFormLabel">{{form.user_code.label}}
                 </td><td class="updateFormInputField"> {{form.user_code(placeholder="User Code Email")}}</td>
             </tr>
             <tr>
-                <td>{{form.birthday.label}}
+                <td class="fishFormLabel">{{form.birthday.label}}
                 </td><td class="updateFormInputField">  {{form.birthday(value=fish.birthday)}}</td>
 
-                <td>{{form.date_of_arrival.label}} 
+                <td class="fishFormLabel">{{form.date_of_arrival.label}} 
                 </td><td class="updateFormInputField">{{form.date_of_arrival(value = fish.date_of_arrival)}}</td>
             </tr>
             <tr>
-                <td>{{form.protocol.label}}
+                <td class="fishFormLabel">{{form.protocol.label}}
                 </td><td class="updateFormInputField"> {{form.protocol(value=fish.protocol, min=0)}}</td>
 
-                <td>{{form.source.label}}
+                <td class="fishFormLabel">{{form.source.label}}
                 </td><td class="updateFormInputField"> {{form.source(value=fish.source)}}</td>
             </tr>
             <tr>
-                <td>{{form.mutant_gene.label}} <div class="infoPopup" onclick="popupShow('mutantgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="mutantgenesInfoPopupText"> If you want to add multiple mutant genes, put each one on a new line</span></div>
+                <td class="fishFormLabel">{{form.mutant_gene.label}} <div class="infoPopup" onclick="popupShow('mutantgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="mutantgenesInfoPopupText"> If you want to add multiple mutant genes, put each one on a new line</span></div>
                 </td><td class="updateFormInputField"> {{form.mutant_gene(placeholder="Mutant Gene", value = fish.mutant_gene)}}</td>
 
-                <td>{{form.transgenes.label}}<div class="infoPopup" onclick="popupShow('transgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="transgenesInfoPopupText"> If you want to add multiple transgenes, put each one on a new line</span>
+                <td class="fishFormLabel">{{form.transgenes.label}}<div class="infoPopup" onclick="popupShow('transgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="transgenesInfoPopupText"> If you want to add multiple transgenes, put each one on a new line</span>
                 </td><td class="updateFormInputField"> {{form.transgenes(placeholder="Transgenes", value = fish.transgenes)}}</td>
             </tr>
             <tr>
-                <td>{{form.allele.label}}<div class="infoPopup" onclick="popupShow('alleleInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="alleleInfoPopupText"> To select multiple allele options, hold the Ctrl key whilst selecting them</span></div>
+                <td class="fishFormLabel">{{form.allele.label}}<div class="infoPopup" onclick="popupShow('alleleInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="alleleInfoPopupText"> To select multiple allele options, hold the Ctrl key whilst selecting them</span></div>
                     {%if current_user.isOwner()%}<br><a href="{{url_for('main.edit_alleles')}}">Edit Alleles List</a>{%endif%}</td> 
                 <td class="updateFormInputField">{{form.allele(placeholder="Allele", value = fish.allele)}}</td>
 
-                <td>{{form.cross_type.label}}
+                <td class="fishFormLabel">{{form.cross_type.label}}
                 </td><td class="updateFormInputField"> {{form.cross_type(placeholder="Cross Type", value = fish.cross_type)}}</td>
             </tr>
             <tr>
-                <td>{{form.father_tank_id.label}}
+                <td class="fishFormLabel">{{form.father_tank_id.label}}
                 </td><td class="updateFormInputField"> {{form.father_tank_id(placeholder="Father's tank #", value = fish.father.fish_id)}}</td>
 
-                <td>{{form.father_stock.label}} 
+                <td class="fishFormLabel">{{form.father_stock.label}} 
                 </td><td class="updateFormInputField">{{form.father_stock(placeholder="Father's Stock", value= fish.father.stock)}}</td>
             </tr>
             <tr>
-                <td>{{form.mother_tank_id.label}}
+                <td class="fishFormLabel">{{form.mother_tank_id.label}}
                 </td><td class="updateFormInputField"> {{form.mother_tank_id(placeholder="Mother's tank #", value = fish.mother.fish_id)}}</td>
 
-                <td>{{form.mother_stock.label}}
+                <td class="fishFormLabel">{{form.mother_stock.label}}
                 </td><td class="updateFormInputField"> {{form.mother_stock(placeholder="Mother's Stock", value = fish.mother.stock)}}</td>
             </tr>
             <tr>
-                <td>{{form.origin_tank_id.label}}</td>
+                <td class="fishFormLabel">{{form.origin_tank_id.label}}</td>
                 <td class="addFishInputField"> {{form.origin_tank_id(placeholder="Origin Tank #", value=fish.origin.tank_id)}}</td>
 
-                <td>{{form.origin_tank_stock.label}}</td>
+                <td class="fishFormLabel">{{form.origin_tank_stock.label}}</td>
                 <td class="addFishInputField"> {{form.origin_tank_stock(placeholder="Origin Stock #", value=fish.origin.stock)}}</td>
             </tr>
             <tr>
-                <td>{{form.males.label}}
-                </td><td class="updateFormInputField"> {{form.males(value = fish.males, min=0)}}</td>
+                <td class="fishFormLabel">{{form.males.label}}
+                </td><td class="updateFormInputField"> {{form.males(value = fish.males, min=0, placeholder="Male"))}}</td>
 
-                <td>{{form.females.label}}
-                </td><td class="updateFormInputField"> {{form.females(value = fish.females, min=0)}}</td>
+                <td class="fishFormLabel">{{form.females.label}}
+                </td><td class="updateFormInputField"> {{form.females(value = fish.females, min=0, placeholder="Female")}}</td>
             </tr>
             <tr>
-                <td>{{form.unsexed.label}}
-                </td><td class="updateFormInputField"> {{form.unsexed(value = fish.unsexed, min=0)}}</td>
+                <td class="fishFormLabel">{{form.unsexed.label}}
+                </td><td class="updateFormInputField"> {{form.unsexed(value = fish.unsexed, min=0, placeholder="Unsexed")}}</td>
 
-                <td>{{form.carriers.label}}
-                </td><td class="updateFormInputField"> {{form.carriers(value = fish.carriers, min=0)}}</td>
+                <td class="fishFormLabel">{{form.carriers.label}}
+                </td><td class="updateFormInputField"> {{form.carriers(value = fish.carriers, min=0, placeholder="Carriers/Licensed")}}</td>
             </tr>
             <tr>
-                <td>{{form.total.label}}</td>
-                <td class="addFishInputField"> {{form.total(value=fish.total, min=0)}}</td>
+                <td class="fishFormLabel">{{form.total.label}}</td>
+                <td class="addFishInputField"> {{form.total(value=fish.total, min=0, placeholder="Total")}}</td>
 
-                <td>{{form.photos.label}} <div class="infoPopup" onclick="popupShow('photoInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="photoInfoPopupText"> Upload any related images here, they must end in one of the following extensions, .jpeg, .png, .jpg, and be no more than 4MB</span> </td>
+                <td class="fishFormLabel">{{form.photos.label}} <div class="infoPopup" onclick="popupShow('photoInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="photoInfoPopupText"> Upload any related images here, they must end in one of the following extensions, .jpeg, .png, .jpg, and be no more than 4MB</span> </td>
                 <td class="addFishInputField"> {{form.photos()}}</td>   
                     
             </tr> 
             <tr>
-                <td>{{form.links.label}} <div class="infoPopup" onclick="popupShow('linksInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="linksInfoPopupText"> Paste links to exernal URLs here, if you want multiple links, put each one on a new line</span></td>
+                <td class="fishFormLabel">{{form.links.label}} <div class="infoPopup" onclick="popupShow('linksInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="linksInfoPopupText"> Paste links to exernal URLs here, if you want multiple links, put each one on a new line</span></td>
                 <td class="addFishInputField"> {{form.links(placeholder="Additional URLs")}}</td>
                 
-                <td>{{form.comments.label}} </td>
+                <td class="fishFormLabel">{{form.comments.label}} </td>
                 <td class="addFishInputField">{{form.comments(placeholder="Comments...")}}</td>  
                 
             </tr> 
             <tr>
-                <td><label for="alert_date">New reminder date</label></td>
+                <td class="fishFormLabel"><label for="alert_date">New reminder date</label></td>
                 <td class="addFishInputField">{{form.alert_date(value = fish.alert_date)}}</td>
 
-                <td><label for="alert_msg">New reminder message</label></td>
+                <td class="fishFormLabel"><label for="alert_msg">New reminder message</label></td>
                 <td class="addFishInputField">{{form.alert_msg(placeholder="e.g. turnover/split/use", value=fish.alert_msg)}}</td>
             </tr>
 

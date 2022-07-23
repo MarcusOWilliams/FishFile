@@ -64,7 +64,7 @@
         </nav>
     </div>
     {% if all_results %}
-        <textarea style="width:80%;" id="copyText">System, ID, Tank ID, Stock, Status, Protocol, Birthday, Date of Arrival, Source, Project License, User code, Mutant gene, Transgenes, Cross Type, Father ID, Father Stock, Mother ID, Mother Stock, Males, Females, Unsexed, Carriers, Total
+        <textarea style="width:80%;" id="copyText">System, ID, Tank ID, Stock, Status, Protocol, Birthday, Date of Arrival, Source, Project License, User code, Mutant gene, Transgenes, Cross Type, Father ID, Father Stock, Mother ID, Mother Stock, Males, Females, Unsexed, Carriers/Licensed, Total
 {%for fish in all_results%}{{fish.system}}, {{fish.fish_id}}, {{fish.tank_id}}, {{fish.stock}}, {{fish.status}}, {{fish.protocol}}, {{fish.birthday}}, {{fish.date_of_arrival}}, {{fish.source}}, {{fish.project_license_holder.project_license}}, {{fish.user_code.code}}, {{fish.mutant_gene}}, {{fish.transgenes}}, {{fish.cross_type}}, {{fish.father.fish_id}}, {{fish.father.stock}}, {{fish.mother.fish_id}}, {{fish.mother.stock}}, {{fish.males}}, {{fish.females}}, {{fish.unsexed}}, {{fish.carriers}}, {{fish.total}}
 {%endfor%}
         </textarea><br>

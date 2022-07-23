@@ -26,9 +26,15 @@
     color: red;
     margin-bottom: 5px;
 }
+.fishFormTable{
+    table-layout: fixed;
+    max-width:1000px;
+}
+
 
 #addFishTable{
     margin:auto;
+    
 }
 
 #addFishTable td{
