@@ -616,10 +616,10 @@ def updatefish(id):
             project_license=form.project_license.data
         ).first()
 
-        if form.origin_tank_id.data != None and form.origin_tank_id.data != "":
-            origin_tank = Fish.query.filter_by(
-                tank_id = form.origin_tank_id.data, stock = form.origin_tank_stock.data 
-            ).order_by(Fish.id.desc()).first()
+        
+        origin_tank = Fish.query.filter_by(
+            tank_id = form.origin_tank_id.data, stock = form.origin_tank_stock.data 
+        ).order_by(Fish.id.desc()).first()
             
 
         pictures = [file.filename for file in form.photos.data]
@@ -929,15 +929,14 @@ def updatefish(id):
 
             fish.source = form.source.data
 
-        if fish.father.fish_id != form.father_id.data:
+        if fish.father != father:
             change = Change(
                 user=current_user,
                 fish=fish,
                 action="Updated",
-                contents="father ID",
-                field="father_id",
-                old=f"{fish.father.fish_id}",
-                new=f"{father.fish_id}",
+                contents="father",
+                old=f"{fish.father}",
+                new=f"{father}",
                 notification = notification
             )
             db.session.add(change)
@@ -945,54 +944,20 @@ def updatefish(id):
             change_count+=1
 
 
-        if fish.father.stock != form.father_stock.data:
+        if fish.mother != mother:
             change = Change(
                 user=current_user,
                 fish=fish,
                 action="Updated",
-                contents="father stock",
-                field="father_stock",
-                old=f"{fish.father.stock}",
-                new=f"{father.stock}",
+                contents="mother",
+                old=f"{fish.mother}",
+                new=f"{mother}",
                 notification = notification
             )
             db.session.add(change)
-            change_count+=1
-
-            fish.father = father
-
-        if fish.mother.fish_id != form.mother_id.data:
-            change = Change(
-                user=current_user,
-                fish=fish,
-                action="Updated",
-                contents="mother ID",
-                field="mother_id",
-                old=f"{fish.mother.fish_id}",
-                new=f"{mother.fish_id}",
-                notification = notification
-            )
-            db.session.add(change)
-            change_count+=1
-
             fish.mother = mother
-
-        if fish.mother.stock != form.mother_stock.data:
-            change = Change(
-                user=current_user,
-                fish=fish,
-                action="Updated",
-                contents="mother stock",
-                field="mother_stock",
-                old=f"{fish.mother.stock}",
-                new=f"{mother.stock}",
-                notification = notification
-            )
-            db.session.add(change)
             change_count+=1
-
-            fish.mother = mother
-
+       
         if fish.origin != origin_tank:
             change = Change(
                 user=current_user,

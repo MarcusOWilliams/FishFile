@@ -31,11 +31,11 @@
             <tr>
                 <td>{{form.project_license.label}}
                 </td>
-                <td class="addFishInputField"> {{form.project_license(placeholder="Project License")}}</td>
+                <td class="addFishInputField"> {{form.project_license()}}</td>
 
                 <td>{{form.user_code.label}}
                 </td>
-                <td class="addFishInputField"> {{form.user_code(placeholder="User Code Email")}}</td>
+                <td class="addFishInputField"> {{form.user_code()}}</td>
             </tr>
             <tr>
                 <td>{{form.birthday.label}}
@@ -98,7 +98,7 @@
             </tr>
             <tr>
                 <td>{{form.unsexed.label}}</td>
-                <td class="addFishInputField"> {{form.unsexed(min=0)}}</td>
+                <td class="addFishInputField"> {{form.unsexed(min=0,placeholder=0)}}</td>
 
                 <td>{{form.carriers.label}} </td>
                 <td class="addFishInputField">{{form.carriers(min=0)}}</td>

@@ -63,10 +63,10 @@ class NewFish(FlaskForm):
     mutant_gene = TextAreaField("* Mutant Gene", validators=[DataRequired()])
     transgenes = TextAreaField("Transgenes", validators=[Optional()])
 
-    father_id = StringField("* Father's ID", validators=[DataRequired()])
-    mother_id = StringField("* Mother's ID", validators=[DataRequired()])
-    father_stock = StringField("* Father's Stock #", validators=[DataRequired()])
-    mother_stock = StringField("* Mother's Stock #", validators=[DataRequired()])
+    father_id = StringField("Father's ID", validators=[Optional()])
+    mother_id = StringField("Mother's ID", validators=[Optional()])
+    father_stock = StringField("Father's Stock #", validators=[Optional()])
+    mother_stock = StringField("Mother's Stock #", validators=[Optional()])
 
     males = IntegerField("* # Males")
     females = IntegerField("* # Females")
@@ -81,6 +81,10 @@ class NewFish(FlaskForm):
     submit = SubmitField("Add Fish")
 
     def validate_father_stock(self, father_stock):
+        if self.father_id.data == None or self.father_id.data == "":
+            raise ValidationError(
+                f"To add a father you must supply both id and stock # for the father."
+            )
         fish = Fish.query.filter_by(
             fish_id=self.father_id.data, stock=father_stock.data
         ).first()
@@ -88,14 +92,30 @@ class NewFish(FlaskForm):
             raise ValidationError(
                 f"There are no fish in the database that match ID = {self.father_id.data} and Stock = {father_stock.data}"
             )
+    def validate_father_id(self, father_id):
+
+        if self.father_stock.data == None or self.father_stock.data == "":
+            raise ValidationError(
+                f"To add a father you must supply both id and stock # for the father."
+            )
 
     def validate_mother_stock(self, mother_stock):
+        if self.mother_id.data == None or self.mother_id.data == "":
+            raise ValidationError(
+                f"To add a mother you must supply both id and stock # for the mother."
+            )
         fish = Fish.query.filter_by(
             fish_id=self.mother_id.data, stock=mother_stock.data
         ).first()
         if fish is None:
             raise ValidationError(
                 f"There are no fish in the database that match ID = {self.mother_id.data} and Stock = {mother_stock.data}"
+            )
+
+    def validate_mother_id(self, mother_id):
+        if self.mother_stock.data == None or self.mother_stock.data == "":
+            raise ValidationError(
+                f"To add a mother you must supply both id and stock # for the mother."
             )
     def validate_origin_tank_stock(self, origin_tank_stock):
         if self.origin_tank_id.data == "" or self.origin_tank_id.data == None:
