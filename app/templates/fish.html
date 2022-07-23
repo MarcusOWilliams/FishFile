@@ -85,10 +85,10 @@
         {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Type of Cross: </span>{{fish.cross_type}}</p>
         {%if fish.father != None%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Father:</span> ID = {{fish.father.fish_id}}, Stock = {{fish.father.stock}} <a href="{{url_for('main.fish', id=fish.father.id)}}" target=”_blank”>(view entry)</a></p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Father: </span>{{fish.father}} <a href="{{url_for('main.fish', id=fish.father.id)}}" target=”_blank”>(view entry)</a></p>
         {%endif%}
         {%if fish.mother != None%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Mother:</span> ID = {{fish.mother.fish_id}}, Stock = {{fish.mother.stock}} <a href="{{url_for('main.fish', id=fish.mother.id)}}" target=”_blank”>(view entry)</a></p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Mother: </span>{{fish.mother}} <a href="{{url_for('main.fish', id=fish.mother.id)}}" target=”_blank”>(view entry)</a></p>
         {%endif%}
         {%if fish.fathered |length > 0 %}
             <p class = "fishInfoPoint"><span class="pointHeader">Fathered Fish:</span></p>

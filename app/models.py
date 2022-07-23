@@ -280,7 +280,7 @@ class Fish(db.Model):
 
 
     def __repr__(self):
-        return f"Fish - ID: {self.fish_id}, Stock: {self.stock}, Tank: {self.tank_id}"
+        return f"ID: {self.fish_id}, Stock: {self.stock}, Tank: {self.tank_id}"
 
     def get_ancestors(self,generation, relation = None):
         ancestors = []

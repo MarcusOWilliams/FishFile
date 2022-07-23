@@ -3,14 +3,14 @@
     <p classs = "notifBody">
         {% if notification.category == "Added" %}
             {%if notification.user == notification.fish.user_code %}
-                You have been set as the user for a new fish entry (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
+                You have been set as the user for a new  entry (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
             {%elif notification.user == notification.fish.project_license_holder%}
-                A new fish entry has been added under your project license (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
+                A new entry has been added under your project license (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
             {%else%}
-                A new fish entry has been added to the database (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
+                A new entry has been added to the database (<strong>{{notification.fish}}</strong>), view the entry <a href="{{url_for('main.fish', id = notification.fish.id)}}">here</a>
             {%endif%}
         {% elif notification.category == "Change" %}
-            {{notification.change_count}} changes have been made to one of your tanks (<strong>{{notification.fish}}</strong>)<br>
+            {{notification.change_count}} changes have been made to one of your entries (<strong>{{notification.fish}}</strong>)<br>
             <b>Changes:</b>
             <ul>
                 {%for change in notification.changes%}
@@ -24,7 +24,7 @@
             <br>
             view all previous changes <a href="{{url_for('main.fishchange', id = notification.fish.id, filters='all')}}">here</a>
         {% elif notification.category == "Reminder" %}
-            You have a <Strong style="color:red;">reminder</Strong> about <Strong>{{notification.fish}}</Strong>. Reminder message "{{notification.contents}}".
+            You have a <Strong style="color:red;">reminder</Strong> about entry <Strong>{{notification.fish}}</Strong>. Reminder message "{{notification.contents}}".
         {%endif%}
     </p>
     <p class="notifTimestamp"><i class="bi bi-clock"></i> {{moment(notification.time).fromNow()}}</p>
