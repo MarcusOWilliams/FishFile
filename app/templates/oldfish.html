@@ -1,14 +1,11 @@
 {% extends "base.html" %}
     
-{%block styles%}
-    <link rel="stylesheet" href="{{url_for('static', filename='styles/fishStyle.css')}}">
-{%endblock%}
-
-{% block content %}
+{%block content%}
 {%if fish%}
 <div id="fishInformation">
     <div class="fishInfoBlock">
         <h2>Fish</h2>
+        <p style="color: red;"><strong>THIS IS AN ENTRY THAT HAS BEEN TRANSFERRED FROM THE OLD DATABASE</strong></p>
         <p class = "fishInfoPoint"><span class="pointHeader">Fish ID: </span>{{fish.fish_id}}</p>
         <p class = "fishInfoPoint"><span class="pointHeader">Tank ID: </span>{{fish.tank_id}}</p>
         <p class = "fishInfoPoint"><span class="pointHeader">Stock#: </span><a href="{{url_for('main.stock', stock=fish.stock)}}">{{fish.stock}}</a></p>
@@ -17,60 +14,26 @@
             <P class = "fishInfoPoint"><span class="pointHeader">Protocol: </span>{{fish.protocol}}</P>
         {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Birthday: </span>{{fish.birthday}} {%if fish.getAge()%}(Age: {{fish.getAge()}}){%endif%}</p>
-        {%if fish.date_of_arrival != None and fish.date_of_arrival != ""%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Date of Arrival: </span>{{fish.date_of_arrival}}</p>
+        {%if fish.old_arrival != None and fish.old_arrival != ""%}
+            <p class = "fishInfoPoint"><span class="pointHeader">Date of Arrival: </span>{{fish.old_arrival}}</p>
         {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Source: </span>{{fish.source}}</p>
     </div>
     <div class="fishInfoBlock">
         <h2>Users</h2>
-        <p class = "fishInfoPoint"><span class="pointHeader">Project License Allocated: </span><a href="{{url_for('main.project_license', license = fish.project_license_holder.project_license)}}" target=”_blank”>{{fish.project_license_holder.project_license}}</a></p>
-        <p class = "fishInfoPoint"><span class="pointHeader">User Code: </span><a href = "{{url_for('main.user', username = fish.user_code.username)}}" target=”_blank”>{{fish.user_code.code}}</a></p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Project License Allocated: </span>{{fish.old_license}}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">User Code: </span>{{fish.old_code}}</p>
     </div>
     <div class="fishInfoBlock">
         <h2>Genetics</h2>
-        <p class = "fishInfoPoint"><span class="pointHeader">Mutant Gene: </span>
-            {% for gene in fish.mutant_gene.split("\n")%}
-                <p class = "fishInfoSubPoint">{{gene}}</p>
-            {%endfor%}</p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Mutant Gene: </span>{{fish.mutant_gene}}</p>
         {%if fish.transgenes != None and fish.transgenes != ""%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Transgenes: </span>
-                {% for gene in fish.transgenes.split("\n")%}
-                    <p class = "fishInfoSubPoint">{{gene}}</p>
-                {%endfor%}
-            </p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Transgenes: </span>{{fish.transgenes}}</p>
         {%endif%}
-        {%if alleles | length>0%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Allele: </span>
-                <div id="alleleBlock">
-                    <table id="alleleTable">
-                        <tr>
-                            <th>Name</th>
-                            <th>Unidentified</th>
-                            <th>Identified</th>
-                            <th>Heterozygous</th>
-                            <th>Homozygous</th>
-                            <th>Hemizygous</th>
-                        </tr>
-                        {%for allele in alleles%}
-                            <tr>
-                                <th>{{allele.name}}</th>
-                                <td {%if allele.unidentified %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
-                                <td {%if allele.identified %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
-                                <td {%if allele.heterozygous %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
-                                <td {%if allele.homozygous %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
-                                <td {%if allele.hemizygous %} class="trueCell" {%else%}class="falseCell"{%endif%}></td>
-                            </tr>
-                        {%endfor%}
-                    </table>
-                    {%if current_user.isResearcher()%}
-                        <a href="{{url_for('main.updatealleles', id=fish.id)}}">Update values</a>
-                    {%endif%}
-                </div>
-
-            </p>
-
+        {%if fish.old_allele != None and fish.old_allele != ""%}
+            <p class = "fishInfoPoint"><span class="pointHeader">Allele: </span>{{fish.old_allele}}</p>
         {%endif%}
+        
         <p class = "fishInfoPoint"><span class="pointHeader">Type of Cross: </span>{{fish.cross_type}}</p>
         {%if fish.father != None%}
             <p class = "fishInfoPoint"><span class="pointHeader">Father:</span> ID = {{fish.father.fish_id}}, Stock = {{fish.father.stock}} <a href="{{url_for('main.fish', id=fish.father.id)}}" target=”_blank”>(view entry)</a></p>
@@ -159,9 +122,9 @@
     {%endif%}
     <div class="fishInfoBlock">
         <h2>More Options</h2>
-        <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishhistory', id = fish.id)}}">View the genetic history of this fish</a></p>
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</a></p>
         {%if current_user.isResearcher()%}
+            <p style="color: red;">WARNING: Updating an entry that has been transferred from the old system may cause unwanted effects, it is recommended you instead create a new entry for the fish if you wish to update it.</p>
             <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
         {%endif%}
         <br>
@@ -196,40 +159,11 @@
     </div>
 </div>
 <br>
-<textarea style="width:80%;" id="copyText">ID, Tank ID, Stock, Status, Protocol, Birthday, Date of Arrival, Source, Project License, User code, Mutant gene, Transgenes, Cross Type, Father ID, Father Stock, Mother ID, Mother Stock, Males, Females, Unsexed, Carriers, Total
-{{fish.fish_id}}, {{fish.tank_id}}, {{fish.stock}}, {{fish.status}}, {{fish.protocol}}, {{fish.birthday}}, {{fish.date_of_arrival}}, {{fish.source}}, {{fish.project_license_holder.project_license}}, {{fish.user_code.code}}, {{fish.mutant_gene}}, {{fish.transgenes}}, {{fish.cross_type}}, {{fish.father.fish_id}}, {{fish.father.stock}}, {{fish.mother.fish_id}}, {{fish.mother.stock}}, {{fish.males}}, {{fish.females}}, {{fish.unsexed}}, {{fish.carriers}}, {{fish.total}}
 
-        </textarea><br>
-<button id="copybtn" class="btn btn-secondary" data-clipboard-action="copy" data-clipboard-target="#copyText" style="margin-bottom:20px">
-    Copy fish data to clipboard <i class="bi bi-clipboard-fill"></i>
-</button>
-<br>
 
-<!-- Include clipboard.js -->
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
-<!-- Instantiate clipboard -->
-<script>
-    var btn = document.getElementById('copybtn');
-    var clipboard = new ClipboardJS(btn);
-
-    clipboard.on('success', function (e) {
-        console.info('Action:', e.action);
-        console.info('Text:', e.text);
-        console.info('Trigger:', e.trigger);
-    });
-
-    clipboard.on('error', function (e) {
-        console.info('Action:', e.action);
-        console.info('Text:', e.text);
-        console.info('Trigger:', e.trigger);
-    });
-</script>
 {%else%}
     <h2>A fish matching this information could not be found</h2>
     <p>Try altering your search conditions on the <a href="{{url_for('main.index')}}">home page</a></p>
 {%endif%}
-
-
-
 
 {%endblock%}

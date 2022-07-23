@@ -296,6 +296,12 @@ class Fish(db.Model):
         return ancestors
     
     def getAge(self):
+        if self.old_birthday:
+            self.birthday = datetime.strptime(self.old_birthday, "%Y-%m-%d").date()
+            self.old_birthday=None
+            db.session.commit()
+            self.getAge()
+            
         if self.status == "Dead":
             return "Dead"
         if self.birthday == None or self.birthday=="":

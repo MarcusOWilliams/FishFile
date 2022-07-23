@@ -2,16 +2,22 @@
     <tr>
         <td colspan="3"><strong>Stock: {{fish.stock}}</strong></td>
     </tr>
+  
     <tr>
-        <td>Fish ID: {{fish.fish_id}}</td>
-        <td>Tank ID: {{fish.tank_id}}</td>
-        <td>Status: {{fish.status}}</td>
+        <td class = "summaryPoint"><strong>Fish ID:</strong> {{fish.fish_id}}</td>
+        <td class = "summaryPoint"><strong>Tank ID:</strong> {{fish.tank_id}}</td>
+        <td class = "summaryPoint"><strong>Status:</strong> {{fish.status}}</td>
     </tr>
     <tr>
-        <td>Protocol: {{fish.protocol}}</td>
-        <td>Total #: {{fish.total}}</td>
-        <td>Age: {{fish.getAge()}}</td>
+        <td class = "summaryPoint"><strong>Protocol:</strong> {{fish.protocol}}</td>
+        <td class = "summaryPoint"><strong>Total #:</strong> {{fish.total}}</td>
+        <td class = "summaryPoint"><strong>Age:</strong> {{fish.getAge()}}</td>
     </tr>
+    {%if fish.system == "Old"%}
+        <tr>
+            <td colspan="3" style="color: red;">This entry is from the old system</td>
+        </tr>
+    {%endif%}
     <tr>
         <td colspan="3"><a href = "{{url_for('main.fish', id=fish.id)}}">See More Details...</a></td>
     </tr>

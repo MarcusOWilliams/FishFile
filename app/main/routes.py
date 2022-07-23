@@ -355,13 +355,15 @@ def user(username):
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def fish(id):
-    fish = Fish.query.filter_by(id=id).first()
+    fish = Fish.query.filter_by(id=id).first_or_404()
     alleles = Allele.query.filter_by(fish=fish).all()
     if fish is None:
         title = "Fish Not Found"
     else:
         title = f"Fish ({fish.stock})"
     
+    if fish.system == "Old":
+        return render_template("oldfish.html", fish=fish, title=title, form = EmptyForm())
 
     return render_template("fish.html", fish=fish, title=title, alleles=alleles , form = EmptyForm())
 
