@@ -481,3 +481,18 @@
 #loginPasswordField input{
     width: 260px;
 }
+
+#registrationContainer{
+    border: 1px gray solid;
+    border-radius: 25px;
+    width:50%;
+    min-width: 370px;
+    margin: auto;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: whitesmoke;
+}
+
+.registerTextField{
+    width:300px;
+}

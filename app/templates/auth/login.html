@@ -21,6 +21,7 @@
     <h1>Sign In</h1>
     {{ form.hidden_tag() }}
     <p>
+        {{form.email.label()}}<br>
         {{ form.email(size=32, placeholder='Email') }}
     </p>
     <p>
@@ -31,6 +32,7 @@
     </p>
     <p>
     <p id="loginPasswordField">
+        {{form.password.label()}}<br>
         {{ form.password(size=32,placeholder='Password') }}
         <span onclick="showPassword()" id="showPasswordIcon">
             <i class="bi bi-eye-fill"></i>
