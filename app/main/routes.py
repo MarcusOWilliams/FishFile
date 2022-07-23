@@ -495,10 +495,10 @@ def newfish():
     if form.validate_on_submit():
         #both mother and father get the most recently added match, incase there are multiple matches
         father = Fish.query.filter_by(
-            fish_id=form.father_id.data, stock=form.father_stock.data
+            tank_id=form.father_tank_id.data, stock=form.father_stock.data
         ).order_by(Fish.id.desc()).first()
         mother = Fish.query.filter_by(
-            fish_id=form.mother_id.data, stock=form.mother_stock.data
+            tank_id=form.mother_tank_id.data, stock=form.mother_stock.data
         ).order_by(Fish.id.desc()).first()
         fish_user = User.query.filter_by(code=form.user_code.data).first()
         license_holder = User.query.filter_by(
@@ -611,11 +611,11 @@ def updatefish(id):
     if form.validate_on_submit():
 
         father = Fish.query.filter_by(
-            fish_id=form.father_id.data, stock=form.father_stock.data
-        ).first()
+            tank_id=form.father_tank_id.data, stock=form.father_stock.data
+        ).order_by(Fish.id.desc()).first()
         mother = Fish.query.filter_by(
-            fish_id=form.mother_id.data, stock=form.mother_stock.data
-        ).first()
+            tank_id=form.mother_tank_id.data, stock=form.mother_stock.data
+        ).order_by(Fish.id.desc()).first()
         fish_user = User.query.filter_by(code=form.user_code.data).first()
         license_holder = User.query.filter_by(
             project_license=form.project_license.data
