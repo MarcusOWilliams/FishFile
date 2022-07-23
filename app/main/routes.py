@@ -488,18 +488,19 @@ def newfish():
     
 
     if form.validate_on_submit():
-        
+        #both mother and father get the most recently added match, incase there are multiple matches
         father = Fish.query.filter_by(
             fish_id=form.father_id.data, stock=form.father_stock.data
-        ).first()
+        ).order_by(Fish.id.desc()).first()
         mother = Fish.query.filter_by(
             fish_id=form.mother_id.data, stock=form.mother_stock.data
-        ).first()
+        ).order_by(Fish.id.desc()).first()
         fish_user = User.query.filter_by(code=form.user_code.data).first()
         license_holder = User.query.filter_by(
             project_license=form.project_license.data
         ).first()
-       
+        
+
 
         newfish = Fish(
             fish_id=form.fish_id.data,
@@ -535,7 +536,13 @@ def newfish():
         change = Change(user=current_user, fish=newfish, action="Added")
         db.session.add(change)
 
-        
+        if form.origin_tank_id.data != None and form.origin_tank_id.data != "":
+            #ordered to get the most recently added match
+            origin_tank = Fish.query.filter_by(
+                tank_id = form.origin_tank_id.data, stock = form.origin_tank_stock.data 
+            ).order_by(Fish.id.desc()).first()
+            if origin_tank != None:
+                newfish.origin = origin_tank
 
         if form.alert_date.data or form.alert_msg.data:
             reminder = Reminder(user = newfish.user_code, fish = newfish, date=form.alert_date.data, message=form.alert_msg.data)
@@ -608,6 +615,12 @@ def updatefish(id):
         license_holder = User.query.filter_by(
             project_license=form.project_license.data
         ).first()
+
+        if form.origin_tank_id.data != None and form.origin_tank_id.data != "":
+            origin_tank = Fish.query.filter_by(
+                tank_id = form.origin_tank_id.data, stock = form.origin_tank_stock.data 
+            ).order_by(Fish.id.desc()).first()
+            
 
         pictures = [file.filename for file in form.photos.data]
         
@@ -978,7 +991,22 @@ def updatefish(id):
             db.session.add(change)
             change_count+=1
 
-            fish.father = mother
+            fish.mother = mother
+
+        if fish.origin != origin_tank:
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="origin",
+                old=f"{fish.origin}",
+                new=f"{origin_tank}",
+                notification = notification
+            )
+            db.session.add(change)
+            change_count+=1
+
+            fish.origin = origin_tank
 
         if fish.user_code != fish_user:
             change = Change(

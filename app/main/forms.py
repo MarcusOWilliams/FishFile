@@ -36,7 +36,7 @@ class SimpleSearch(FlaskForm):
 
 class NewFish(FlaskForm):
     fish_id = StringField("* Fish ID", validators=[DataRequired()])
-    tank_id = StringField("* Tank ID", validators=[DataRequired()])
+    tank_id = StringField("* Tank #", validators=[DataRequired()])
     status = SelectField(
         "* Status",
         choices=["Alive", "Alive (Healthy)", "Alive (Unhealthy)", "Dead"],
@@ -73,7 +73,8 @@ class NewFish(FlaskForm):
     unsexed = IntegerField("* # Unsexed")
     carriers = IntegerField("* # Carriers/Licenced")
     total = IntegerField("* Total #")
-
+    origin_tank_id = StringField("Origin Tank #", validators=[Optional()])
+    origin_tank_stock = StringField("Origin Stock #", validators=[Optional()])
     alert_date = DateField("Reminder date", validators=[Optional()])
     alert_msg = StringField("Reminder message", validators=[Optional()])
 
@@ -96,7 +97,24 @@ class NewFish(FlaskForm):
             raise ValidationError(
                 f"There are no fish in the database that match ID = {self.mother_id.data} and Stock = {mother_stock.data}"
             )
+    def validate_origin_tank_stock(self, origin_tank_stock):
+        if self.origin_tank_id.data == "" or self.origin_tank_id.data == None:
+            raise ValidationError(
+                f"To add an origin tank you must supply both tank # and stock # for the origin tank."
+            )
+        fish = Fish.query.filter_by(
+            tank_id=self.origin_tank_id.data, stock=origin_tank_stock.data
+        ).first()
+        if fish is None:
+            raise ValidationError(
+                f"There are no entries in the database that match tank # = {self.origin_tank_id.data} and Stock = {origin_tank_stock.data}"
+            )
 
+    def validate_origin_tank_id(self, origin_tank_id):
+        if self.origin_tank_stock.data == "" or self.origin_tank_stock.data == None:
+            raise ValidationError(
+                f"To add an origin tank you must supply both tank # and stock # for the origin tank."
+            )
     def validate_males(self, males):
         if males.data == None or males.data == "":
             raise ValidationError("This field is required")

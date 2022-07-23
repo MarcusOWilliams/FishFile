@@ -241,6 +241,10 @@ class Fish(db.Model):
 
     links = db.Column(db.Text())
 
+    origin_tank_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
+    origin_for = db.relationship(
+        "Fish", backref=db.backref("origin", remote_side=[id]), foreign_keys=[origin_tank_id]
+    )
 
     changes = db.relationship(
         "Change", backref="fish", lazy="dynamic", cascade="all, delete"

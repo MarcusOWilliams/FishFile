@@ -1,22 +1,4 @@
-Does each project license only have one user, can one user have more than one?
-
-Should there be able to be multiple fish with the same stock/ tank_id (alive)
-
-Do you need the s at the start of stock number?
-
-
-
-If someone was to get a new project license is i alright for all the fish to change over?
-
-Should project license have a description?
-
-Are IDs always the same format e.g two upper case letters? would it matter if I made them all upper case?
-    same with tank_id
-    Same with stock (the s)
-
-Roughly how many tanks would someone work on at a time? Just for the profile list?
-
-
+Should I change father/ mother IDs to tank id or something
 ANSWERED:
 
 DB questions
@@ -48,3 +30,18 @@ Suggestions for what should be on the home page
 What would you want to see for genetic history? 
 
 WHat changes to track?
+
+Roughly how many tanks would someone work on at a time? Just for the profile list?
+What are the 3 most important and 7 most important attributes?
+Are IDs always the same format e.g two upper case letters? would it matter if I made them all upper case?
+same with tank id
+Same with stock (the s)]
+Do you need the s at the start of stock number?
+Should project license have a description?
+If someone was to get a new project license is it alright for all the fish to change over?
+Does each project license only have one user, can one user have more than one?
+Should there be able to be multiple fish with the same stock/ tank_id (alive)
+What other fields are not necessary for searching?
+Would you ever search by dates? should there be a range?
+What fields are not necessary for change filters?
+What age would you want reminders?

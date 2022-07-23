@@ -74,6 +74,13 @@
                 </td><td class="updateFormInputField"> {{form.mother_stock(placeholder="Mother's Stock", value = fish.mother.stock)}}</td>
             </tr>
             <tr>
+                <td>{{form.origin_tank_id.label}}</td>
+                <td class="addFishInputField"> {{form.origin_tank_id(placeholder="Origin Tank #", value=fish.origin.tank_id)}}</td>
+
+                <td>{{form.origin_tank_stock.label}}</td>
+                <td class="addFishInputField"> {{form.origin_tank_stock(placeholder="Origin Stock #", value=fish.origin.stock)}}</td>
+            </tr>
+            <tr>
                 <td>{{form.males.label}}
                 </td><td class="updateFormInputField"> {{form.males(value = fish.males, min=0)}}</td>
 
