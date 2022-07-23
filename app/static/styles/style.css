@@ -186,6 +186,7 @@
     border: 1px gray solid;
     border-radius: 1em;
     padding: 5px;
+    padding-bottom: 0px;
     margin-top:20px;
 }
 
@@ -495,4 +496,60 @@
 
 .registerTextField{
     width:300px;
+}
+
+#mainSettingsForm{
+    margin: auto;
+    width:60%;
+    border: 1px solid gray;
+    border-radius: 25px;
+    padding: 10px;
+    margin-bottom: 50px;
+}
+
+
+#emailSettingsCheckboxes{
+    width:60%;
+    margin: auto;
+    text-align: left;
+    position: relative;
+    
+}
+
+#emailSettingsCheckboxes label{
+    padding-bottom: 5px;
+    
+}
+
+#emailSettingsCheckboxes input{
+    position: absolute;
+    right:0;
+    
+}
+
+#notificationsSettingsCheckboxes{
+    width:60%;
+    margin: auto;
+    text-align: left;
+    position: relative;
+    
+}
+#notificationsSettingsCheckboxes label{
+    padding-bottom: 5px;
+}
+
+#notificationsSettingsCheckboxes input{
+    position: absolute;
+    right:0;
+
+}
+
+.settingsCheckboxRow{
+    margin-bottom: 5px;
+    padding:5px;
+}
+
+.settingsCheckboxRow:hover{
+    background-color: whitesmoke;
+    padding:5px;
 }

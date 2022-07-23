@@ -18,26 +18,36 @@
 {% block content %}
     <h2>Settings for {{current_user.username}}:</h2><br>
 
-    <p><a href="{{url_for('auth.change_password')}}">Change Password</a></p>
-
-    <form action="" method="post" enctype="multipart/form-data">
+    <p style="color: red;">Don't forget to press apply settings at the bottom of the page!</p>
+    <form action="" method="post" enctype="multipart/form-data" id="mainSettingsForm">
         {{form.hidden_tag()}}
-        <h4>Emails:</h4>
-            {{form.emails.label}} {{form.emails(checked=current_user.settings.emails)}}<br>
-            {{form.email_reminders.label}} {{form.email_reminders(checked=current_user.settings.email_reminders)}}<br>
-        <h4>Notifications:</h4>
-            {{form.add_notifications.label}} {{form.add_notifications(checked=current_user.settings.add_notifications)}}<br>
-            {{form.change_notifications.label}} {{form.change_notifications(checked=current_user.settings.change_notifications)}}<br>
-            {{form.custom_reminders.label}} {{form.custom_reminders(checked=current_user.settings.custom_reminders)}}<br>
-            {{form.age_notifications.label}} {{form.age_notifications(checked=current_user.settings.age_notifications)}}<br>
-            {% if current_user.project_license != None and current_user.project_license != "" %}
-                {{form.pl_add_notifications.label}} {{form.pl_add_notifications(checked=current_user.settings.pl_add_notifications)}}<br>
-                {{form.pl_custom_reminders.label}} {{form.pl_custom_reminders(checked=current_user.settings.pl_custom_reminders)}}<br>
-                {{form.pl_age_notifications.label}} {{form.pl_age_notifications(checked=current_user.settings.pl_age_notifications)}}<br>
-            {%endif%}
-
-        <br> 
+        <h4>Password</h4>
+        <p><a href="{{url_for('auth.change_password')}}">Change Password</a></p>
+        <hr>
+        <h4>Emails</h4>
+            <div id="emailSettingsCheckboxes">
+                <div class="settingsCheckboxRow">{{form.emails.label}} {{form.emails(checked=current_user.settings.emails)}}</div>
+                <div class="settingsCheckboxRow">{{form.email_reminders.label}} {{form.email_reminders(checked=current_user.settings.email_reminders)}}</div>
+            </div>
+            <hr>        
+            <h4>Notifications</h4>
+            <div id="notificationsSettingsCheckboxes">
+                <div class="settingsCheckboxRow">{{form.add_notifications.label}} {{form.add_notifications(checked=current_user.settings.add_notifications)}}</div>
+                <div class="settingsCheckboxRow">{{form.change_notifications.label}} {{form.change_notifications(checked=current_user.settings.change_notifications)}}</div>
+                <div class="settingsCheckboxRow">{{form.custom_reminders.label}} {{form.custom_reminders(checked=current_user.settings.custom_reminders)}}</div>
+                <div class="settingsCheckboxRow">{{form.age_notifications.label}} {{form.age_notifications(checked=current_user.settings.age_notifications)}}</div>
+                {% if current_user.project_license != None and current_user.project_license != "" %}
+                    <div class="settingsCheckboxRow">{{form.pl_add_notifications.label}} {{form.pl_add_notifications(checked=current_user.settings.pl_add_notifications)}}</div>
+                    <div class="settingsCheckboxRow">{{form.pl_custom_reminders.label}} {{form.pl_custom_reminders(checked=current_user.settings.pl_custom_reminders)}}</div>
+                    <div class="settingsCheckboxRow">{{form.pl_age_notifications.label}} {{form.pl_age_notifications(checked=current_user.settings.pl_age_notifications)}}</div>
+                {%endif%}
+            </div>
         
+         
+        <hr>
+        
+        <h4>Personal License</h4>
+        <br>
         {{form.personal_license.label}} <div class="infoPopup" onclick="popupShow('personalInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="personalInfoPopupText"> Enter your own personal license here</span></div>
         {{form.personal_license(placeholder="Your personal license")}} <br><br>
 
@@ -48,14 +58,18 @@
             {%endif%}
 
         
+        <hr>
+        
+        <h4>Project License</h4>
+        <br>
         {{form.project_license.label}} <div class="infoPopup" onclick="popupShow('plInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="plInfoPopupText"> If you have your own project license enter it here, if don't have one/use someone else's, leave this blank (or as None)</span></div>
         {{form.project_license(placeholder="Your project license")}} <br><br>
         {{form.project_license_file.label}} <div class="infoPopup" onclick="popupShow('plInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="plInfoPopupText"> If you would like to attach a pdf to your project license, do so here, you can only have one prpject license pdf associated yo your account, if you upload a second then it will replace the current document</span></div>
         {{form.project_license_file()}}<br><br>
-        {%if current_user.project_document ==True %}<p><a target="_blank" href="/static/files/project_licenses/{{current_user.id}}.pdf">Current project license document</a>  <button class="btn btn-secondary" onclick='sendPostDelete("Project")'>Delete</button></p><br>{%endif%}
+        {%if current_user.project_document ==True %}<p><a target="_blank" href="/static/files/project_licenses/{{current_user.id}}.pdf">Current project license document</a>  <button class="btn btn-secondary" onclick='sendPostDelete("Project")'>Delete</button></p>{%endif%}
 
         
-        {{form.submit}}
+        {{form.submit(value="Apply Settings", class="btn btn-primary")}}
     </form>
     {% for field, errors in form.errors.items() %}
                 <div class = "formError">{{ form[field].label }} {{ ', '.join(errors) }}</div>
