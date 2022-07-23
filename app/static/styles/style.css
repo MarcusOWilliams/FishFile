@@ -31,6 +31,9 @@
     max-width:1000px;
 }
 
+.fishFormTable tr:hover{
+    background-color: whitesmoke;
+}
 
 #addFishTable{
     margin:auto;
