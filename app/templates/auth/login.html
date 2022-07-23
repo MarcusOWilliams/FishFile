@@ -16,8 +16,9 @@
 {%endblock%}
 
 {% block content %}
-<h1>Sign In</h1>
-<form action="" method="post">
+
+<form action="" method="post" id="signInForm">
+    <h1>Sign In</h1>
     {{ form.hidden_tag() }}
     <p>
         {{ form.email(size=32, placeholder='Email') }}
@@ -29,7 +30,7 @@
     </p>
     </p>
     <p>
-    <p>
+    <p id="loginPasswordField">
         {{ form.password(size=32,placeholder='Password') }}
         <span onclick="showPassword()" id="showPasswordIcon">
             <i class="bi bi-eye-fill"></i>
