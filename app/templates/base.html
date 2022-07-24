@@ -187,7 +187,8 @@
                   
                   </a>
                   <ul class="dropdown-menu" id="notificationDropdownList" aria-labelledby="notifsDropdown">
-                    {%if current_user.notifications%}
+                    
+                    {%if current_user.notifications.count() >0%}
                       <p id="notifsHeading" style="padding-left: 5px;"><strong>Notifications:</strong><span id="clearNotifs"><button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#deleteNotifsModal">Clear Notifications</button></span><br></p>
                       
                       {%for notification in current_user.notifications|reverse %}
@@ -195,6 +196,10 @@
                         <li class="dropdown-item">{%include 'subtemplates/_notification.html'%}</li>
                       
                       {%endfor%}
+                    {%else%}
+                    <p id="notifsHeading" style="padding-left: 5px;"><strong>Notifications:</strong><br></p>
+                     <hr>
+                     <p style="padding-left: 5px;">You have no notifications to show...</p>
                     {%endif%}
                   </ul>
                 </li>
