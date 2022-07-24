@@ -22,8 +22,8 @@ from dateutil import relativedelta
 
 """
 This is the class for the User table  of the SQL database
-Each user row contains a unique id, names, email, username, hashed_password, last seen time, verification check, role 
-This table has relationships to: Changes, Notification, Settings, Fish
+Each user is created as a new object of this class
+This table has relationships to: Changes, Notification, Settings, Fish, Reminder
 It also contains the methods required for the user
 """
 
@@ -186,12 +186,10 @@ def requires_roles(*roles):
 
 """
 This is the class for the Fish table of the SQL database
-Each user row contains a ...
-This table has relationships to: Itself, User, Change, Tank
+This is the main functionality of the system, each fish entry is stored as a new object of this class
+This table has relationships to: Itself, User, Change, Notification, Allele, Photo, Reminder
 It also contains the methods required for the fish
 """
-
-
 class Fish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.String(264), index=True)
@@ -366,6 +364,11 @@ class Fish(db.Model):
         reminder.send_reminder(users = [self.project_license_holder.id], category="Age reminder")
 
 
+"""
+This is the class for the Allele table of the SQL database
+A fish can have multiple alleles associated with it, each being a new object of this class
+This table has relationships to: Fish
+"""
 class Allele(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
@@ -384,7 +387,13 @@ def get_all_allele_names():
     alleles = Allele.query.with_entities(Allele.name).distinct()
     names = set(allele[0] for allele in alleles)
     return names
-    
+
+"""
+This is the class for the Photo table of the SQL database
+A fish can have multiple photos associated with it, each being a new object of this class
+photos are stored as a string which contains the location of the photo within the app
+This table has relationships to: Fish
+"""
 class Photo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
@@ -399,13 +408,10 @@ class Photo(db.Model):
     def __repr__(self):
         return f"Photo - {self.name}"
 """
-This is the class for the Change table of the SQL database, which is used to record changes to the database
-Each user row contains a ...
-This table has relationships to: Fish, User, Tank
-It also contains the methods required for the change
+This is the class for the Change table of the SQL database, which is used to record changes to Fish objects the database
+This table has relationships to: Fish, User, Notification
+Users, Notifications and Fish can have many changes associated with them
 """
-
-
 class Change(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -425,13 +431,9 @@ class Change(db.Model):
 
 
 """
-This is the class for the Setting table of the SQL database
-Each user row contains a ...
+This is the class for the Settings table of the SQL database
 This table has a one-to-one relationships to User
-It also contains the methods required for the Settings
 """
-
-
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # one-to-one relationship
@@ -460,11 +462,11 @@ class Settings(db.Model):
 
 """
 This is the class for the Notifiaction table of the SQL database
-Each user row contains a ...
-This table has relationships to: User
+This table has relationships to: User, Fish, Change
+Users and Fish can have many notifications
+Notifications can related to multiple changes
 It also contains the methods required for the notifiaction
 """
-
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -490,6 +492,11 @@ class Notification(db.Model):
             send_notification_email(self.user, self)
  
 
+"""
+This is the class for the Reminder table of the SQL database
+This table has relationships to: Fish, User
+Users and Fish can have many reminders associated with them
+"""
 class Reminder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
