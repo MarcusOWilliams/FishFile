@@ -553,3 +553,16 @@
     background-color: whitesmoke;
     padding:5px;
 }
+
+#clearNotifs{
+    position: absolute;
+    right:0;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-top: 0px;
+    
+}
+
+#clearNotifs button{
+    background-color: Gainsboro;
+}

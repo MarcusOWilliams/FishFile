@@ -67,7 +67,7 @@ add validation on new fish form, e.g. check if certain fields exists already (ta
 Add scheduled tasks:
  / clear old notifs
   / send required time based alerts
- check fish ages, send alerts
+ / check fish ages, send alerts
   / check reminders
 
 / Add data deletion

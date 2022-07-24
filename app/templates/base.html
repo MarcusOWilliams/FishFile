@@ -188,7 +188,8 @@
                   </a>
                   <ul class="dropdown-menu" id="notificationDropdownList" aria-labelledby="notifsDropdown">
                     {%if current_user.notifications%}
-                      <p><strong>Notifications:</strong></p>
+                      <p id="notifsHeading" style="padding-left: 5px;"><strong>Notifications:</strong><span id="clearNotifs"><button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#deleteNotifsModal">Clear Notifications</button></span><br></p>
+                      
                       {%for notification in current_user.notifications|reverse %}
                         <hr class="dropdown-divider" />
                         <li class="dropdown-item">{%include 'subtemplates/_notification.html'%}</li>
@@ -197,7 +198,7 @@
                     {%endif%}
                   </ul>
                 </li>
-                
+
                     
                 {% if g.search_form %}
                   <form class="d-flex" role="search" method="get" id="simpleSearchForm"
@@ -212,6 +213,7 @@
     </nav>
     <!-- APP CONTENT -->
     <div id="mainContainer">
+      
       {% with messages = get_flashed_messages(with_categories=true) %} 
         {% if messages %}
          {% for category, message in messages %}
@@ -229,9 +231,31 @@
             </div>
             
 
-      {%endif%}{% endfor %} {% endif %} {%endwith%} {% block content %}{% endblock %}
+      {%endif%}{% endfor %} {% endif %} {%endwith%}
+      
+      {% block content %}{% endblock %}
     </div>
-
+    <!-- Modal for clearing notifications -->
+    <div class="modal fade" id="deleteNotifsModal" tabindex="-1" aria-labelledby="deleteNotifsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="deleteNotifsModalLabel">Are you sure?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete all of your notifications? You will not be able to recover them after this.
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <form action="{{ url_for('main.deletenotifs')}}" method="POST">
+                {{ g.clearNotifsForm.hidden_tag() }}
+                {{ g.clearNotifsForm.submit(value='Delete Notifications', class="btn btn-danger") }}
+            </form>
+            </div>
+        </div>
+      </div>
+    </div>
     <!-- More scripts to allow functionality of bootstrap components -->
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"

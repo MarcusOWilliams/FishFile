@@ -1473,6 +1473,17 @@ def deletepersonallicense():
         current_user.delete_project_document()
 
     return jsdata
+@bp.route('/deletenotifs', methods=["POST"])
+@login_required
+@requires_roles("User","Researcher","Admin", "Owner")
+def deletenotifs():
+    notifications = current_user.notifications
+
+    for notif in notifications:
+        db.session.delete(notif)
+        
+    db.session.commit()
+    return redirect(url_for('main.index'))
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request
@@ -1481,3 +1492,4 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
         g.search_form = SimpleSearch()
+        g.clearNotifsForm = EmptyForm()
