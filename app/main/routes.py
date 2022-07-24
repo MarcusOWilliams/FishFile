@@ -445,7 +445,7 @@ def fishhistory(id):
     ancestors = fish.get_ancestors(0)
     generations = max(ancestors, key = lambda x:x['level'])['level']
 
-    return render_template("fishhistory.html", fish = fish, generations = generations, current_generation =0, title="Fish History")
+    return render_template("fishhistory.html", fish = fish, generations = generations, current_generation =0, title="Family Tree")
 
 @bp.route("/fish/<id>/updatealleles/", methods=["GET", "POST"])
 @login_required
@@ -1146,7 +1146,7 @@ def allfish():
         
     
 
-    return render_template('allfish.html', all_fish = fish, form = form)
+    return render_template('allfish.html', all_fish = fish, form = form, title="All Fish")
 
 @bp.route("/projectlicense/<license>/", methods=["GET", "POST"])
 @login_required
@@ -1352,7 +1352,7 @@ def settings():
         form.personal_license.data = current_user.personal_license
 
     return render_template(
-        "settings.html", form=form, current_settings=current_settings, deletePersonalForm = deletePersonalForm 
+        "settings.html", form=form, current_settings=current_settings, deletePersonalForm = deletePersonalForm, title ="Settings"
     )
 
 @bp.route("/fish/<fish_id>/photo/<photo_id>/editcaption/", methods=["GET", "POST"])
@@ -1389,7 +1389,7 @@ def guides():
 def user_list():
     users = User.query.order_by(User.id.desc())
 
-    return render_template('Admin/user_list.html',users=users)
+    return render_template('Admin/user_list.html',users=users, title="User List")
 
 @bp.route("/editalleles/")
 @login_required
