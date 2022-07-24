@@ -134,7 +134,10 @@ def reset_password(token):
         return redirect(url_for("auth.login"))
     return render_template("auth/reset_password.html", form=form)
 
-
+"""
+This function describes the route for /verify_email
+This route is used for verifying the email of a user, given a token
+"""
 @bp.route("/verify_email/<token>", methods=["GET"])
 def verify_email(token):
     user = User.verify_email_token(token)
@@ -149,7 +152,10 @@ def verify_email(token):
     flash("Your email has been verified", "success")
     return redirect(url_for("auth.login"))
 
-
+"""
+This function describes the route for /change_password
+This route is used for updating the password for a user
+"""
 @bp.route("/change_password/", methods=["GET", "POST"])
 @login_required
 def change_password():
