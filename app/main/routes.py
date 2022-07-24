@@ -546,10 +546,10 @@ def newfish():
     if form.validate_on_submit():
         #both mother and father get the most recently added match, incase there are multiple matches
         father = Fish.query.filter_by(
-            tank_id=form.father_tank_id.data, stock=form.father_stock.data
+            tank_id=form.father_tank_id.data.upper() , stock=form.father_stock.data.upper() 
         ).order_by(Fish.id.desc()).first()
         mother = Fish.query.filter_by(
-            tank_id=form.mother_tank_id.data, stock=form.mother_stock.data
+            tank_id=form.mother_tank_id.data.upper() , stock=form.mother_stock.data.upper() 
         ).order_by(Fish.id.desc()).first()
         fish_user = User.query.filter_by(code=form.user_code.data).first()
         license_holder = User.query.filter_by(
@@ -595,7 +595,7 @@ def newfish():
         if form.origin_tank_id.data != None and form.origin_tank_id.data != "":
             #ordered to get the most recently added match
             origin_tank = Fish.query.filter_by(
-                tank_id = form.origin_tank_id.data, stock = form.origin_tank_stock.data 
+                tank_id = form.origin_tank_id.data.upper() , stock = form.origin_tank_stock.data.upper() 
             ).order_by(Fish.id.desc()).first()
             if origin_tank != None:
                 newfish.origin = origin_tank
@@ -667,10 +667,10 @@ def updatefish(id):
     if form.validate_on_submit():
 
         father = Fish.query.filter_by(
-            tank_id=form.father_tank_id.data, stock=form.father_stock.data
+            tank_id=form.father_tank_id.data.upper() , stock=form.father_stock.data.upper() 
         ).order_by(Fish.id.desc()).first()
         mother = Fish.query.filter_by(
-            tank_id=form.mother_tank_id.data, stock=form.mother_stock.data
+            tank_id=form.mother_tank_id.data.upper() , stock=form.mother_stock.data.upper() 
         ).order_by(Fish.id.desc()).first()
         fish_user = User.query.filter_by(code=form.user_code.data).first()
         license_holder = User.query.filter_by(
@@ -679,7 +679,7 @@ def updatefish(id):
 
         
         origin_tank = Fish.query.filter_by(
-            tank_id = form.origin_tank_id.data, stock = form.origin_tank_stock.data 
+            tank_id = form.origin_tank_id.data.upper() , stock = form.origin_tank_stock.data.upper() 
         ).order_by(Fish.id.desc()).first()
             
 
