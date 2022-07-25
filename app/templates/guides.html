@@ -20,11 +20,14 @@
     <hr>
     <h4 id="profile_guide">Profile settings</h4>
       <p><strong>Settings</strong><br>Each user is given a default username which matches the first part of the University of Bath email address, the username can be used to access your profile page using the link /user/username or by clicking the link on the navigation bar.<br><br>Each user is also given a unique user code wich is of the form "Initials (username)", this is what is used to associate each fish entry with a given user. <br><br>From your profile page you can edit the settings of you account (or click <a href="{{url_for('main.settings')}}">this link</a>). This includes notification, password and email settings along with the option to upload documents for your personal license and project licenses if you have them.</p>
-      <p><Strong>Permissions</Strong><br>There are a number of different levels of permissions, allowing different access to the data base, so if you are unable to use any of the functionality it may be becuase you don't have the necessary permissions<br>Your current level of permissions is {{current_user.permissions}}. The list of levels of permissions is:
+      <p><Strong>Permissions</Strong><br>There are a number of different levels of permissions, allowing different access to the data base, so if you are unable to use any of the functionality it may be becuase you don't have the necessary permissions<br>Your current level of permissions is {{current_user.role}}.<br> The list of levels of permissions is:
          <ul style="list-style: none; width:60%;margin:auto;">
           <li><b>User</b> - Users simply have the permissions to view the database, they are not able to update any details of database entries, add new entries or delete entries</li>
           <li><b>Researcher</b> - Researchers have all of the same permissions as users, but they also have the ability to update information about database entries, they do not have permission to add or delete entries</li>
           <li><b>Admin</b> - Admins, have all previously described permissions, they can also add and remove entries from the database, can update the list of alleles and can change the permission levels of other users (can not make another user an admin, only a few select users can do this)</li>
+          {% if current_user.isOwner()%}
+            <li><b>Owner</b> - Your account is an owner account, this is the top level of permissions. It allows you to create other admins and owners and view a list of all users along with all other described permissions.</li>
+          {%endif%}
         </ul>
         </p>
     <hr>
@@ -43,7 +46,8 @@
       <h4>Adding an entry to the database</h4>
       <p>To add an entry to the database you must have the necessary permissions, if you believe you require these previlidges and do not have them then please contact a website admin.
         Once you have the correct permissions head over to <a href="{{url_for('main.newfish')}}">this page</a> where you will see the form to add a new database entry.<br><br> Required fields are marked, everything else is optional. When entering the details for father and mother fish make sure that the details match to an entry that is already in the database. For all of the fish counts a number must be inputted to the associated fields, if there are no fish matching the count then just input 0.</p>
-      <hr>
+        The user code associated with an entry is linked to a users account, therefore if you want to set a user as the user code for an entry they must first create and verify their account on the website.
+        <hr>
     </div>
     <div id="excel_guide">
       <h4>Creating and Excel Spreadsheet From the Database</h4>
