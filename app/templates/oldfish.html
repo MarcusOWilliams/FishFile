@@ -124,8 +124,8 @@
         <h2>More Options</h2>
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</a></p>
         {%if current_user.isResearcher()%}
-            <p style="color: red;">WARNING: When updating an old entry you will need to update fields such as user code and project license to the new format.</p>
-            <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
+            <p style="color: red;">WARNING: When updating an old entry you will need to update fields such as user code, project license, father and mother to the new format.<br> Multiple fields in the update page will not auto fill, so make sure you have inputted all fields you require. It is recommened to keep this page open in a seperate tab to refer back to.</p>
+            <p class="fishInfoPoint moreFishOptionsItem"><a target="_blank" href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
         {%endif%}
         <br>
         {% if current_user.isAdmin() %}

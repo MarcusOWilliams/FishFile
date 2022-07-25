@@ -666,19 +666,6 @@ def updatefish(id):
 
     if form.validate_on_submit():
         
-
-
-
-
-
-
-
-
-
-
-
-
-
         father = Fish.query.filter_by(
             tank_id=form.father_tank_id.data.upper() , stock=form.father_stock.data.upper() 
         ).order_by(Fish.id.desc()).first()
@@ -1271,7 +1258,6 @@ def updatefish(id):
     form.mutant_gene.data = fish.mutant_gene
     form.transgenes.data = fish.transgenes
 
-    
 
     return render_template("updatefish.html", fish=fish, form=form, title=title, deleteReminderForm =deleteReminderForm, deletePhotoForm=deletePhotoForm )
 
