@@ -80,11 +80,9 @@ def register():
         )
         user.set_password(form.password.data)
         user.username = user.email.split("@")[0]
-        user.code = f"{user.first_name[0]}{user.last_name[0]} ({user.username})"
         db.session.add(user)
 
-        settings = Settings(user=user)
-        db.session.add(settings)
+        
 
         db.session.commit()
 
@@ -148,6 +146,10 @@ def verify_email(token):
         )
         return redirect(url_for("auth.login"))
     user.is_verified = True
+
+    #create user code on account verification, this avoids unverified accounts having codes which clog up the select options
+    user.code = f"{user.first_name[0]}{user.last_name[0]} ({user.username})"
+    
     db.session.commit()
     flash("Your email has been verified", "success")
     return redirect(url_for("auth.login"))
