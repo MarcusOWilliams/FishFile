@@ -35,7 +35,7 @@ def send_reminders():
 @scheduler.task('cron', id='send_age_reminders',hour='2')
 def send_age_reminders():
     with scheduler.app.app_context():
-        all_fish = Fish.query.filter(Fish.status != "Dead").all()
+        all_fish = Fish.query.filter(Fish.status != "Dead", Fish.system != "Old").all()
         for fish in all_fish:
 
             if fish.getMonths()>=23 and fish.age_reminder != "23 Months":
@@ -54,7 +54,7 @@ def send_age_reminders():
 @scheduler.task('cron', id='update_fish_months',hour='1')
 def update_fish_months():
     with scheduler.app.app_context():
-        all_fish = Fish.query.filter(Fish.status != "Dead", Fish.birthday != None).all()
+        all_fish = Fish.query.filter(Fish.status != "Dead", Fish.birthday != None, Fish.system != "Old").all()
         
         for fish in all_fish:
 
