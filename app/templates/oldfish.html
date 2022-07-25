@@ -124,7 +124,7 @@
         <h2>More Options</h2>
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</a></p>
         {%if current_user.isResearcher()%}
-            <p style="color: red;">WARNING: Updating an entry that has been transferred from the old system may cause unwanted effects, it is recommended you instead create a new entry for the fish if you wish to update it.</p>
+            <p style="color: red;">WARNING: When updating an old entry you will need to update fields such as user code and project license to the new format.</p>
             <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
         {%endif%}
         <br>
