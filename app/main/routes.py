@@ -665,6 +665,19 @@ def updatefish(id):
     current_alleles = [allele.name for allele in fish.alleles]
 
     if form.validate_on_submit():
+        
+
+
+
+
+
+
+
+
+
+
+
+
 
         father = Fish.query.filter_by(
             tank_id=form.father_tank_id.data.upper() , stock=form.father_stock.data.upper() 
@@ -685,8 +698,110 @@ def updatefish(id):
 
         pictures = [file.filename for file in form.photos.data]
         
-        notification = Notification(fish=fish, category="Change", contents="Changes have been made to one of your fish entries")
 
+        #if a fish is being updated from the old system the process is different
+        #all fields are updated to the new system
+        if fish.system == "Old":
+            
+
+            fish.system = "New"
+            fish.fish_id = form.fish_id.data
+            fish.tank_id = form.tank_id.data.upper()
+            fish.status = form.status.data
+            fish.stock = form.stock.data.upper()
+            fish.protocol = form.protocol.data
+            fish.birthday = form.birthday.data
+            fish.months = fish.getMonths()
+            fish.date_of_arrival = form.date_of_arrival.data
+            fish.mutant_gene = form.mutant_gene.data
+            fish.transgenes = form.transgenes.data
+            fish.cross_type = form.cross_type.data
+            fish.comments = form.comments.data
+            fish.links = form.links.data
+            fish.males = form.males.data
+            fish.females = form.females.data
+            fish.unsexed = form.unsexed.data
+            fish.carriers = form.carriers.data
+            fish.total = form.total.data
+            fish.source = form.source.data
+            fish.father = father
+            fish.mother = mother
+            fish.origin = origin_tank
+            fish.user_code = fish_user
+            fish.project_license_holder = license_holder
+
+            fish.old_code = None
+            fish.old_license = None
+            fish.old_mID = None
+            fish.old_fID = None
+            fish.old_fStock = None
+            fish.old_mStock = None
+            fish.old_birthday = None
+            fish.old_arrival = None
+            fish.old_allele = None
+
+
+
+            for name in form.allele.data:
+                allele =Allele(name=name, fish=fish)
+                db.session.add(allele)
+
+
+            for photo in form.photos.data:
+                if photo is None or photo.filename =="":
+                    continue
+                file = photo
+                filename = secure_filename(f"{fish.id}_{file.filename}")
+                current = Photo.query.filter_by(fish=fish, name=filename).first()
+                if current == None:
+                    file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
+                    photo = Photo(fish=fish, name=filename)
+                    db.session.add(photo)
+                else:
+                    current.delete()
+                    file.save(os.path.join(current_app.config['FISH_PICTURES'], filename))
+                    photo = Photo(fish=fish, name=filename)
+                    db.session.add(photo)
+
+            if form.alert_date.data or form.alert_msg.data:
+                reminder = Reminder(user = fish.user_code, fish = fish, date=form.alert_date.data, message=form.alert_msg.data)
+                db.session.add(reminder)
+
+                if reminder.date <= datetime.today().date():
+                    reminder.send_reminder()
+
+
+            notification = Notification(fish=fish, category="Change", contents="Changes have been made to one of your fish entries")
+
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="system",
+                field="system",
+                old="New",
+                new="Old",
+                notification = notification
+            )
+
+            db.session.add(change)       
+            if fish.user_code.settings.change_notifications:
+                notification.user = fish.user_code
+                notification.change_count = 1
+                notification.send_email()
+                db.session.add(notification)
+                db.session.commit()
+
+            db.session.commit()
+
+            return redirect(url_for("main.fish", id=fish.id))
+
+
+
+
+
+
+        notification = Notification(fish=fish, category="Change", contents="Changes have been made to one of your fish entries")
 
         change_count=0
         if fish.fish_id != form.fish_id.data:
