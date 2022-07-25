@@ -397,6 +397,7 @@ def fish(id):
         title = f"Fish ({fish.stock})"
     
     if fish.system == "Old":
+
         return render_template("oldfish.html", fish=fish, title=title, form = EmptyForm())
 
     return render_template("fish.html", fish=fish, title=title, alleles=alleles , form = EmptyForm())

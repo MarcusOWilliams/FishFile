@@ -321,6 +321,19 @@ class Fish(db.Model):
             age = f"{age_difference.days} days"
 
         return age
+
+    def setDateOfArrival(self):
+        if self.date_of_arrival is not None:
+            return
+
+        if self.old_arrival is None or self.old_arrival == "":
+            return
+
+        self.date_of_arrival = datetime.strptime(self.old_arrival, "%Y-%m-%d").date()
+        self.old_arrival = None
+        db.session.commit()
+
+
         
     def getMonths(self):
 

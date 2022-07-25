@@ -14,8 +14,8 @@
             <P class = "fishInfoPoint"><span class="pointHeader">Protocol: </span>{{fish.protocol}}</P>
         {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Birthday: </span>{{fish.birthday}} {%if fish.getAge()%}(Age: {{fish.getAge()}}){%endif%}</p>
-        {%if fish.old_arrival != None and fish.old_arrival != ""%}
-            <p class = "fishInfoPoint"><span class="pointHeader">Date of Arrival: </span>{{fish.old_arrival}}</p>
+        {%if fish.date_of_arrival != None and fish.date_of_arrival != ""%}
+            <p class = "fishInfoPoint"><span class="pointHeader">Date of Arrival: </span>{{fish.date_of_arrival}}</p>
         {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Source: </span>{{fish.source}}</p>
     </div>
