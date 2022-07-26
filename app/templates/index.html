@@ -4,7 +4,7 @@
 
     <h1>Hi {{ current_user.first_name }}, Welcome to {{config["WEBSITE_NAME"]}}!</h1>
     <br>
-    <h6 id="introParagraph" style="width: 70%; margin:auto;">{{config["WEBSITE_NAME"]}} is a new relational database management system designed speciafically for researchers at the University of Bath, it's goal is to aid in the collection, storage, retrieval and analysis of data involving the zebrafish research carried out at the University.</h6>
+    <h6 id="introParagraph" style="width: 70%; margin:auto;">{{config["WEBSITE_NAME"]}} is a new database management system designed for researchers at the University of Bath, its goal is to aid in the collection, storage, retrieval and analysis of data involving the zebrafish research carried out at the University.</h6>
     <br>
     {%if current_user.isAdmin() %}
         <h4>Add a new entry:</h4>
