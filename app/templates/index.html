@@ -8,7 +8,7 @@
     <br>
     {%if current_user.isAdmin() %}
         <h4>Add a new entry:</h4>
-        <p>Add a new entry to the database <strong><a href="{{url_for('main.newfish')}}">here</a></strong></p>
+        <p>Add a new entry to the database <strong><a href="{{url_for('main.newfish')}}" id="newFishLink">here</a></strong></p>
         <br>
     {%endif%}
     

@@ -208,7 +208,7 @@
                 {% if g.search_form %}
                   <form class="d-flex" role="search" method="get" id="simpleSearchForm"
                           action="{{ url_for('main.simplesearch') }}">
-                          {{ g.search_form.search(size=20, class='form-control me-2', type='Search', placeholder=g.search_form.search.label.text) }} {{ g.search_form.submit(class='btn btn-outline-primary') }}
+                          {{ g.search_form.search(size=20, class='form-control me-2', type='Search', placeholder=g.search_form.search.label.text) }} {{ g.search_form.submit(id="simpleSearchSubmit", class='btn btn-outline-primary') }}
                   </form>
                 {% endif %}
                 
