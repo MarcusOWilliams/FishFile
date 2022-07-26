@@ -22,12 +22,12 @@
         {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Source: </span>{{fish.source}}</p>
         {%if fish.origin != None %}
-            <p class = "fishInfoPoint"><span class="pointHeader">Originated from: </span>{{fish.origin}}<a href="{{url_for('main.fish', id=fish.origin.id)}}">(view entry)</a></p>
+            <p class = "fishInfoPoint"><span class="pointHeader">Originated from: </span>{{fish.origin}} <a target="_blank"  href="{{url_for('main.fish', id=fish.origin.id)}}">(view entry)</a></p>
         {%endif%}
         {%if fish.origin_for|length >0 %}
             <p class = "fishInfoPoint"><span class="pointHeader">Origin for: </span>
                 {% for tank in fish.origin_for %}
-                    <p class = "fishInfoPoint fishSubpoint">{{tank}}<a href="{{url_for('main.fish', id=tank.id)}}">(view entry)</a></p>
+                    <p class = "fishInfoPoint fishSubpoint">{{tank}} <a  target="_blank" href="{{url_for('main.fish', id=tank.id)}}">(view entry)</a></p>
                 {%endfor%}
             </p>
         {%endif%}
