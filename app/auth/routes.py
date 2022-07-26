@@ -1,4 +1,4 @@
-from msilib.schema import Error
+
 from app import db
 from app.auth import bp
 from app.auth.email import send_email_verification_email, send_password_reset_email
@@ -9,7 +9,7 @@ from app.auth.forms import (
     ResetPasswordRequestForm,
     ChangePasswordForm,
 )
-from app.models import Settings, User
+from app.models import User
 from flask import flash, redirect, render_template, request, url_for, current_app
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse

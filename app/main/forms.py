@@ -1,4 +1,4 @@
-from optparse import Option
+
 from flask import request
 from flask_wtf import FlaskForm
 from flask_login import current_user
@@ -18,7 +18,7 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, ValidationError, Optional
 from app.models import Allele, Fish, User, get_all_allele_names
-from flask_wtf.file import FileAllowed
+
 
 
 

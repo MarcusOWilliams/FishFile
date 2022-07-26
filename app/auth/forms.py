@@ -1,4 +1,3 @@
-import email
 
 from app.models import User
 from flask_wtf import FlaskForm
