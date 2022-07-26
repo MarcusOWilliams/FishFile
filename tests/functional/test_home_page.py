@@ -27,5 +27,5 @@ from flask import url_for,request
 #     response = test_client.get('/home')
 #     assert response.status_code == 200
 
-#     assert b"Welcome to DanioDB" in response.data
+#     assert b"Welcome to FishFile" in response.data
 #     assert b"incorrect" not in response.data

@@ -7,7 +7,7 @@ def test_register_page(client):
     response = client.get('/register')
     assert response.status_code == 200
     assert b"Register" in response.data
-    assert b"Welcome to DanioDB!" not in response.data
+    assert b"Welcome to FishFile!" not in response.data
     assert b"Already have an account?" in response.data
 
 def test_incorrects_register_page(client):

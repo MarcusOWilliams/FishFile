@@ -1,10 +1,8 @@
 #mainContainer{
     text-align: center;
+    margin-top: 20px;
 }
 
-#mainNavbar{
-    margin-bottom: 20px;
-}
 
 #homeTable{
     margin:auto;

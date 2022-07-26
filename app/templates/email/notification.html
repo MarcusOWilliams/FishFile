@@ -1,6 +1,6 @@
 <p>Dear {{ user.first_name }},</p>
 
-<p>You have recieved a notification from DanioDB</p>
+<p>You have recieved a notification from {{config["WEBSITE_NAME"]}}</p>
 
 
 {% if notification.category == "Added" %}

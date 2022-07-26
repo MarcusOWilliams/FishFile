@@ -523,9 +523,9 @@ class Reminder(db.Model):
 
        
         from app.main.email import send_reminder_email
-
-        users.append(self.user_id)
-
+        users.append(self.user.id)
+        print(users, category, file=sys.stderr
+        )
         for user in users:
             user = User.query.filter_by(id=user).first()
             if user is None:
@@ -533,12 +533,13 @@ class Reminder(db.Model):
 
             
             if category == "Reminder" and (user.settings.custom_reminder or user.settings.pl_custom_reminder):
-
                 notification = Notification(user = user, fish = self.fish, category="Reminder", contents = self.message)
                 db.session.add(notification)
             elif category == "Age reminder" and (user.settings.age_notifications or user.settings.pl_age_notifications) :
                 notification = Notification(user = user, fish = self.fish, category="Reminder", contents = self.message)
                 db.session.add(notification)
+
+
 
         
 
@@ -549,6 +550,11 @@ class Reminder(db.Model):
 
         self.sent=True
         db.session.commit()
+
+    def __repr__(self):
+
+        return f"Reminder - Messgae: {self.message}, Date: {self.date}, Sent: {self.sent}"
+        
 
 
 

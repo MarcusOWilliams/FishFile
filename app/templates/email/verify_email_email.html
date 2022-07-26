@@ -1,4 +1,5 @@
 <p>Dear {{ user.first_name }},</p>
+<p>A new account on {{config["WEBSITE_NAME"]}} was recently created with you email address</p>
 <p>
     To verify your email:
     <a href="{{ url_for('auth.verify_email', token=token, _external=True) }}">
@@ -9,4 +10,4 @@
 <p>{{ url_for('auth.verify_email', token=token, _external=True) }}</p>
 <p>If you were not expecting this email, please ignore it</p>
 <p>Sincerely,</p>
-<p>DanioDB</p>
+<p>{{config["WEBSITE_NAME"]}}</p>

@@ -30,9 +30,9 @@
     {%endblock%}
 
     {% if title %}
-    <title>{{ title }} - DanioDB</title>
+    <title>{{ title }} - {{config["WEBSITE_NAME"]}}</title>
     {% else %}
-    <title>DanioDB</title>
+    <title>{{config["WEBSITE_NAME"]}}</title>
     {% endif %}
 
     
@@ -79,7 +79,7 @@
             height="30"
             class="d-inline-block align-text-top"
           />
-          DanioDB
+          {{config["WEBSITE_NAME"]}}
         </a>
         <button
           class="navbar-toggler"

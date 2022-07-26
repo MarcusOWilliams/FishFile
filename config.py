@@ -6,7 +6,7 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 # this is the main configuration class which sets all of the variables needed to create the app, this class is used in the main app __init__ file
 class Config(object):
-
+    WEBSITE_NAME = os.environ.get('WEBSITE_NAME')
     # secret key
     SECRET_KEY = os.environ.get('SECRET_KEY')
 

@@ -14,7 +14,7 @@ def send_notification_email(user, notification):
         return
 
     send_email(
-        ("[DanioDB] Notification"),
+        (f'[{current_app.config["WEBSITE_NAME"]}] Notification'),
         sender=current_app.config["MAIL_DEFAULT_SENDER"],
         recipients=[user.email],
         text_body=render_template(
@@ -32,7 +32,7 @@ def send_reminder_email(user, reminder):
         return
 
     send_email(
-        ("[DanioDB] Reminder"),
+        (f'[{current_app.config["WEBSITE_NAME"]}] Reminder'),
         sender=current_app.config["MAIL_DEFAULT_SENDER"],
         recipients=[user.email],
         text_body=render_template(

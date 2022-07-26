@@ -30,9 +30,9 @@
     {%endblock%}
 
     {% if title %}
-    <title>{{ title }} - FishFile</title>
+    <title>{{ title }} - {{config["WEBSITE_NAME"]}}</title>
     {% else %}
-    <title>FishFile</title>
+    <title>{{config["WEBSITE_NAME"]}}</title>
     {% endif %}
 
     
@@ -79,7 +79,7 @@
             height="30"
             class="d-inline-block align-text-top"
           />
-          DanioDB
+          {{config["WEBSITE_NAME"]}}
         </a>
         <button
           class="navbar-toggler"
@@ -216,27 +216,26 @@
         </div>
       </div>
     </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %} 
+    {% if messages %}
+     {% for category, message in messages %}
+      {%if category == 'message'%}
+        <div class="alert alert-secondary alert-dismissible" role="alert">
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          {{ message }}
+        </div>
+        
+      {%else%}
+        <div class="alert alert-{{category}} alert-dismissible" role="alert">
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          {{ message }}
+
+        </div>
+        
+
+    {%endif%}{% endfor %} {% endif %} {%endwith%}
     <!-- APP CONTENT -->
     <div id="mainContainer">
-      
-      {% with messages = get_flashed_messages(with_categories=true) %} 
-        {% if messages %}
-         {% for category, message in messages %}
-          {%if category == 'message'%}
-            <div class="alert alert-secondary alert-dismissible" role="alert">
-              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              {{ message }}
-            </div>
-            
-          {%else%}
-            <div class="alert alert-{{category}} alert-dismissible" role="alert">
-              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              {{ message }}
-
-            </div>
-            
-
-      {%endif%}{% endfor %} {% endif %} {%endwith%}
       
       {% block content %}{% endblock %}
     </div>

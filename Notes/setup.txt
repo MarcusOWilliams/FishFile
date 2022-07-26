@@ -2,7 +2,7 @@ Step 1: pull the project from github
 Step 2: create a venv
 Step 3: install requirements.txt
 Step 4: setup your .env file
-    FLASK_APP = danioDB.py
+    FLASK_APP = FishFile.py
     FLASK_ENV = production
     SECRET_KEY = random secure sequence of letters numbers and symbols
     MAIL_SERVER = smtp.googlemail.com
