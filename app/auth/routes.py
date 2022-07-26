@@ -1,4 +1,3 @@
-
 from app import db
 from app.auth import bp
 from app.auth.email import send_email_verification_email, send_password_reset_email
@@ -25,15 +24,18 @@ def login():
     if form.validate_on_submit():
 
         user = User.query.filter_by(email=form.email.data).first()
-        
+
         # check if they have entered an email that is in the db
         if user is None or not user.check_password(form.password.data):
             flash("Invalid email or password", "danger")
             return redirect(url_for("auth.login"))
 
-        #If the user's role has been set to blocked, deny login
-        if user.role =="Blocked":
-            flash(f"This account has been removed, if you think this is a mistake please contact your system manager to resolve the issue.", "danger")
+        # If the user's role has been set to blocked, deny login
+        if user.role == "Blocked":
+            flash(
+                f"This account has been removed, if you think this is a mistake please contact your system manager to resolve the issue.",
+                "danger",
+            )
             return redirect(url_for("auth.login"))
 
         # if the user is not verified they are sent a verification email
@@ -81,8 +83,6 @@ def register():
         user.set_password(form.password.data)
         user.username = user.email.split("@")[0]
         db.session.add(user)
-
-        
 
         db.session.commit()
 
@@ -132,10 +132,13 @@ def reset_password(token):
         return redirect(url_for("auth.login"))
     return render_template("auth/reset_password.html", form=form)
 
+
 """
 This function describes the route for /verify_email
 This route is used for verifying the email of a user, given a token
 """
+
+
 @bp.route("/verify_email/<token>", methods=["GET"])
 def verify_email(token):
     user = User.verify_email_token(token)
@@ -147,17 +150,20 @@ def verify_email(token):
         return redirect(url_for("auth.login"))
     user.is_verified = True
 
-    #create user code on account verification, this avoids unverified accounts having codes which clog up the select options
+    # create user code on account verification, this avoids unverified accounts having codes which clog up the select options
     user.code = f"{user.first_name[0]}{user.last_name[0]} ({user.username})"
-    
+
     db.session.commit()
     flash("Your email has been verified", "success")
     return redirect(url_for("auth.login"))
+
 
 """
 This function describes the route for /change_password
 This route is used for updating the password for a user
 """
+
+
 @bp.route("/change_password/", methods=["GET", "POST"])
 @login_required
 def change_password():
@@ -167,7 +173,7 @@ def change_password():
         if not current_user.check_password(form.old_password.data):
             flash(
                 "The current password you entered is incorrect. If you have forgotten your password, logout and use the 'forgoten password' link on the login page.",
-                "danger"
+                "danger",
             )
             return redirect(url_for("auth.change_password"))
 

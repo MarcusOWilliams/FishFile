@@ -1,4 +1,3 @@
-
 from flask import request
 from flask_wtf import FlaskForm
 from flask_login import current_user
@@ -14,12 +13,10 @@ from wtforms import (
     TextAreaField,
     SelectMultipleField,
     MultipleFileField,
-    FileField
+    FileField,
 )
 from wtforms.validators import DataRequired, ValidationError, Optional
 from app.models import Allele, Fish, User, get_all_allele_names
-
-
 
 
 class SimpleSearch(FlaskForm):
@@ -92,6 +89,7 @@ class NewFish(FlaskForm):
             raise ValidationError(
                 f"There are no fish in the database that match Tank # = {self.father_tank_id.data} and Stock = {father_stock.data}"
             )
+
     def validate_father_tank_id(self, father_tank_id):
 
         if self.father_stock.data == None or self.father_stock.data == "":
@@ -100,12 +98,12 @@ class NewFish(FlaskForm):
             )
 
     def validate_mother_stock(self, mother_stock):
-        if self.mother_tank_id.data== None or self.mother_tank_id.data == "":
+        if self.mother_tank_id.data == None or self.mother_tank_id.data == "":
             raise ValidationError(
                 f"To add a mother you must supply both id and stock # for the mother."
             )
         fish = Fish.query.filter_by(
-            tank_id=self.mother_tank_id.data.upper() , stock=mother_stock.data.upper() 
+            tank_id=self.mother_tank_id.data.upper(), stock=mother_stock.data.upper()
         ).first()
         if fish is None:
             raise ValidationError(
@@ -117,13 +115,15 @@ class NewFish(FlaskForm):
             raise ValidationError(
                 f"To add a mother you must supply both tank # and stock # for the mother."
             )
+
     def validate_origin_tank_stock(self, origin_tank_stock):
         if self.origin_tank_id.data == "" or self.origin_tank_id.data == None:
             raise ValidationError(
                 f"To add an origin tank you must supply both tank # and stock # for the origin tank."
             )
         fish = Fish.query.filter_by(
-            tank_id=self.origin_tank_id.data.upper(), stock=origin_tank_stock.data.upper()
+            tank_id=self.origin_tank_id.data.upper(),
+            stock=origin_tank_stock.data.upper(),
         ).first()
         if fish is None:
             raise ValidationError(
@@ -135,6 +135,7 @@ class NewFish(FlaskForm):
             raise ValidationError(
                 f"To add an origin tank you must supply both tank # and stock # for the origin tank."
             )
+
     def validate_males(self, males):
         if males.data == None or males.data == "":
             raise ValidationError("This field is required")
@@ -172,13 +173,13 @@ class NewFish(FlaskForm):
                 raise ValidationError(f'The link "{link}" is not a valid URL')
 
     def validate_photos(self, photos):
-        
+
         for file in photos.data:
             if file.filename == "":
                 continue
             if file.filename.split(".")[-1] not in ("jpg", "jpeg", "png"):
-                raise ValidationError('File must have a .jpg, .jpeg or .png extension')
-            if len(file.read()) > 3*1024*1024:
+                raise ValidationError("File must have a .jpg, .jpeg or .png extension")
+            if len(file.read()) > 3 * 1024 * 1024:
                 raise ValidationError(f"File size must be less than 3MB for each file")
             file.seek(0)
 
@@ -222,7 +223,7 @@ class SearchFrom(FlaskForm):
     )
     stock = StringField("Stock #", validators=[Optional()])
     protocol = IntegerField("Protocol #", validators=[Optional()])
-    source = SelectField("Source", choices=["","Home", "UK", "International"])
+    source = SelectField("Source", choices=["", "Home", "UK", "International"])
     cross_type = StringField("Cross Type", validators=[Optional()])
     age_older = IntegerField("Min. age (months)", validators=[Optional()])
     age_younger = IntegerField("Max. age(months)", validators=[Optional()])
@@ -232,7 +233,19 @@ class SearchFrom(FlaskForm):
     mutant_gene = StringField("Mutant Gene", validators=[Optional()])
     transgenes = StringField("Transgene", validators=[Optional()])
     total = IntegerField("Total # (>=)", validators=[Optional()])
-    order = SelectField("Order By:", validators=[DataRequired()], choices=["Newest Added", "Oldest Added","Fish ID", "Tank ID","Stock","Age ( young -> old )","Age (old -> young)"])
+    order = SelectField(
+        "Order By:",
+        validators=[DataRequired()],
+        choices=[
+            "Newest Added",
+            "Oldest Added",
+            "Fish ID",
+            "Tank ID",
+            "Stock",
+            "Age ( young -> old )",
+            "Age (old -> young)",
+        ],
+    )
     submit = SubmitField("Search")
 
 
@@ -243,33 +256,40 @@ class SettingsForm(FlaskForm):
     add_notifications = BooleanField("Entry added under your user code:")
     change_notifications = BooleanField("Change made to entry under your user code:")
     custom_reminders = BooleanField("Custom reminders:")
-    age_notifications = BooleanField("Alerts when fish under your user code reach a certain age:")
+    age_notifications = BooleanField(
+        "Alerts when fish under your user code reach a certain age:"
+    )
 
     pl_add_notifications = BooleanField("Fish added under your project license:")
-    pl_custom_reminders = BooleanField("Custom reminders for all fish under your project license:")
-    pl_age_notifications = BooleanField("Fish age reminders for all fish under your project license:")
+    pl_custom_reminders = BooleanField(
+        "Custom reminders for all fish under your project license:"
+    )
+    pl_age_notifications = BooleanField(
+        "Fish age reminders for all fish under your project license:"
+    )
 
     personal_license = StringField("Personal License:")
     personal_license_file = FileField("Personal Licence PDF", validators=[Optional()])
-    
+
     project_license = StringField("Project License:")
     project_license_file = FileField("Project Licence PDF", validators=[Optional()])
-
 
     submit = SubmitField("Apply")
 
     def validate_project_license(self, project_license):
         if project_license.data and project_license.data != "":
-            user = User.query.filter_by(project_license = project_license.data).first()
+            user = User.query.filter_by(project_license=project_license.data).first()
             if user is not None and user != current_user:
-                raise ValidationError("This project license is already associated with another user")
+                raise ValidationError(
+                    "This project license is already associated with another user"
+                )
 
     def validate_personal_license_file(self, personal_license_file):
         if not personal_license_file.data or personal_license_file.data.filename == "":
             return
         if personal_license_file.data.filename.split(".")[-1] not in ("pdf"):
             raise ValidationError("The file must be a pdf file ending in .pdf")
-        if len(personal_license_file.data.read()) > 2*1024*1024:
+        if len(personal_license_file.data.read()) > 2 * 1024 * 1024:
             raise ValidationError(f"File size must be less than 2MB")
         personal_license_file.data.seek(0)
 
@@ -278,23 +298,36 @@ class SettingsForm(FlaskForm):
             return
         if project_license_file.data.filename.split(".")[-1] not in ("pdf"):
             raise ValidationError("The file must be a pdf file ending in .pdf")
-        if len(project_license_file.data.read()) > 2*1024*1024:
+        if len(project_license_file.data.read()) > 2 * 1024 * 1024:
             raise ValidationError(f"File size must be less than 2MB")
         project_license_file.data.seek(0)
 
 
-
-
 class RoleChange(FlaskForm):
-    role = SelectField('Update Role:', validators=[DataRequired()], coerce=str)
-    submit= SubmitField('Change')
+    role = SelectField("Update Role:", validators=[DataRequired()], coerce=str)
+    submit = SubmitField("Change")
+
 
 class OrderForm(FlaskForm):
-    order = SelectField("Order By:", validators=[DataRequired()], choices=["Fish ID", "Tank ID","Stock","Age ( young -> old )","Age (old -> young)", "Newest Added", "Oldest Added"])
+    order = SelectField(
+        "Order By:",
+        validators=[DataRequired()],
+        choices=[
+            "Fish ID",
+            "Tank ID",
+            "Stock",
+            "Age ( young -> old )",
+            "Age (old -> young)",
+            "Newest Added",
+            "Oldest Added",
+        ],
+    )
     submit = SubmitField("Apply")
 
+
 class EmptyForm(FlaskForm):
-    submit = SubmitField('Submit')
+    submit = SubmitField("Submit")
+
 
 class AlleleForm(FlaskForm):
     unidentified = BooleanField("Unidentified:")
@@ -302,11 +335,13 @@ class AlleleForm(FlaskForm):
     homozygous = BooleanField("Homozygous:")
     heterozygous = BooleanField("Heterozygous:")
     hemizygous = BooleanField("Hemizygous:")
-    submit = SubmitField('Update')
+    submit = SubmitField("Update")
+
 
 class PhotoCaptionForm(FlaskForm):
     caption = TextAreaField("Caption:")
     submit = SubmitField("Apply")
+
 
 class EditAlleles(FlaskForm):
     add = StringField("Add an allele:", validators=[Optional()])
@@ -319,4 +354,6 @@ class EditAlleles(FlaskForm):
 
     def validate_remove(self, remove):
         if remove not in get_all_allele_names():
-            raise ValidationError("This allele name is not in the list, so can not be removed")
+            raise ValidationError(
+                "This allele name is not in the list, so can not be removed"
+            )

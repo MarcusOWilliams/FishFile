@@ -19,7 +19,6 @@ import json
 from dateutil import relativedelta
 
 
-
 """
 This is the class for the User table  of the SQL database
 Each user is created as a new object of this class
@@ -45,7 +44,9 @@ class User(UserMixin, db.Model):
     code = db.Column(db.String(32), index=True)
     changes = db.relationship("Change", backref="user", lazy="dynamic")
 
-    notifications = db.relationship("Notification", backref="user", lazy="dynamic", cascade="all, delete")
+    notifications = db.relationship(
+        "Notification", backref="user", lazy="dynamic", cascade="all, delete"
+    )
     last_notification_read_time = db.Column(db.DateTime)
 
     reminders = db.relationship(
@@ -54,18 +55,19 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "<User {} {}>".format(self.first_name, self.last_name)
-    
+
     def delete_personal_document(self):
         if not self.personal_document:
             return
 
         try:
-            os.remove(os.path.join(current_app.config['PERSONAL_LICENSES'], f"{self.id}.pdf"))
+            os.remove(
+                os.path.join(current_app.config["PERSONAL_LICENSES"], f"{self.id}.pdf")
+            )
 
         except:
 
             return
-            
 
         self.personal_document = False
         db.session.commit()
@@ -75,8 +77,10 @@ class User(UserMixin, db.Model):
             return
 
         try:
-            os.remove(os.path.join(current_app.config['PROJECT_LICENSES'], f"{self.id}.pdf"))
-            
+            os.remove(
+                os.path.join(current_app.config["PROJECT_LICENSES"], f"{self.id}.pdf")
+            )
+
         except:
             return
 
@@ -119,8 +123,12 @@ class User(UserMixin, db.Model):
 
     def new_notifications(self):
         last_read_time = self.last_notification_read_time or datetime(1900, 1, 1)
-        return Notification.query.filter_by(user=self).filter(Notification.time > last_read_time).count()
-    
+        return (
+            Notification.query.filter_by(user=self)
+            .filter(Notification.time > last_read_time)
+            .count()
+        )
+
     # this is used to verify a password reset token, it decodes the link and checks the id of the user exists
     @staticmethod
     def verify_reset_password_token(token):
@@ -147,12 +155,15 @@ class User(UserMixin, db.Model):
 def get_all_user_codes():
     all_codes = User.query.with_entities(User.code).distinct()
     codes = [code[0] for code in all_codes]
-    return sorted(filter(lambda x: x!= None and x!="", codes))
+    return sorted(filter(lambda x: x != None and x != "", codes))
+
 
 def get_all_user_licenses():
     all_licenses = User.query.with_entities(User.project_license).distinct()
     licenses = [license[0] for license in all_licenses]
-    return sorted(filter(lambda x: x!= None and x!="", licenses))
+    return sorted(filter(lambda x: x != None and x != "", licenses))
+
+
 # flask_login keeps track of logged in users, the users ID is loaded into memeory each time the load a new page
 # flask_login doesn't know about the database so this function gives it the user ID
 @login.user_loader
@@ -166,7 +177,6 @@ def load_user(id):
 def requires_roles(*roles):
     def wrapper(f):
         @wraps(f)
-
         def wrapped(*args, **kwargs):
             if current_app.testing == True:
                 return f(*args, **kwargs)
@@ -190,6 +200,8 @@ This is the main functionality of the system, each fish entry is stored as a new
 This table has relationships to: Itself, User, Change, Notification, Allele, Photo, Reminder
 It also contains the methods required for the fish
 """
+
+
 class Fish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.String(264), index=True)
@@ -201,8 +213,8 @@ class Fish(db.Model):
     protocol = db.Column(db.Integer, index=True)
     birthday = db.Column(db.Date, index=True)
     date_of_arrival = db.Column(db.Date, index=True)
-    months = db.Column(db.Integer, default = 0)
-    age_reminder = db.Column(db.String(64), default = "Not sent")
+    months = db.Column(db.Integer, default=0)
+    age_reminder = db.Column(db.String(64), default="Not sent")
 
     mutant_gene = db.Column(db.Text())
     transgenes = db.Column(db.Text())
@@ -241,7 +253,9 @@ class Fish(db.Model):
 
     origin_tank_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
     origin_for = db.relationship(
-        "Fish", backref=db.backref("origin", remote_side=[id]), foreign_keys=[origin_tank_id]
+        "Fish",
+        backref=db.backref("origin", remote_side=[id]),
+        foreign_keys=[origin_tank_id],
     )
 
     changes = db.relationship(
@@ -258,13 +272,13 @@ class Fish(db.Model):
 
     alleles = db.relationship(
         "Allele", backref="fish", lazy="dynamic", cascade="all, delete"
-    ) 
+    )
     photos = db.relationship(
         "Photo", backref="fish", lazy="dynamic", cascade="all, delete"
-    ) 
+    )
 
-    #The following attributes are to make fish from the old system compatiable on the new database
-    system = db.Column(db.String(64), default = "New")
+    # The following attributes are to make fish from the old system compatiable on the new database
+    system = db.Column(db.String(64), default="New")
     old_code = db.Column(db.String(64))
     old_license = db.Column(db.String(64))
     old_mID = db.Column(db.String(64))
@@ -275,15 +289,13 @@ class Fish(db.Model):
     old_arrival = db.Column(db.String(64))
     old_allele = db.Column(db.String(64))
 
-
-
     def __repr__(self):
         return f"Stock: {self.stock}, Tank: {self.tank_id}, ID: {self.fish_id}"
 
-    def get_ancestors(self,generation, relation = None):
+    def get_ancestors(self, generation, relation=None):
         ancestors = []
-        
-        ancestors.append({"fish":self,"relation":relation,"level" : generation})
+
+        ancestors.append({"fish": self, "relation": relation, "level": generation})
 
         generation += 1
 
@@ -291,31 +303,30 @@ class Fish(db.Model):
             ancestors = ancestors + self.father.get_ancestors(generation, "Father")
         if self.mother is not None:
             ancestors = ancestors + self.mother.get_ancestors(generation, "Mother")
-            
 
         ancestors = sorted(ancestors, key=lambda x: x["level"])
 
         return ancestors
-    
+
     def getAge(self):
         if self.old_birthday:
             self.birthday = datetime.strptime(self.old_birthday, "%Y-%m-%d").date()
-            self.old_birthday=None
+            self.old_birthday = None
             db.session.commit()
             self.getAge()
-            
+
         if self.status == "Dead":
             return "Dead"
-        if self.birthday == None or self.birthday=="":
+        if self.birthday == None or self.birthday == "":
             return "None"
 
         today = datetime.today().date()
-        birthday =  self.birthday
-        age_difference = relativedelta.relativedelta(today,birthday)
+        birthday = self.birthday
+        age_difference = relativedelta.relativedelta(today, birthday)
 
-        if age_difference.years>0:
+        if age_difference.years > 0:
             age = f"{age_difference.years} years, {age_difference.months} months, {age_difference.days} days"
-        elif age_difference.months>0:
+        elif age_difference.months > 0:
             age = f"{age_difference.months} months, {age_difference.days} days"
         else:
             age = f"{age_difference.days} days"
@@ -333,48 +344,46 @@ class Fish(db.Model):
         self.old_arrival = None
         db.session.commit()
 
-
-        
     def getMonths(self):
 
         if self.status == "Dead":
             return 0
         try:
             today = datetime.today().date()
-            birthday =  self.birthday
-            age_difference = relativedelta.relativedelta(today,birthday)
-            
+            birthday = self.birthday
+            age_difference = relativedelta.relativedelta(today, birthday)
+
             return age_difference.months
         except:
             return 0
-        
+
     def delete_photo(self, photo_name):
-        
-        photo = Photo.query.filter_by(fish = self, name = photo_name).first()
+
+        photo = Photo.query.filter_by(fish=self, name=photo_name).first()
         if photo != None:
-            os.remove(os.path.join(current_app.config['FISH_PICTURES'], photo_name))
+            os.remove(os.path.join(current_app.config["FISH_PICTURES"], photo_name))
 
             db.session.delete(photo)
             db.session.commit()
-            
-
 
     def delete_all_photos(self):
-        photos = Photo.query.filter_by(fish = self).all()
+        photos = Photo.query.filter_by(fish=self).all()
         for photo in photos:
 
-            os.remove(os.path.join(current_app.config['FISH_PICTURES'],photo.name))
+            os.remove(os.path.join(current_app.config["FISH_PICTURES"], photo.name))
             db.session.delete(photo)
 
         db.session.commit()
-    
+
     def send_age_reminder(self, months):
         message = f"The tank is now {months} months old."
-        reminder = Reminder(user = self.user_code, fish=self, message=message)
+        reminder = Reminder(user=self.user_code, fish=self, message=message)
         db.session.add(reminder)
         self.age_reminder = f"{months} Months"
         db.session.commit()
-        reminder.send_reminder(users = [self.project_license_holder.id], category="Age reminder")
+        reminder.send_reminder(
+            users=[self.project_license_holder.id], category="Age reminder"
+        )
 
 
 """
@@ -382,6 +391,8 @@ This is the class for the Allele table of the SQL database
 A fish can have multiple alleles associated with it, each being a new object of this class
 This table has relationships to: Fish
 """
+
+
 class Allele(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
@@ -390,16 +401,18 @@ class Allele(db.Model):
     identified = db.Column(db.Boolean, default=False)
     homozygous = db.Column(db.Boolean, default=False)
     heterozygous = db.Column(db.Boolean, default=False)
-    hemizygous = db.Column(db.Boolean, default=False) 
+    hemizygous = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"Allele: {self.name} - Fish: {self.fish.stock}"
 
+
 def get_all_allele_names():
-    
+
     alleles = Allele.query.with_entities(Allele.name).distinct()
     names = set(allele[0] for allele in alleles)
     return names
+
 
 """
 This is the class for the Photo table of the SQL database
@@ -407,6 +420,8 @@ A fish can have multiple photos associated with it, each being a new object of t
 photos are stored as a string which contains the location of the photo within the app
 This table has relationships to: Fish
 """
+
+
 class Photo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
@@ -414,17 +429,21 @@ class Photo(db.Model):
     caption = db.Column(db.Text())
 
     def delete(self):
-        os.remove(os.path.join(current_app.config['FISH_PICTURES'],self.name))
+        os.remove(os.path.join(current_app.config["FISH_PICTURES"], self.name))
         db.session.delete(self)
         db.session.commit()
 
     def __repr__(self):
         return f"Photo - {self.name}"
+
+
 """
 This is the class for the Change table of the SQL database, which is used to record changes to Fish objects the database
 This table has relationships to: Fish, User, Notification
 Users, Notifications and Fish can have many changes associated with them
 """
+
+
 class Change(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -437,8 +456,6 @@ class Change(db.Model):
     time = db.Column(db.DateTime, default=datetime.utcnow)
     notification_id = db.Column(db.Integer, db.ForeignKey("notification.id"))
 
-
-
     def __repr__(self):
         return f"<Change by User:{self.user_id} on Fish: {self.fish_id}"
 
@@ -447,27 +464,27 @@ class Change(db.Model):
 This is the class for the Settings table of the SQL database
 This table has a one-to-one relationships to User
 """
+
+
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # one-to-one relationship
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User", backref=db.backref("settings", uselist=False))
 
-    #this is emails for notifications
+    # this is emails for notifications
     emails = db.Column(db.Boolean, default=False)
 
     email_reminders = db.Column(db.Boolean, default=False)
-    
+
     add_notifications = db.Column(db.Boolean, default=True)
     change_notifications = db.Column(db.Boolean, default=True)
     custom_reminder = db.Column(db.Boolean, default=True)
     age_notifications = db.Column(db.Boolean, default=True)
-    
+
     pl_add_notifications = db.Column(db.Boolean, default=False)
     pl_custom_reminder = db.Column(db.Boolean, default=True)
     pl_age_notifications = db.Column(db.Boolean, default=False)
-
-
 
     def __repr__(self):
         return f"<Settings for User:{self.user.username}"
@@ -481,16 +498,17 @@ Notifications can related to multiple changes
 It also contains the methods required for the notifiaction
 """
 
+
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
-    
+
     time = db.Column(db.DateTime, default=datetime.utcnow)
     category = db.Column(db.String(64))
     contents = db.Column(db.String(64))
     change_count = db.Column(db.Integer)
-    changes =  db.relationship(
+    changes = db.relationship(
         "Change", backref="notification", lazy="dynamic", cascade="all, delete"
     )
 
@@ -502,60 +520,66 @@ class Notification(db.Model):
             return
         if self.user.settings.emails:
             from app.main.email import send_notification_email
+
             send_notification_email(self.user, self)
- 
+
 
 """
 This is the class for the Reminder table of the SQL database
 This table has relationships to: Fish, User
 Users and Fish can have many reminders associated with them
 """
+
+
 class Reminder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
     date = db.Column(db.Date)
     message = db.Column(db.String(64))
-    sent = db.Column(db.Boolean, default= False)
+    sent = db.Column(db.Boolean, default=False)
 
-    #send notification from reminder, can take more than one user
-    def send_reminder(self, users = [], category="Reminder"):
+    # send notification from reminder, can take more than one user
+    def send_reminder(self, users=[], category="Reminder"):
 
-       
         from app.main.email import send_reminder_email
+
         users.append(self.user.id)
-        print(users, category, file=sys.stderr
-        )
+        print(users, category, file=sys.stderr)
         for user in users:
             user = User.query.filter_by(id=user).first()
             if user is None:
                 continue
 
-            
-            if category == "Reminder" and (user.settings.custom_reminder or user.settings.pl_custom_reminder):
-                notification = Notification(user = user, fish = self.fish, category="Reminder", contents = self.message)
+            if category == "Reminder" and (
+                user.settings.custom_reminder or user.settings.pl_custom_reminder
+            ):
+                notification = Notification(
+                    user=user,
+                    fish=self.fish,
+                    category="Reminder",
+                    contents=self.message,
+                )
                 db.session.add(notification)
-            elif category == "Age reminder" and (user.settings.age_notifications or user.settings.pl_age_notifications) :
-                notification = Notification(user = user, fish = self.fish, category="Reminder", contents = self.message)
+            elif category == "Age reminder" and (
+                user.settings.age_notifications or user.settings.pl_age_notifications
+            ):
+                notification = Notification(
+                    user=user,
+                    fish=self.fish,
+                    category="Reminder",
+                    contents=self.message,
+                )
                 db.session.add(notification)
-
-
-
-        
-
-
 
             if user.settings.email_reminders:
                 send_reminder_email(user, self)
 
-        self.sent=True
+        self.sent = True
         db.session.commit()
 
     def __repr__(self):
 
-        return f"Reminder - Messgae: {self.message}, Date: {self.date}, Sent: {self.sent}"
-        
-
-
-
-
+        return (
+            f"Reminder - Messgae: {self.message}, Date: {self.date}, Sent: {self.sent}"
+        )

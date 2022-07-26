@@ -7,9 +7,9 @@ from flask import render_template, current_app
 from app.email import send_email
 from app.models import *
 
-#This email take a user and a notification sends an email notification to the user 
+# This email take a user and a notification sends an email notification to the user
 def send_notification_email(user, notification):
-    
+
     if not user.settings.emails:
         return
 
@@ -25,9 +25,10 @@ def send_notification_email(user, notification):
         ),
     )
 
-#This email take a user and a reminder sends an email notification to the user 
+
+# This email take a user and a reminder sends an email notification to the user
 def send_reminder_email(user, reminder):
-    
+
     if not user.settings.email_reminders:
         return
 
@@ -35,10 +36,6 @@ def send_reminder_email(user, reminder):
         (f'[{current_app.config["WEBSITE_NAME"]}] Reminder'),
         sender=current_app.config["MAIL_DEFAULT_SENDER"],
         recipients=[user.email],
-        text_body=render_template(
-            "email/reminder.txt", user=user, reminder=reminder
-        ),
-        html_body=render_template(
-            "email/reminder.html", user=user, reminder=reminder
-        ),
+        text_body=render_template("email/reminder.txt", user=user, reminder=reminder),
+        html_body=render_template("email/reminder.html", user=user, reminder=reminder),
     )
