@@ -1,7 +1,6 @@
 from flask import request
 from flask_wtf import FlaskForm
 from flask_login import current_user
-import validators
 from wtforms import (
     StringField,
     SubmitField,

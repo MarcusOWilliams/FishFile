@@ -61,14 +61,14 @@ from selenium.webdriver.support.ui import Select
 #     def tearDown(self):
 #         self.driver.close()
 
-class MainSystemTest(unittest.TestCase):
+class AddUpdateRemoveFish(unittest.TestCase):
     def setUp(self):
         self.account_pswd = input("Input password:")
         self.driver = webdriver.Chrome("tests\end_to_end\chromedriver\chromedriver.exe")
         self.url = "http://127.0.0.1:5000"
         self.delay = 3
 
-    def test_main_run_through(self):
+    def test_add_update_remove_fish(self):
 
         
         #setup driver
@@ -134,8 +134,33 @@ class MainSystemTest(unittest.TestCase):
         total.send_keys(0)
 
         submit_button = driver.find_element("id", "submit")
-        submit_button.click()
+        driver.execute_script('arguments[0].click()', submit_button)
+        
+        """UPDATE FISH"""
+        update_link = driver.find_element("id", "updateFishLink")
+        driver.execute_script('arguments[0].click()', update_link)
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "updateFishTable")))
 
+        print(driver.title)
+
+        fish_id = driver.find_element("id", "fish_id")
+        fish_id.send_keys("Updated")
+        tank_id = driver.find_element("id", "tank_id")
+        tank_id.send_keys("Updated")
+        males = driver.find_element("id", "males")
+        males.send_keys(1)
+        females = driver.find_element("id", "females")
+        females.send_keys(1)
+        unsexed = driver.find_element("id", "unsexed")
+        unsexed.send_keys(1)
+        carriers = driver.find_element("id", "carriers")
+        carriers.send_keys(1)
+        total = driver.find_element("id", "total")
+        total.send_keys(1)
+
+
+        submit_button = driver.find_element("id", "submit")
+        driver.execute_script('arguments[0].click()', submit_button)
 
         """DELETE FISH"""
         WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "fishInformation")))
@@ -148,7 +173,6 @@ class MainSystemTest(unittest.TestCase):
 
         WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "mainSearchForm")))
         self.assertEqual("Home Page - FishFile", driver.title)
-        print(driver.title)
 
 
     def tearDown(self):

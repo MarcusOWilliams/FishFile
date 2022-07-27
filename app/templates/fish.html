@@ -174,7 +174,7 @@
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishhistory', id = fish.id)}}">View the genetic history of this fish</a></p>
         <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</a></p>
         {%if current_user.isResearcher()%}
-            <p class="fishInfoPoint moreFishOptionsItem"><a href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
+            <p class="fishInfoPoint moreFishOptionsItem"><a id="updateFishLink" href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
         {%endif%}
         <br>
         {% if current_user.isAdmin() %}
