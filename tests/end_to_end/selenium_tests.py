@@ -135,6 +135,9 @@ class AddUpdateRemoveFish(unittest.TestCase):
 
         submit_button = driver.find_element("id", "submit")
         driver.execute_script('arguments[0].click()', submit_button)
+
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "fishInformation")))
+        auto_fish_url = driver.current_url
         
         """UPDATE FISH"""
         update_link = driver.find_element("id", "updateFishLink")
@@ -157,16 +160,48 @@ class AddUpdateRemoveFish(unittest.TestCase):
         carriers.send_keys(1)
         total = driver.find_element("id", "total")
         total.send_keys(1)
-
+        father_tank = driver.find_element("id", "father_tank_id")
+        father_tank.send_keys("AA101")
+        father_stock = driver.find_element("id", "father_stock")
+        father_stock.send_keys("S0001")
+        mother_tank = driver.find_element("id", "mother_tank_id")
+        mother_tank.send_keys("AA102")
+        mother_stock = driver.find_element("id", "mother_stock")
+        mother_stock.send_keys("S0002")
 
         submit_button = driver.find_element("id", "submit")
         driver.execute_script('arguments[0].click()', submit_button)
 
+        """CHECK ADDITIONAL LINKS"""
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "fishInformation")))
+        histroy_link = driver.find_element("id", "historyFishLink")
+        driver.execute_script('arguments[0].click()', histroy_link)
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "familyTree")))
+        driver.back()
+
+        changes_link = driver.find_element("id", "changesFishLink")
+        driver.execute_script('arguments[0].click()', changes_link)
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "filterChangeForm")))
+
+        filter_id = driver.find_element("id", "fish_id")
+        driver.execute_script('arguments[0].click()', filter_id)
+
+        submit_button = driver.find_element("id", "submit")
+        driver.execute_script('arguments[0].click()', submit_button)
+
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "filterChangeForm")))
+
+
+        driver.get(auto_fish_url)
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "fishInformation")))
+
+
+
+
+
+
         """DELETE FISH"""
         WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "fishInformation")))
-        print(driver.title)
-        
-        
         
         delete_button = driver.find_element("id", "deleteFishButton")
         driver.execute_script('arguments[0].click()', delete_button)
