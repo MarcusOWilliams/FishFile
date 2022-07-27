@@ -76,7 +76,7 @@
                         {%endfor%}
                     </table>
                     {%if current_user.isResearcher()%}
-                        <a href="{{url_for('main.updatealleles', id=fish.id)}}">Update values</a>
+                        <a id="updateAllelesLink"href="{{url_for('main.updatealleles', id=fish.id)}}">Update values</a>
                     {%endif%}
                 </div>
 

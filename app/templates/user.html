@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>{{user.first_name}} {{user.last_name}}</h2>
+    <h2 id="profileNameHeader">{{user.first_name}} {{user.last_name}}</h2>
     <p>Email: <a href="mailto:{{user.email}}">{{user.email}}</a></p>
     {%if user.project_license != "" and user.project_license != None%}
         <p>Project License: <a href="{{url_for('main.project_license', license = user.project_license)}}">{{user.project_license}}</a></p>

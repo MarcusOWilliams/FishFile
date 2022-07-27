@@ -120,17 +120,18 @@
                     role="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
+                    id="profileDropdown"
                   >
                     My Profile
                   </a>
                   <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="{{url_for('main.user', username = current_user.username)}}">View Profile</a></li>
+                    <li><a id="myProfileLink"class="dropdown-item" href="{{url_for('main.user', username = current_user.username)}}">View Profile</a></li>
                     <li><a class="dropdown-item" href="{{ url_for('main.settings') }}">Settings</a></li>
                     <li>
                       
                     </li>
                     <li>
-                      <a class="dropdown-item" href="{{ url_for('auth.logout') }}"
+                      <a id="logoutLink" class="dropdown-item" href="{{ url_for('auth.logout') }}"
                         >Logout</a>
                     </li>
                   </ul>

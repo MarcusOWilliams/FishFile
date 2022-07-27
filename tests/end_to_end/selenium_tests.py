@@ -1,3 +1,4 @@
+import profile
 import sys
 import time
 from selenium import webdriver
@@ -61,14 +62,14 @@ from selenium.webdriver.support.ui import Select
 #     def tearDown(self):
 #         self.driver.close()
 
-class AddUpdateRemoveFish(unittest.TestCase):
+class MainEndToEnd(unittest.TestCase):
     def setUp(self):
         self.account_pswd = input("Input password:")
         self.driver = webdriver.Chrome("tests\end_to_end\chromedriver\chromedriver.exe")
         self.url = "http://127.0.0.1:5000"
-        self.delay = 3
+        self.delay = 4
 
-    def test_add_update_remove_fish(self):
+    def test_main_run_through(self):
 
         
         #setup driver
@@ -168,6 +169,9 @@ class AddUpdateRemoveFish(unittest.TestCase):
         mother_tank.send_keys("AA102")
         mother_stock = driver.find_element("id", "mother_stock")
         mother_stock.send_keys("S0002")
+        allele = Select(driver.find_element("id", "allele"))
+        allele.select_by_index(2)
+        allele_name = allele.first_selected_option.text
 
         submit_button = driver.find_element("id", "submit")
         driver.execute_script('arguments[0].click()', submit_button)
@@ -186,10 +190,44 @@ class AddUpdateRemoveFish(unittest.TestCase):
         filter_id = driver.find_element("id", "fish_id")
         driver.execute_script('arguments[0].click()', filter_id)
 
+        filter_button = driver.find_element("id", "tank_id")
+        driver.execute_script('arguments[0].click()', filter_button)
+
+        filter_button = driver.find_element("id", "stock")
+        driver.execute_script('arguments[0].click()', filter_button)
+
+        filter_button = driver.find_element("id", "protocol")
+        driver.execute_script('arguments[0].click()', filter_button)
+
         submit_button = driver.find_element("id", "submit")
         driver.execute_script('arguments[0].click()', submit_button)
 
         WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "filterChangeForm")))
+
+        """UPDATE ALLELE"""
+        driver.get(auto_fish_url)
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "fishInformation")))
+        
+        allele_link = driver.find_element("id", "updateAllelesLink")
+        driver.execute_script('arguments[0].click()', allele_link)
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "alleleTable")))
+        unidentified = driver.find_element("name", f"{allele_name.replace(' ','')}Unidentified")
+        identified = driver.find_element("name", f"{allele_name.replace(' ','')}Identified")
+        homozygous = driver.find_element("name", f"{allele_name.replace(' ','')}Homozygous")
+        heterozygous = driver.find_element("name", f"{allele_name.replace(' ','')}Heterozygous")
+        hemizygous = driver.find_element("name", f"{allele_name.replace(' ','')}Hemizygous")
+        submit_button = driver.find_element("id", "submit")
+
+        driver.execute_script('arguments[0].click()', unidentified )
+        driver.execute_script('arguments[0].click()', identified)
+        driver.execute_script('arguments[0].click()', homozygous)
+        driver.execute_script('arguments[0].click()', heterozygous)
+        driver.execute_script('arguments[0].click()', hemizygous)
+        driver.execute_script('arguments[0].click()', submit_button)
+
+
+
+
 
 
         driver.get(auto_fish_url)
@@ -208,6 +246,62 @@ class AddUpdateRemoveFish(unittest.TestCase):
 
         WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "mainSearchForm")))
         self.assertEqual("Home Page - FishFile", driver.title)
+
+
+        """CHECK SEARCH FUNCTIONALITY"""
+
+        submit_button = driver.find_element("id", "submit")
+        driver.execute_script('arguments[0].click()', submit_button)
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "fishList")))
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        next_page = driver.find_element("id", "nextPageLink")
+        driver.execute_script('arguments[0].click()', next_page)
+
+        """CHECK USER PAGE AND SETTINGS"""
+
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "profileDropdown")))
+        profile_link = driver.find_element("id", "myProfileLink")
+        driver.execute_script('arguments[0].click()', profile_link)
+
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "profileNameHeader")))
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        driver.get(f"{base_url}/settings")
+        WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "notificationsSettingsCheckboxes")))
+        add_notifications = driver.find_element("id", "add_notifications")
+        driver.execute_script('arguments[0].click()', add_notifications)
+        pl_add_notifications = driver.find_element("id", "pl_add_notifications")
+        driver.execute_script('arguments[0].click()', pl_add_notifications)
+        pl_custom_reminders = driver.find_element("id", "pl_custom_reminders")
+        driver.execute_script('arguments[0].click()', pl_custom_reminders)
+        emails = driver.find_element("id", "emails")
+        driver.execute_script('arguments[0].click()', emails)
+     
+        
+        driver.execute_script('arguments[0].click()', add_notifications)
+        driver.execute_script('arguments[0].click()', pl_add_notifications)
+        driver.execute_script('arguments[0].click()', pl_custom_reminders)
+        driver.execute_script('arguments[0].click()', emails)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        submit  = driver.find_element("id", "submit")
+        driver.execute_script('arguments[0].click()', submit)
+
+
+
+        """LOGOUT"""
+
+
+        logout_link = driver.find_element("id", "logoutLink")
+        driver.execute_script('arguments[0].click()', logout_link)
+
+        self.assertEquals(driver.title, "FishFile")
+
+
+        
+        
 
 
     def tearDown(self):
