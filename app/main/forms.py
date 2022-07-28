@@ -76,6 +76,8 @@ class NewFish(FlaskForm):
     alert_date = DateField("Reminder date", validators=[Optional()])
     alert_msg = StringField("Reminder message", validators=[Optional()])
 
+    total_change_comment= TextAreaField("Add a note", validators=[Optional()])
+
     submit = SubmitField("Add Fish")
 
     def validate_father_stock(self, father_stock):
@@ -227,7 +229,7 @@ class SearchFrom(FlaskForm):
     source = StringField("Source", validators=[Optional()])
     cross_type = StringField("Cross Type", validators=[Optional()])
     age_older = IntegerField("Min. age (months)", validators=[Optional()])
-    age_younger = IntegerField("Max. age(months)", validators=[Optional()])
+    age_younger = IntegerField("Max. age (months)", validators=[Optional()])
     user_code = StringField("User Code", validators=[Optional()])
     project_license = StringField("Project License", validators=[Optional()])
     allele = StringField("Allele", validators=[Optional()])

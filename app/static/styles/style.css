@@ -564,3 +564,12 @@
 #clearNotifs button{
     background-color: Gainsboro;
 }
+
+#totalCommentNote{
+    text-align: center;
+}
+
+#totalCommentNote:hover{
+    background-color: lightgray;
+    cursor: pointer;
+}

@@ -1134,7 +1134,12 @@ def updatefish(id):
                 new=form.total.data,
                 notification=notification,
             )
+            
+            if form.total_change_comment.data != None and form.total_change_comment.data != "":
+                change.note = form.total_change_comment.data
+
             db.session.add(change)
+
             change_count += 1
 
             fish.total = form.total.data

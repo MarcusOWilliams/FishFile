@@ -451,9 +451,10 @@ class Change(db.Model):
     action = db.Column(db.String(64))
     contents = db.Column(db.String(64))
     field = db.Column(db.String(64))
-    old = db.Column(db.String(64))
-    new = db.Column(db.String(64))
+    old = db.Column(db.Text())
+    new = db.Column(db.Text())
     time = db.Column(db.DateTime, default=datetime.utcnow)
+    note = db.Column(db.Text())
     notification_id = db.Column(db.Integer, db.ForeignKey("notification.id"))
 
     def __repr__(self):

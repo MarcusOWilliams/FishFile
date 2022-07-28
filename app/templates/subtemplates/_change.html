@@ -13,5 +13,6 @@
         <td class = "fishChangeDetails"><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> updated the {{change.contents}} of <a href = "{{url_for('main.fish', id=change.fish.id)}}">{{change.fish}}</a> <b>from {{change.old}} to {{change.new}}</b></td>
         <td> - {{ moment(change.time).fromNow() }} </td>
     </tr>
+    
 </table>
 {%endif%}
