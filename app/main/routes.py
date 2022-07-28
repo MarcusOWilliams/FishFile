@@ -1363,15 +1363,15 @@ def updatefish(id):
                     field="user_code",
                     notification=notification,
                 )
-            if fish.project_license_holder is not None:
-                change.old = fish.project_license_holder.project_license
-            elif fish.old_license is not None:
-                change.old = fish.old_license
-            
-            if license_holder is not None:
-                change.new = license_holder.project_license
-            elif form.custom_license.data != None or form.custom_license.data != "":
-                change.new = form.custom_license.data
+                if fish.project_license_holder is not None:
+                    change.old = fish.project_license_holder.project_license
+                elif fish.old_license is not None:
+                    change.old = fish.old_license
+                
+                if license_holder is not None:
+                    change.new = license_holder.project_license
+                elif form.custom_license.data != None or form.custom_license.data != "":
+                    change.new = form.custom_license.data
 
             db.session.add(change)
             change_count += 1
