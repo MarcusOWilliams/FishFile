@@ -1,3 +1,4 @@
+import sys
 from flask import request
 from flask_wtf import FlaskForm
 from flask_login import current_user
@@ -344,16 +345,17 @@ class PhotoCaptionForm(FlaskForm):
 
 
 class EditAlleles(FlaskForm):
-    add = StringField("Add an allele:", validators=[Optional()])
-    remove = StringField("Remove an allele:", validators=[Optional()])
+    add = StringField("Add an allele", validators=[Optional()])
+    remove = StringField("Remove an allele", validators=[Optional()])
     submit = SubmitField("Apply")
 
     def validate_add(self, add):
-        if add in get_all_allele_names():
+        if add.data in get_all_allele_names():
             raise ValidationError("This allele name is already in the list")
 
     def validate_remove(self, remove):
-        if remove not in get_all_allele_names():
+        print(get_all_allele_names(), file = sys.stderr)
+        if remove.data not in get_all_allele_names():
             raise ValidationError(
                 "This allele name is not in the list, so can not be removed"
             )

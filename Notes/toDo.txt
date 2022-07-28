@@ -94,12 +94,9 @@ order fish
 
 / add image captions
 
-
-add clear search form
-
 / make status and source have defaults
 
-add extra permission layers
+/ add extra permission layers
 
 add comment to total number change
 

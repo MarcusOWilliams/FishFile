@@ -23,10 +23,10 @@
       <p><Strong>Permissions</Strong><br>There are a number of different levels of permissions, allowing different access to the data base, so if you are unable to use any of the functionality it may be becuase you don't have the necessary permissions<br>Your current level of permissions is {{current_user.role}}.<br> The list of levels of permissions is:
          <ul style="list-style: none; width:60%;margin:auto;">
           <li><b>User</b> - Users simply have the permissions to view the database, they are not able to update any details of database entries, add new entries or delete entries</li>
-          <li><b>Researcher</b> - Researchers have all of the same permissions as users, but they also have the ability to update information about database entries, they do not have permission to add or delete entries</li>
+          <li><b>Researcher</b> - Researchers have all of the same permissions as users, but they also have the ability to update information about database entries that are related to them either by their user code or they own the project license the fish are under, they do not have permission to add or delete entries</li>
           <li><b>Admin</b> - Admins, have all previously described permissions, they can also add and remove entries from the database, can update the list of alleles and can change the permission levels of other users (can not make another user an admin, only a few select users can do this)</li>
           {% if current_user.isOwner()%}
-            <li><b>Owner</b> - Your account is an owner account, this is the top level of permissions. It allows you to create other admins and owners and view a list of all users along with all other described permissions.</li>
+            <li><b>Owner</b> - Your account is an owner account, this is the top level of permissions. You can update the information of all fish in the database. It also allows you to create other admins and owners and view a list of all users along with all other described permissions.</li>
           {%endif%}
         </ul>
         </p>

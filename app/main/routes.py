@@ -689,6 +689,8 @@ def newfish():
         flash("The new fish has been added to the database", "info")
         return redirect(url_for("main.fish", id=newfish.id))
 
+    form.source.data = "Home"
+
     return render_template("newfish.html", form=form, title="New Fish")
 
 
@@ -701,11 +703,18 @@ This route is used for updating the attributes for a fish entry
 @login_required
 @requires_roles("Researcher", "Admin", "Owner")
 def updatefish(id):
+
     form = NewFish()
     deleteReminderForm = EmptyForm()
     deletePhotoForm = EmptyForm()
     fish = Fish.query.filter_by(id=id).first_or_404()
     title = f"Update Fish ({fish.stock})"
+    
+    if not current_user.isOwner():
+        if current_user != fish.project_license_holder or current_user != fish.user_code:
+            flash("You do not have permission to update this fish, you must be associted by either user code or own the project license to update this entry", "warning")
+            return redirect(url_for('main.fish', id=fish.id))
+
 
     form.user_code.choices = [""] + get_all_user_codes()
 
@@ -1711,7 +1720,7 @@ This function describes the route for /editalleles
 Permission required for this route are "Admin", "Owner"
 This route is used for allowing an admin to update the list of alleles
 """
-@bp.route("/editalleles/")
+@bp.route("/editalleles/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Admin", "Owner")
 def edit_alleles():
