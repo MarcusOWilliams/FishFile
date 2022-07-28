@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <br>
+    <h1>Sorry, the user you were looking for could not be found!</h1><br>
+    <p>Make sure the account you were looking for has been verified and has not been removed. If this problem persists please report it to a system administrator</p>
+    <p>Please return to the home page <a href="{{ url_for('main.index') }}">here.</a></p>
+{% endblock %}

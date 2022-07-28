@@ -1,28 +1,29 @@
-<table class="table table-striped">
-    <tr>
+<table class="table table-striped" style="width: 80%; margin:auto; table-layout:fixed;">
+    <tr >
         
         <td>
-            Name: {{user.first_name}} {{user.last_name}}
+            <b>Name: </b>{{user.first_name}} {{user.last_name}}
         </td>
         <td>
-            Email: {{user.email}}
+            <b>Email: </b>{{user.email}}
         </td>
         <td>
             {%if user.project_license%}
-                Project License: {{user.project_license}}
+            <b>Project License: </b>{{user.project_license}}
             {%else%}
-                Project License: N/A
+            <b>Project License: </b>N/A
             {%endif%}
         </td>
         <td>
-            Current Role: {{user.role}}
+            <b>Current Role: </b>{{user.role}}
         </td>
         <td>
-            {% if user.last_seen %}<p>Last online: {{ moment(user.last_seen).fromNow() }}</p>{% endif %}
+            {% if user.last_seen %}<p><b>Last online: </b>{{ moment(user.last_seen).fromNow() }}</p>{% endif %}
         </td>
+        <td><b>Verified email: </b>{{user.is_verified}}</td>
     </tr>
     <tr>
-        <td colspan="5"><a href="{{url_for('main.user', username = user.username)}}" target="_blank">View Profile...</a></td>
+        <td colspan="6"><a href="{{url_for('main.user', username = user.username)}}" target="_blank">View Profile...</a></td>
     </tr>
 </table>
 <br>

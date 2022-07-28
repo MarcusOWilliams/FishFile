@@ -340,7 +340,11 @@ This page contains all of the entries a user is working on and all of the change
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
+    user = User.query.filter_by(username=username, is_verified=True).first()
+
+    if user is None:
+        return render_template("errors/user_not_found.html", title = "User Not Found")
+
     title = user.username
     user_fish = (
         Fish.query.filter_by(user_code=user)
