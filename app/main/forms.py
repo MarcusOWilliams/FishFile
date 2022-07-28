@@ -16,6 +16,7 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, ValidationError, Optional
 from app.models import Allele, Fish, User, get_all_allele_names
+import validators
 
 
 class SimpleSearch(FlaskForm):
@@ -44,7 +45,7 @@ class NewFish(FlaskForm):
     links = TextAreaField("Additional links", validators=[Optional()])
     photos = MultipleFileField("Upload pictures", validators=[Optional()])
 
-    source = SelectField("* Source", choices=["Home", "UK", "International"])
+    source = StringField("* Source", validators=[DataRequired()])
     cross_type = StringField("* Cross Type", validators=[DataRequired()])
 
     birthday = DateField("* Birthday", validators=[DataRequired()])
@@ -222,7 +223,7 @@ class SearchFrom(FlaskForm):
     )
     stock = StringField("Stock #", validators=[Optional()])
     protocol = IntegerField("Protocol #", validators=[Optional()])
-    source = SelectField("Source", choices=["", "Home", "UK", "International"])
+    source = StringField("Source", validators=[Optional()])
     cross_type = StringField("Cross Type", validators=[Optional()])
     age_older = IntegerField("Min. age (months)", validators=[Optional()])
     age_younger = IntegerField("Max. age(months)", validators=[Optional()])

@@ -90,6 +90,10 @@ def index():
         session["search_dict"] = search_dict.copy()
         return redirect(url_for("main.search"))
 
+
+    form.source.data = "Home"
+    form.status.data = "Alive"
+
     return render_template("index.html", form=form, title="Home Page")
 
 
@@ -142,7 +146,7 @@ def search():
         elif key == "status":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(status=search_dict[key])
+                .filter(Fish.status.contains(search_dict[key]))
                 .subquery()
             )
         elif key == "protocol":
