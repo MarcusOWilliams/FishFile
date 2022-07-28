@@ -1373,10 +1373,10 @@ def updatefish(id):
                 elif form.custom_license.data != None or form.custom_license.data != "":
                     change.new = form.custom_license.data
 
-            db.session.add(change)
-            change_count += 1
+                db.session.add(change)
+                change_count += 1
 
-            fish.old_license = form.custom_license.data
+                fish.old_license = form.custom_license.data
 
         if current_alleles != form.allele.data:
             change = Change(
