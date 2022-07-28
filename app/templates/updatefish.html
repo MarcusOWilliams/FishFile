@@ -18,7 +18,34 @@
         }
         
 
+        function updateUserCodeInput(){
+            var selectColumn = document.getElementById("userCodeSelect")
+            var customColumn = document.getElementById("userCodeCustom")
+                
+            if (window.getComputedStyle(selectColumn).display === "none") {
+                selectColumn.style.display = "block"
+                customColumn.style.display = "none"
+            }else{
+                selectColumn.style.display = "none"
+                selectColumn.data = ""
+                customColumn.style.display = "block"
+            }
+        }
+        function updatePLInput(){
+            var selectColumn = document.getElementById("PLSelect")
+            var customColumn = document.getElementById("PLCustom")
+                
+            if (window.getComputedStyle(selectColumn).display === "none") {
+                selectColumn.style.display = "block"
+                customColumn.style.display = "none"
+            }else{
+                selectColumn.style.display = "none"
+                customColumn.style.display = "block"
+            }
+        }
+
     </script>
+
 {%endblock%}
 
 {% block content %}

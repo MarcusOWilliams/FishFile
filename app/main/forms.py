@@ -53,10 +53,12 @@ class NewFish(FlaskForm):
     birthday = DateField("* Birthday", validators=[DataRequired()])
     date_of_arrival = DateField("Date of Arrival", validators=[Optional()])
 
-    user_code = SelectField("* User Code", validators=[DataRequired()], coerce=str)
+    user_code = SelectField("* User Code", coerce=str)
+    custom_code = StringField("* User Code")
     project_license = SelectField(
-        "* Project License", validators=[DataRequired()], coerce=str
+        "* Project License", coerce=str
     )
+    custom_license = StringField("* User License")
 
     allele = SelectMultipleField("Allele", coerce=str, validators=[Optional()])
     mutant_gene = TextAreaField("* Mutant Gene", validators=[DataRequired()])
@@ -189,6 +191,16 @@ class NewFish(FlaskForm):
             if len(file.read()) > 3 * 1024 * 1024:
                 raise ValidationError(f"File size must be less than 3MB for each file")
             file.seek(0)
+
+    def validate_user_code(self, user_code):
+        if user_code.data == None or user_code.data == "":
+            if self.custom_code.data == None or self.custom_code.data == "":
+                raise ValidationError("You must enter a user code.")
+
+    def validate_project_license(self, project_license):
+        if project_license.data == None or project_license.data == "":
+            if self.custom_license.data == None or self.custom_license.data == "":
+                raise ValidationError("You must enter a project license.")
 
 
 class FilterChanges(FlaskForm):
