@@ -34,8 +34,18 @@
     </div>
     <div class="fishInfoBlock">
         <h2>Users</h2>
-        <p class = "fishInfoPoint"><span class="pointHeader">Project License Allocated: </span><a href="{{url_for('main.project_license', license = fish.project_license_holder.project_license)}}" target=”_blank”>{{fish.project_license_holder.project_license}}</a></p>
-        <p class = "fishInfoPoint"><span class="pointHeader">User Code: </span><a href = "{{url_for('main.user', username = fish.user_code.username)}}" target=”_blank”>{{fish.user_code.code}}</a></p>
+        {%if fish.user_code != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">User Code: </span><a href = "{{url_for('main.user', username = fish.user_code.username)}}" target=”_blank”>{{fish.user_code.code}}</a></p>    
+        {%elif fish.old_code != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">User Code: </span>{{fish.old_code}}</p>
+        {%endif%}
+
+        {%if fish.project_license_holder != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Project License Allocated: </span><a href="{{url_for('main.project_license', license = fish.project_license_holder.project_license)}}" target=”_blank”>{{fish.project_license_holder.project_license}}</a></p>
+        {%elif fish.old_license != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Project License Allocated: </span>{{fish.old_license}}</p>
+        {%endif%}
+
     </div>
     <div class="fishInfoBlock">
         <h2>Genetics</h2>
