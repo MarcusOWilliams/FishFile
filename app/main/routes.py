@@ -345,6 +345,7 @@ def user(username):
     if user is None:
         return render_template("errors/user_not_found.html", title = "User Not Found")
 
+
     title = user.username
     user_fish = (
         Fish.query.filter_by(user_code=user)

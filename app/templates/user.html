@@ -15,7 +15,10 @@
             <p>View personal license document <a href="/static/files/personal_licenses/{{user.id}}.pdf">here</a></p>
         {%endif%}
     {%endif%}
-    <p></p>
+    {% if user.role == "Blocked"%}
+        <p style="color: red;">This user no longer has access to the system</p>
+    {%endif%}
+    
     {%if user == current_user %}
         <p><a href="{{url_for('main.settings')}}">Account settings</a></p>
     {%endif%}
