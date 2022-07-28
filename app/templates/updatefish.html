@@ -72,11 +72,17 @@
                 </td><td class="updateFormInputField">{{form.status(value = fish.status)}}</td>
             </tr>
             <tr>
-                <td class="fishFormLabel">{{form.project_license.label}} 
-                </td><td class="updateFormInputField">{{form.project_license(placeholder="Project License", value = fish.project_license_holder.project_license)}}</td>
+                <td class="fishFormLabel">{{form.project_license.label}}
+                </td>
+                <td class="updateFormInputField" id="PLSelect"> {{form.project_license()}}<br><span class="changePLInput" onclick="updatePLInput()">Add Custom License</span></td>
+                <td class="updateFormInputField" id="PLCustom" style="display: none;"> {{form.custom_license(value=fish.old_license)}}<br><span class="changePLInput" onclick="updatePLInput()">Select License From List</span></td>
 
-                <td class="fishFormLabel">{{form.user_code.label}}
-                </td><td class="updateFormInputField"> {{form.user_code(placeholder="User Code Email")}}</td>
+
+                
+                <td class="fishFormLabel">{{form.user_code.label}}</td>
+
+                <td  class="updateFormInputField" id = "userCodeSelect"> {{form.user_code()}}<br><span class="changeUserCodeInput" onclick="updateUserCodeInput()">Add Custom User Code</span></td>
+                <td class="updateFormInputField" id="userCodeCustom" style="display: none;"> {{form.custom_code(value=fish.old_code)}}<br><span class="changeUserCodeInput" onclick="updateUserCodeInput()">Select User Code From List</span></td>
             </tr>
             <tr>
                 <td class="fishFormLabel">{{form.birthday.label}}

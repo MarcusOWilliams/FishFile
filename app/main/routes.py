@@ -608,10 +608,7 @@ def newfish():
             .order_by(Fish.id.desc())
             .first()
         )
-        fish_user = User.query.filter_by(code=form.user_code.data).first()
-        license_holder = User.query.filter_by(
-            project_license=form.project_license.data
-        ).first()
+
 
         newfish = Fish(
             fish_id=form.fish_id.data,
@@ -633,11 +630,31 @@ def newfish():
             total=form.total.data,
             source=form.source.data,
             father=father,
-            mother=mother,
-            user_code=fish_user,
-            project_license_holder=license_holder,
+            mother=mother
         )
         db.session.add(newfish)
+
+        if form.project_license.data != None and form.project_license.data != "":
+            license_holder = User.query.filter_by(
+                project_license=form.project_license.data
+                ).first()
+        else:
+            license_holder = None
+
+        if form.user_code.data != None and form.user_code.data != "":
+            fish_user = User.query.filter_by(code=form.user_code.data).first()
+        else:
+            fish_user = None
+
+        if license_holder is None:
+            newfish.old_license = form.custom_license.data
+        else:
+            newfish.project_license_holder = license_holder
+
+        if fish_user is None:
+            newfish.old_code = form.custom_code.data
+        else:
+            newfish.user_code = fish_user
 
         for name in form.allele.data:
             allele = Allele(name=name, fish=newfish)
@@ -660,38 +677,52 @@ def newfish():
                 newfish.origin = origin_tank
 
         if form.alert_date.data or form.alert_msg.data:
-            reminder = Reminder(
-                user=newfish.user_code,
-                fish=newfish,
-                date=form.alert_date.data,
-                message=form.alert_msg.data,
-            )
-            db.session.add(reminder)
-            if reminder.date <= datetime.today().date():
-                reminder.send_reminder()
+            if fish_user is not None:
+                reminder = Reminder(
+                    user=fish_user,
+                    fish=newfish,
+                    date=form.alert_date.data,
+                    message=form.alert_msg.data,
+                )
+                db.session.add(reminder)
+                if reminder.date <= datetime.today().date():
+                    reminder.send_reminder()
 
-        if newfish.user_code.settings.add_notifications:
-            notification = Notification(
-                user=newfish.user_code,
-                fish=newfish,
-                category="Added",
-                contents="A new fish under your user code has been added",
-            )
-            db.session.add(notification)
-            notification.send_email()
+            if license_holder is not None:
+                reminder = Reminder(
+                    user=license_holder,
+                    fish=newfish,
+                    date=form.alert_date.data,
+                    message=form.alert_msg.data,
+                )
+                db.session.add(reminder)
+                if reminder.date <= datetime.today().date():
+                    reminder.send_reminder()
 
-        if (
-            newfish.project_license_holder.settings.pl_add_notifications
-            and newfish.user_code != newfish.project_license_holder
-        ):
-            pl_notification = Notification(
-                user=newfish.project_license_holder,
-                fish=newfish,
-                category="Added",
-                contents="A new fish under your project license has been added",
-            )
-            db.session.add(pl_notification)
-            pl_notification.send_email()
+        if fish_user is not None:
+            if newfish.user_code.settings.add_notifications:
+                notification = Notification(
+                    user=newfish.user_code,
+                    fish=newfish,
+                    category="Added",
+                    contents="A new fish under your user code has been added",
+                )
+                db.session.add(notification)
+                notification.send_email()
+                
+        if license_holder is not None:
+            if (
+                newfish.project_license_holder.settings.pl_add_notifications
+                and newfish.user_code != newfish.project_license_holder
+            ):
+                pl_notification = Notification(
+                    user=newfish.project_license_holder,
+                    fish=newfish,
+                    category="Added",
+                    contents="A new fish under your project license has been added",
+                )
+                db.session.add(pl_notification)
+                pl_notification.send_email()
 
         file_names = [file.filename for file in form.photos.data]
 
@@ -770,10 +801,18 @@ def updatefish(id):
             .order_by(Fish.id.desc())
             .first()
         )
-        fish_user = User.query.filter_by(code=form.user_code.data).first()
-        license_holder = User.query.filter_by(
-            project_license=form.project_license.data
-        ).first()
+
+        if form.project_license.data != None and form.project_license.data != "":
+            license_holder = User.query.filter_by(
+                project_license=form.project_license.data
+                ).first()
+        else:
+            license_holder = None
+
+        if form.user_code.data != None and form.user_code.data != "":
+            fish_user = User.query.filter_by(code=form.user_code.data).first()
+        else:
+            fish_user = None
 
         origin_tank = (
             Fish.query.filter_by(
@@ -813,11 +852,17 @@ def updatefish(id):
             fish.father = father
             fish.mother = mother
             fish.origin = origin_tank
-            fish.user_code = fish_user
-            fish.project_license_holder = license_holder
+            if fish_user is not None:
+                fish.user_code = fish_user
+                fish.old_code = None
+            else:
+                fish.old_code = form.custom_code.data
+            if license_holder is not None:
+                fish.project_license_holder = license_holder
+                fish.old_license = None
+            else:
+                fish.old_license = form.custom_license.data
 
-            fish.old_code = None
-            fish.old_license = None
             fish.old_mID = None
             fish.old_fID = None
             fish.old_fStock = None
@@ -1241,14 +1286,47 @@ def updatefish(id):
                 action="Updated",
                 contents="user code",
                 field="user_code",
-                old=fish.user_code.code,
-                new=fish_user.code,
                 notification=notification,
             )
+            if fish.user_code is not None:
+                change.old = fish.user_code.code
+            elif fish.old_code is not None:
+                change.old = fish.old_code
+            
+            if fish_user is not None:
+                change.new = fish_user.code
+            elif form.custom_code.data != None or form.custom_code.data != "":
+                change.new = form.custom_code.data
+
             db.session.add(change)
             change_count += 1
 
             fish.user_code = fish_user
+
+
+        if fish_user is None:
+            if fish.old_code != form.custom_code.data:
+                change = Change(
+                    user=current_user,
+                    fish=fish,
+                    action="Updated",
+                    contents="user code",
+                    field="user_code",
+                    notification=notification,
+                )
+                if fish.user_code is not None:
+                    change.old = fish.user_code.code
+                elif fish.old_code is not None:
+                    change.old = fish.old_code
+                
+                if fish_user is not None:
+                    change.new = fish_user.code
+                elif form.custom_code.data != None or form.custom_code.data != "":
+                    change.new = form.custom_code.data
+                db.session.add(change)
+                change_count += 1
+
+                fish.old_code = form.custom_code.data
 
         if fish.project_license_holder != license_holder:
             change = Change(
@@ -1257,13 +1335,48 @@ def updatefish(id):
                 action="Updated",
                 contents="project license",
                 field="project_license",
-                old=fish.project_license_holder.project_license,
-                new=license_holder.project_license,
                 notification=notification,
             )
+
+            if fish.project_license_holder is not None:
+                change.old = fish.project_license_holder.project_license
+            elif fish.old_license is not None:
+                change.old = fish.old_license
+            
+            if license_holder is not None:
+                change.new = license_holder.project_license
+            elif form.custom_license.data != None or form.custom_license.data != "":
+                change.new = form.custom_license.data
+
+
             db.session.add(change)
             fish.project_license_holder = license_holder
             change_count += 1
+        
+        if license_holder is None:
+            if fish.old_license != form.custom_license.data:
+                change = Change(
+                    user=current_user,
+                    fish=fish,
+                    action="Updated",
+                    contents="user code",
+                    field="user_code",
+                    notification=notification,
+                )
+            if fish.project_license_holder is not None:
+                change.old = fish.project_license_holder.project_license
+            elif fish.old_license is not None:
+                change.old = fish.old_license
+            
+            if license_holder is not None:
+                change.new = license_holder.project_license
+            elif form.custom_license.data != None or form.custom_license.data != "":
+                change.new = form.custom_license.data
+
+            db.session.add(change)
+            change_count += 1
+
+            fish.old_license = form.custom_license.data
 
         if current_alleles != form.allele.data:
             change = Change(
@@ -1318,29 +1431,41 @@ def updatefish(id):
 
         if change_count > 0:
             notification.change_count = change_count
-
-            if fish.user_code.settings.change_notifications:
-                notification.user = fish.user_code
-                notification.send_email()
-                db.session.add(notification)
-                db.session.commit()
+            if fish.user_code != None:
+                if fish.user_code.settings.change_notifications:
+                    notification.user = fish.user_code
+                    notification.send_email()
+                    db.session.add(notification)
+                    db.session.commit()
 
             flash("Fish updated", "info")
 
         if form.alert_date.data or form.alert_msg.data:
-            reminder = Reminder(
-                user=fish.user_code,
-                fish=fish,
-                date=form.alert_date.data,
-                message=form.alert_msg.data,
-            )
-            db.session.add(reminder)
+            if fish_user is not None:
+                reminder = Reminder(
+                    user=fish_user,
+                    fish=fish,
+                    date=form.alert_date.data,
+                    message=form.alert_msg.data,
+                )
+                db.session.add(reminder)
+                if reminder.date <= datetime.today().date():
+                    reminder.send_reminder()
 
-            if reminder.date <= datetime.today().date():
-                reminder.send_reminder()
+            if license_holder is not None:
+                reminder = Reminder(
+                    user=license_holder,
+                    fish=fish,
+                    date=form.alert_date.data,
+                    message=form.alert_msg.data,
+                )
+                db.session.add(reminder)
+                if reminder.date <= datetime.today().date():
+                    reminder.send_reminder()
 
             db.session.commit()
 
+        db.session.commit()
         return redirect(url_for("main.fish", id=fish.id))
 
     if fish.project_license_holder != None:
@@ -1710,6 +1835,8 @@ def settings():
     if form.validate_on_submit():
         current_user.settings.emails = form.emails.data
         current_user.settings.email_reminders = form.email_reminders.data
+        current_user.settings.pl_email_reminders = form.email_reminders.data
+
 
         current_user.settings.add_notifications = form.add_notifications.data
         current_user.settings.change_notifications = form.change_notifications.data

@@ -477,6 +477,7 @@ class Settings(db.Model):
     emails = db.Column(db.Boolean, default=False)
 
     email_reminders = db.Column(db.Boolean, default=False)
+    pl_email_reminders = db.Column(db.Boolean, default=False)
 
     add_notifications = db.Column(db.Boolean, default=True)
     change_notifications = db.Column(db.Boolean, default=True)
@@ -546,35 +547,72 @@ class Reminder(db.Model):
         from app.main.email import send_reminder_email
 
         users.append(self.user.id)
-        print(users, category, file=sys.stderr)
+
         for user in users:
+            user_done = False
             user = User.query.filter_by(id=user).first()
             if user is None:
                 continue
 
-            if category == "Reminder" and (
-                user.settings.custom_reminder or user.settings.pl_custom_reminder
-            ):
-                notification = Notification(
-                    user=user,
-                    fish=self.fish,
-                    category="Reminder",
-                    contents=self.message,
-                )
-                db.session.add(notification)
-            elif category == "Age reminder" and (
-                user.settings.age_notifications or user.settings.pl_age_notifications
-            ):
-                notification = Notification(
-                    user=user,
-                    fish=self.fish,
-                    category="Reminder",
-                    contents=self.message,
-                )
-                db.session.add(notification)
+            if category == "Reminder":
+                if self.fish.user_code is not None:
+                    if user.settings.custom_reminder and  user == self.fish.user_code:
+                        notification = Notification(
+                            user=user,
+                            fish=self.fish,
+                            category="Reminder",
+                            contents=self.message,
+                        )
+                        db.session.add(notification)
 
-            if user.settings.email_reminders:
-                send_reminder_email(user, self)
+                        if user.settings.email_reminders:
+                            send_reminder_email(user, self)
+
+                        user_done = True
+
+                if (not user_done) and self.fish.project_license_holder is not None:
+                    if user.settings.pl_custom_reminder and  user == self.fish.project_license_holder:
+                        notification = Notification(
+                            user=user,
+                            fish=self.fish,
+                            category="Reminder",
+                            contents=self.message,
+                        )
+                        db.session.add(notification)
+
+                        if user.settings.pl_email_reminders :
+                            send_reminder_email(user, self)
+
+            elif category == "Age reminder": 
+                if self.fish.user_code is not None:
+                    if user.settings.age_notifications and  user == self.fish.user_code:
+                        notification = Notification(
+                            user=user,
+                            fish=self.fish,
+                            category="Reminder",
+                            contents=self.message,
+                        )
+                        db.session.add(notification)
+
+                    if user.settings.email_reminders:
+                        send_reminder_email(user, self)
+
+                elif self.fish.project_license_holder is not None:
+                    if user.settings.pl_age_notifications and  user == self.fish.project_license_holder:
+                        notification = Notification(
+                            user=user,
+                            fish=self.fish,
+                            category="Reminder",
+                            contents=self.message,
+                        )
+                        db.session.add(notification)
+
+                    if user.settings.pl_email_reminders:
+                        send_reminder_email(user, self)
+
+            
+
+            
 
         self.sent = True
         db.session.commit()

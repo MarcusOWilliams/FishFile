@@ -33,6 +33,9 @@
             <div id="emailSettingsCheckboxes">
                 <div class="settingsCheckboxRow">{{form.emails.label}} {{form.emails(checked=current_user.settings.emails)}}</div>
                 <div class="settingsCheckboxRow">{{form.email_reminders.label}} {{form.email_reminders(checked=current_user.settings.email_reminders)}}</div>
+                {% if current_user.project_license != None and current_user.project_license != "" %}
+                    <div class="settingsCheckboxRow">{{form.pl_email_reminders.label}} {{form.pl_email_reminders(checked=current_user.settings.pl_email_reminders)}}</div>
+                {%endif%}
             </div>
             <hr>        
             <h4>Notifications</h4>

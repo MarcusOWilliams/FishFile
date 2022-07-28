@@ -270,7 +270,8 @@ class SearchFrom(FlaskForm):
 
 class SettingsForm(FlaskForm):
     emails = BooleanField("Email notifications:")
-    email_reminders = BooleanField("Email reminders:")
+    email_reminders = BooleanField("Email reminders for fish under user code:")
+    pl_email_reminders = BooleanField("Email reminders for fish under project license:")
 
     add_notifications = BooleanField("Entry added under your user code:")
     change_notifications = BooleanField("Change made to entry under your user code:")

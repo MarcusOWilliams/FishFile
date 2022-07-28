@@ -61,11 +61,15 @@
             <tr>
                 <td class="fishFormLabel">{{form.project_license.label}}
                 </td>
-                <td class="addFishInputField"> {{form.project_license()}}</td>
+                <td class="addFishInputField" id="PLSelect"> {{form.project_license()}}<br><span class="changePLInput" onclick="updatePLInput()">Add Custom License</span></td>
+                <td class="addFishInputField" id="PLCustom" style="display: none;"> {{form.custom_license()}}<br><span class="changePLInput" onclick="updatePLInput()">Select License From List</span></td>
 
-                <td>{{form.user_code.label}}
-                </td>
-                <td class="addFishInputField"> {{form.user_code()}}</td>
+
+                
+                <td class="fishFormLabel">{{form.user_code.label}}</td>
+
+                <td  class="addFishInputField" id = "userCodeSelect"> {{form.user_code()}}<br><span class="changeUserCodeInput" onclick="updateUserCodeInput()">Add Custom User Code</span></td>
+                <td class="addFishInputField" id="userCodeCustom" style="display: none;"> {{form.custom_code()}}<br><span class="changeUserCodeInput" onclick="updateUserCodeInput()">Select User Code From List</span></td>
             </tr>
             <tr>
                 <td class="fishFormLabel">{{form.birthday.label}}
