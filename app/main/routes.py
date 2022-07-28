@@ -73,6 +73,8 @@ Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for the home page of a logged in user
 This route contains a main search form which redirects to /search when submitted
 """
+
+
 @bp.route("/home", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -90,7 +92,6 @@ def index():
         session["search_dict"] = search_dict.copy()
         return redirect(url_for("main.search"))
 
-
     form.source.data = "Home"
     form.status.data = "Alive"
 
@@ -103,6 +104,8 @@ Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for showing results of a user's search
 This route contains a search form which updates the search and reloads the page
 """
+
+
 @bp.route("/search", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -308,6 +311,8 @@ Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for when a user uses the simple search bar
 The user is redirected to the fish route after findin (or not) the match
 """
+
+
 @bp.route("/simplesearch/")
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -329,6 +334,8 @@ Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for displaying the profile page of a given user
 This page contains all of the entries a user is working on and all of the changes they have made
 """
+
+
 @bp.route("/user/<username>/", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -395,6 +402,8 @@ This function describes the route for /fish
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for displaying a fish entry and its related data
 """
+
+
 @bp.route("/fish/<id>")
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -420,6 +429,8 @@ This function describes the route for /fish/id/changes
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for showing the backlog of changes made to a fish entry
 """
+
+
 @bp.route("/fish/<id>/changes/<filters>", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -454,7 +465,7 @@ def fishchange(id, filters="all"):
             if "changes" in locals():
                 changes = changes.union(Change.query.filter_by(field=filter))
             else:
-                changes = Change.query.filter_by(field=filter)
+                changes = Change.query.filter_by(field=filter, fish_id=id)
 
         changes = changes.order_by(Change.time.desc()).paginate(
             page, current_app.config["CHANGES_PER_PAGE"], False
@@ -489,6 +500,8 @@ This function describes the route for /fish/id/hisstory
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for displaying the family tree of a given fish entry
 """
+
+
 @bp.route("/fish/<id>/history/")
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -512,6 +525,8 @@ This function describes the route for /fish/id/updatealleles
 Permission required for this route are "Researcher", "Admin", "Owner"
 This route is used for updating the status of the alleles of a given fish entry
 """
+
+
 @bp.route("/fish/<id>/updatealleles/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Researcher", "Admin", "Owner")
@@ -557,6 +572,8 @@ This function describes the route for /newfish
 Permission required for this route are "Admin", "Owner"
 This route is used for adding new fish to the database
 """
+
+
 @bp.route("/newfish/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Admin", "Owner")
@@ -699,6 +716,8 @@ This function describes the route for /updatefish
 Permission required for this route are  "Researcher", "Admin", "Owner"
 This route is used for updating the attributes for a fish entry
 """
+
+
 @bp.route("/updatefish/<id>/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Researcher", "Admin", "Owner")
@@ -709,12 +728,17 @@ def updatefish(id):
     deletePhotoForm = EmptyForm()
     fish = Fish.query.filter_by(id=id).first_or_404()
     title = f"Update Fish ({fish.stock})"
-    
-    if not current_user.isOwner():
-        if current_user != fish.project_license_holder or current_user != fish.user_code:
-            flash("You do not have permission to update this fish, you must be associted by either user code or own the project license to update this entry", "warning")
-            return redirect(url_for('main.fish', id=fish.id))
 
+    if not current_user.isOwner():
+        if (
+            current_user != fish.project_license_holder
+            or current_user != fish.user_code
+        ):
+            flash(
+                "You do not have permission to update this fish, you must be associted by either user code or own the project license to update this entry",
+                "warning",
+            )
+            return redirect(url_for("main.fish", id=fish.id))
 
     form.user_code.choices = [""] + get_all_user_codes()
 
@@ -1134,8 +1158,11 @@ def updatefish(id):
                 new=form.total.data,
                 notification=notification,
             )
-            
-            if form.total_change_comment.data != None and form.total_change_comment.data != "":
+
+            if (
+                form.total_change_comment.data != None
+                and form.total_change_comment.data != ""
+            ):
                 change.note = form.total_change_comment.data
 
             db.session.add(change)
@@ -1342,6 +1369,8 @@ This function describes the route for /allfish
 Permission required for this route are  "Admin", "Owner"
 This route is used for displaying a list of all fish in the database
 """
+
+
 @bp.route("/allfish/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Admin", "Owner")
@@ -1393,6 +1422,8 @@ Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for showing all of the fish associated with a project license
 It also has links to the associated documents
 """
+
+
 @bp.route("/projectlicense/<license>/", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -1486,6 +1517,8 @@ This function describes the route for /stock
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for showing all the fish associated with a stock
 """
+
+
 @bp.route("/stock/<stock>/", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -1554,6 +1587,9 @@ def stock(stock):
             .filter(Fish.status != "Dead")
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
+    current_total = 0
+    for entry in fish.items:
+        current_total += entry.total
 
     next_url = (
         url_for("main.stock", stock=stock, page=fish.next_num)
@@ -1574,6 +1610,81 @@ def stock(stock):
         pagination=fish,
         form=form,
         title=f"Stock ({stock})",
+        current_total=current_total,
+        stock=stock,
+    )
+
+
+"""
+This function describes the route for /stock/changes
+Permission required for this route are "User", "Researcher", "Admin", "Owner"
+This route is used for showing all the changes associated with the total of fish belonging to a stock
+"""
+
+
+@bp.route("/stock/<stock>/changes/<filters>", methods=["GET", "POST"])
+@login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
+def stock_changes(stock, filters="all"):
+
+    form = FilterChanges()
+
+    if form.validate_on_submit():
+        filters = []
+        for fieldname, value in form.data.items():
+            if value and (fieldname != "submit" and fieldname != "csrf_token"):
+                filters.append(fieldname)
+
+        if len(filters) < 1:
+            filters.append("all")
+
+        return redirect(
+            url_for("main.stock_changes", stock=stock, filters=" ".join(filters))
+        )
+
+    page = request.args.get("page", 1, type=int)
+
+    filter_list = filters.split(" ")
+
+    if filters == "all":
+        changes = (
+            Change.query.filter(Change.fish.has(stock=stock))
+            .order_by(Change.time.desc())
+            .paginate(page, current_app.config["CHANGES_PER_PAGE"], False)
+        )
+    else:
+        for filter in filter_list:
+            if "changes" in locals():
+                changes = changes.union(Change.query.filter_by(field=filter))
+            else:
+                changes = Change.query.filter_by(field=filter).filter(
+                    Change.fish.has(stock=stock)
+                )
+
+        changes = changes.order_by(Change.time.desc()).paginate(
+            page, current_app.config["CHANGES_PER_PAGE"], False
+        )
+
+    next_url = (
+        url_for("main.stock_changes", stock=stock, page=changes.next_num)
+        if changes.has_next
+        else None
+    )
+    prev_url = (
+        url_for("main.stock_changes", stock=stock, page=changes.prev_num)
+        if changes.has_prev
+        else None
+    )
+    return render_template(
+        "stock_changes.html",
+        form=form,
+        title=f"{stock} changes",
+        changes=changes.items,
+        stock=stock,
+        pagination=changes,
+        next_url=next_url,
+        prev_url=prev_url,
+        filters=filter_list
     )
 
 
@@ -1582,6 +1693,8 @@ This function describes the route for /settings
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for changing a users settings
 """
+
+
 @bp.route("/settings/", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -1671,6 +1784,8 @@ This function describes the route for /fish/photo/editcaption
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for updating the caption of a photo associated with a fish
 """
+
+
 @bp.route("/fish/<fish_id>/photo/<photo_id>/editcaption/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Researcher", "Admin", "Owner")
@@ -1698,6 +1813,8 @@ This function describes the route for /guides
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for displaying all of the tutorials to a user
 """
+
+
 @bp.route("/guides/")
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -1711,6 +1828,8 @@ This function describes the route for /userlist
 Permission required for this route are  "Owner"
 This route is used for showing a site owner a list of all users
 """
+
+
 @bp.route("/userlist/")
 @requires_roles("Owner")
 @login_required
@@ -1725,6 +1844,8 @@ This function describes the route for /editalleles
 Permission required for this route are "Admin", "Owner"
 This route is used for allowing an admin to update the list of alleles
 """
+
+
 @bp.route("/editalleles/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Admin", "Owner")
@@ -1757,6 +1878,8 @@ This function describes the route for /reset_notifications
 This route is used for updating the last read notification time for a user
 This is used to set the counter next to the notifications icon
 """
+
+
 @bp.route("/reset_notifications", methods=["POST"])
 @login_required
 def reset_notifications():
@@ -1770,6 +1893,8 @@ This function describes the route for /deletefish
 Permission required for this route are "Admin", "Owner"
 This route is used for deleting an entry from the database
 """
+
+
 @bp.route("/deletefish/<id>", methods=["POST"])
 @login_required
 @requires_roles("Admin", "Owner")
@@ -1787,6 +1912,8 @@ This function describes the route for /deletereminder
 Permission required for this route are "Researcher", "Admin", "Owner"
 This route is used for deleting a reminder associated with a fish entry
 """
+
+
 @bp.route("/deletereminder/<id>", methods=["POST"])
 @login_required
 @requires_roles("Researcher", "Admin", "Owner")
@@ -1805,6 +1932,8 @@ This function describes the route for /fish/deletephoto
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for deleting a fish associated with a fish entry
 """
+
+
 @bp.route("/fish/<fish_id>/deletephoto/<photo_id>", methods=["POST"])
 @login_required
 @requires_roles("Researcher", "Admin", "Owner")
@@ -1823,6 +1952,8 @@ Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for deleting a document associated with a user
 The document can be either personal or project license
 """
+
+
 @bp.route("/deletedocument", methods=["POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
@@ -1844,6 +1975,8 @@ This function describes the route for /deletenotifs
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
 This route is used for clearing all of the notifications of a user
 """
+
+
 @bp.route("/deletenotifs", methods=["POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")

@@ -573,3 +573,6 @@
     background-color: lightgray;
     cursor: pointer;
 }
+.filterChangeOption:hover{
+    background-color: whitesmoke;
+}
