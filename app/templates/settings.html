@@ -18,7 +18,12 @@
 {% block content %}
     <h2>Settings for {{current_user.username}}:</h2><br>
 
-    <p style="color: red;">Don't forget to press apply settings at the bottom of the page!</p>
+    {%if form.errors.items()%}
+        <p style="color: red;">ERROR updating settings:</p>
+        {% for field, errors in form.errors.items() %}
+                    <div class = "formError">{{ form[field].label }} {{ ', '.join(errors) }}</div>
+        {% endfor %}
+    {%endif%}
     <form action="" method="post" enctype="multipart/form-data" id="mainSettingsForm">
         {{form.hidden_tag()}}
         <h4>Password</h4>
@@ -71,9 +76,6 @@
         
         {{form.submit(value="Apply Settings", class="btn btn-primary")}}
     </form>
-    {% for field, errors in form.errors.items() %}
-                <div class = "formError">{{ form[field].label }} {{ ', '.join(errors) }}</div>
-    {% endfor %}
 
     
 {%endblock%}

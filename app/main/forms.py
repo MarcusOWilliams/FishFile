@@ -1,3 +1,4 @@
+import os
 import sys
 from flask import request
 from flask_wtf import FlaskForm
@@ -178,10 +179,13 @@ class NewFish(FlaskForm):
     def validate_photos(self, photos):
 
         for file in photos.data:
-            if file.filename == "":
+            filename, file_extension = os.path.splitext(file.filename)
+
+            if filename == "" and file_extension=="":
                 continue
-            if file.filename.split(".")[-1] not in ("jpg", "jpeg", "png"):
+            if file_extension not in (".jpg", ".jpeg", ".png"):
                 raise ValidationError("File must have a .jpg, .jpeg or .png extension")
+
             if len(file.read()) > 3 * 1024 * 1024:
                 raise ValidationError(f"File size must be less than 3MB for each file")
             file.seek(0)
@@ -290,7 +294,8 @@ class SettingsForm(FlaskForm):
     def validate_personal_license_file(self, personal_license_file):
         if not personal_license_file.data or personal_license_file.data.filename == "":
             return
-        if personal_license_file.data.filename.split(".")[-1] not in ("pdf"):
+        filename, file_extension = os.path.splitext(personal_license_file.data.filename)
+        if file_extension not in (".pdf"):
             raise ValidationError("The file must be a pdf file ending in .pdf")
         if len(personal_license_file.data.read()) > 2 * 1024 * 1024:
             raise ValidationError(f"File size must be less than 2MB")
@@ -299,7 +304,8 @@ class SettingsForm(FlaskForm):
     def validate_project_license_file(self, project_license_file):
         if not project_license_file.data or project_license_file.data.filename == "":
             return
-        if project_license_file.data.filename.split(".")[-1] not in ("pdf"):
+        filename, file_extension = os.path.splitext(project_license_file.data.filename)
+        if file_extension not in (".pdf"):
             raise ValidationError("The file must be a pdf file ending in .pdf")
         if len(project_license_file.data.read()) > 2 * 1024 * 1024:
             raise ValidationError(f"File size must be less than 2MB")
