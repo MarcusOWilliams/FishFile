@@ -97,6 +97,8 @@
     margin-top:20px;
     
 }
+
+
 .fishSummaryTable{
     text-align: center;
     margin:auto;
@@ -257,6 +259,13 @@
     }
     #simpleSearchForm{
         position: relative;
+    }
+
+    #fishList{
+        width:100%;
+    }
+    #mainSearchForm{
+        width:100%;
     }
 
 }
