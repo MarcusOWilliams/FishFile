@@ -4,7 +4,7 @@ alabaster
 alembic==1.8.0
 amqp==5.1.1
 anaconda-client
-anaconda-navigator==2.1.1
+anaconda-navigator
 anaconda-project 
 anyio 
 appdirs==1.4.4
