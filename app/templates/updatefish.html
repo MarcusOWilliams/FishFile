@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {%block scripts %}
+
+
     <script>
         function updatetotalCommentBox(){
             var commentRow = document.getElementById("totalChangeCommentRow")
@@ -21,29 +23,51 @@
         function updateUserCodeInput(){
             var selectColumn = document.getElementById("userCodeSelect")
             var customColumn = document.getElementById("userCodeCustom")
+            var selectInput = document.getElementById("user_code")
+            var customInput  = document.getElementById("custom_code") 
                 
             if (window.getComputedStyle(selectColumn).display === "none") {
                 selectColumn.style.display = "block"
+                customInput.value = ""
                 customColumn.style.display = "none"
             }else{
+                selectInput.selectedIndex = 0
                 selectColumn.style.display = "none"
-                selectColumn.data = ""
                 customColumn.style.display = "block"
             }
         }
         function updatePLInput(){
             var selectColumn = document.getElementById("PLSelect")
             var customColumn = document.getElementById("PLCustom")
+            var selectInput = document.getElementById("project_license")
+            var customInput  = document.getElementById("custom_license") 
+
                 
             if (window.getComputedStyle(selectColumn).display === "none") {
                 selectColumn.style.display = "block"
+                customInput.value = ""
                 customColumn.style.display = "none"
             }else{
+                selectInput.selectedIndex = 0
                 selectColumn.style.display = "none"
                 customColumn.style.display = "block"
             }
         }
 
+        window.onload = function() {
+            var customCode = document.getElementById("custom_code");
+            var customLicense= document.getElementById("custom_license");
+            if(customCode.value){
+                updateUserCodeInput();
+            }
+
+            if(customLicense.value){
+                updatePLInput()
+            }
+            
+        };
+        
+        
     </script>
 
 {%endblock%}

@@ -1,5 +1,6 @@
 from datetime import datetime
 from os import abort
+import sys
 
 
 from wtforms.validators import DataRequired, ValidationError
@@ -855,6 +856,7 @@ def updatefish(id):
             if fish_user is not None:
                 fish.user_code = fish_user
                 fish.old_code = None
+
             else:
                 fish.old_code = form.custom_code.data
             if license_holder is not None:
@@ -862,6 +864,7 @@ def updatefish(id):
                 fish.old_license = None
             else:
                 fish.old_license = form.custom_license.data
+
 
             fish.old_mID = None
             fish.old_fID = None
@@ -1302,6 +1305,7 @@ def updatefish(id):
             change_count += 1
 
             fish.user_code = fish_user
+            fish.old_code = None
 
 
         if fish_user is None:
@@ -1351,6 +1355,7 @@ def updatefish(id):
 
             db.session.add(change)
             fish.project_license_holder = license_holder
+            fish.old_license = None
             change_count += 1
         
         if license_holder is None:

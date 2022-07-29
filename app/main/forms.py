@@ -196,19 +196,25 @@ class NewFish(FlaskForm):
         if user_code.data == None or user_code.data == "":
             if self.custom_code.data == None or self.custom_code.data == "":
                 raise ValidationError("You must enter a user code.")
-        else:
-            if self.custom_code.data != "":
-                print(self.custom_code.data)
-                raise ValidationError("You have selected a user code from the list and entered a custom user code, please clear one of these fields.")
+
+               
 
 
     def validate_project_license(self, project_license):
         if project_license.data == None or project_license.data == "":
             if self.custom_license.data == None or self.custom_license.data == "":
                 raise ValidationError("You must enter a project license.")
-        else:
-            if self.custom_license.data != "":
-                raise ValidationError("You have selected a project license from the list and entered a custom project license, please clear one of these fields.")
+
+    
+    def validate_custom_code(self, custom_code):
+        if custom_code.data != None and custom_code.data != "":
+            if self.user_code.data != None and self.user_code.data != "":
+                raise ValidationError("You have selected a user code from the list and entered a custom user code, please clear one of these fields (use the link under the input to change fields).")
+
+    def validate_custom_license(self, custom_license):
+        if custom_license.data != None and custom_license.data != "":
+            if self.project_license.data != None and self.project_license.data != "":
+                raise ValidationError("You have selected a project license from the list and entered a custom project license, please clear one of these fields (use the link under the input to change fields).")
 
 
 
