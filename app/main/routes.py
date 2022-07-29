@@ -92,7 +92,6 @@ def index():
         session["search_dict"] = search_dict.copy()
         return redirect(url_for("main.search"))
 
-    form.source.data = "Home"
     form.status.data = "Alive"
 
     return render_template("index.html", form=form, title="Home Page")
