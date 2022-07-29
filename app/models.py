@@ -99,7 +99,7 @@ class User(UserMixin, db.Model):
     # takes a password and returns its hash
     def set_password(self, password):
         # I implemented generate_password hash using the bcrypt hashing algorithm, uses bcrypt hash + salt
-        self.password_hash = bcrypt.generate_password_hash(password)
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf8')
 
     # takes a password and a hash and checks if the match
     def check_password(self, password):
@@ -232,7 +232,7 @@ class Fish(db.Model):
     )
 
     project_license_holder_id = db.Column(
-        db.Integer, db.ForeignKey("user.project_license")
+        db.Integer, db.ForeignKey("user.id")
     )
     project_license_holder = db.relationship(
         "User", foreign_keys=[project_license_holder_id], backref="fish_on_license"

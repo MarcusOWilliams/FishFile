@@ -1,8 +1,8 @@
-"""add origin tank
+"""first postgres
 
-Revision ID: 1ac1404badbb
+Revision ID: bce1d950c520
 Revises: 
-Create Date: 2022-07-23 11:04:35.491181
+Create Date: 2022-07-29 13:13:42.620137
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1ac1404badbb'
+revision = 'bce1d950c520'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -82,7 +82,7 @@ def upgrade():
     sa.ForeignKeyConstraint(['father_id'], ['fish.id'], ),
     sa.ForeignKeyConstraint(['mother_id'], ['fish.id'], ),
     sa.ForeignKeyConstraint(['origin_tank_id'], ['fish.id'], ),
-    sa.ForeignKeyConstraint(['project_license_holder_id'], ['user.project_license'], ),
+    sa.ForeignKeyConstraint(['project_license_holder_id'], ['user.id'], ),
     sa.ForeignKeyConstraint(['user_code_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -98,6 +98,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('emails', sa.Boolean(), nullable=True),
     sa.Column('email_reminders', sa.Boolean(), nullable=True),
+    sa.Column('pl_email_reminders', sa.Boolean(), nullable=True),
     sa.Column('add_notifications', sa.Boolean(), nullable=True),
     sa.Column('change_notifications', sa.Boolean(), nullable=True),
     sa.Column('custom_reminder', sa.Boolean(), nullable=True),
@@ -158,9 +159,10 @@ def upgrade():
     sa.Column('action', sa.String(length=64), nullable=True),
     sa.Column('contents', sa.String(length=64), nullable=True),
     sa.Column('field', sa.String(length=64), nullable=True),
-    sa.Column('old', sa.String(length=64), nullable=True),
-    sa.Column('new', sa.String(length=64), nullable=True),
+    sa.Column('old', sa.Text(), nullable=True),
+    sa.Column('new', sa.Text(), nullable=True),
     sa.Column('time', sa.DateTime(), nullable=True),
+    sa.Column('note', sa.Text(), nullable=True),
     sa.Column('notification_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['fish_id'], ['fish.id'], ),
     sa.ForeignKeyConstraint(['notification_id'], ['notification.id'], ),
