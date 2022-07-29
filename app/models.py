@@ -105,8 +105,8 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
-    # this creates a secure signed payload using SHA256 to act as the verification for resetting a password it expires after 5 minutes
-    def get_reset_password_token(self, expires_in=300):
+    # this creates a secure signed payload using SHA256 to act as the verification for resetting a password it expires after 10 minutes
+    def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
             {"reset_password": self.id, "exp": time() + expires_in},
             current_app.config["SECRET_KEY"],
@@ -114,7 +114,7 @@ class User(UserMixin, db.Model):
         )
 
     # this works similar to above, but is used for email validation
-    def get_email_verification_token(self, expires_in=300):
+    def get_email_verification_token(self, expires_in=600):
         return jwt.encode(
             {"verify_email": self.id, "exp": time() + expires_in},
             current_app.config["SECRET_KEY"],

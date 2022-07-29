@@ -8,7 +8,7 @@ from app.auth.forms import (
     ResetPasswordRequestForm,
     ChangePasswordForm,
 )
-from app.models import User
+from app.models import Settings, User
 from flask import flash, redirect, render_template, request, url_for, current_app
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
@@ -91,6 +91,8 @@ def register():
         user.username = user.email.split("@")[0]
         db.session.add(user)
         logout_user()
+        settings = Settings(user=user)
+        db.session.add(settings)
         db.session.commit()
 
         return redirect(url_for("auth.login"))
