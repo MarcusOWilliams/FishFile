@@ -1,6 +1,5 @@
 -ffi @ file:///C:/ci/cffi_1613247279197/work
 absl-py==1.0.0
-alabaster @ file:///home/ktietz/src/ci/alabaster_1611921544520/work
 alembic==1.8.0
 amqp==5.1.1
 anaconda-client==1.7.2
