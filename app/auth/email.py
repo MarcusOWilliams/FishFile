@@ -28,7 +28,7 @@ def send_password_reset_email(user):
 def send_email_verification_email(user):
     token = user.get_email_verification_token()
     send_email(
-        (f'[{current_app.config["WEBSITE_NAME"]} Verify Your Email'),
+        (f'[{current_app.config["WEBSITE_NAME"]}] Verify Your Email'),
         sender=current_app.config["MAIL_DEFAULT_SENDER"],
         recipients=[user.email],
         text_body=render_template(

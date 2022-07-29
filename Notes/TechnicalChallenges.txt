@@ -11,3 +11,8 @@ make allele changes work in a user friendly way
 Making the screen synamic to be nice on all screens
 
 Sending delete forms with javascript post requests
+
+Making custom codes and license
+    Needed to make checks for if there was user codes
+    Needed to use javascript for forms and correct validation
+    making usre there was only one of each and the user couldn't be confused which

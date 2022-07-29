@@ -1,8 +1,8 @@
-"""first postgres
+"""postgres fix
 
-Revision ID: bce1d950c520
+Revision ID: 623e3f9b9af3
 Revises: 
-Create Date: 2022-07-29 13:13:42.620137
+Create Date: 2022-07-29 16:45:26.155581
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'bce1d950c520'
+revision = '623e3f9b9af3'
 down_revision = None
 branch_labels = None
 depends_on = None

@@ -17,6 +17,13 @@ from werkzeug.urls import url_parse
 @bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
+        if not current_user.is_verified:
+            send_email_verification_email(user)
+            flash(
+                f"To login you must verify your email address, a verification link has been sent to {user.email}, this can take a few minutes, don't forget to check your spam folder!",
+                "info",
+            )
+            return redirect(url_for("auth.login"))
         return redirect(url_for("main.index"))
 
     form = LoginForm()
@@ -42,7 +49,7 @@ def login():
         if not user.is_verified:
             send_email_verification_email(user)
             flash(
-                f"To login you must verify your email address, a verification link has been sent to {user.email}, don't forget to check your spam folder!",
+                f"To login you must verify your email address, a verification link has been sent to {user.email}, this can take a few minutes, don't forget to check your spam folder!",
                 "info",
             )
             return redirect(url_for("auth.login"))
@@ -83,7 +90,7 @@ def register():
         user.set_password(form.password.data)
         user.username = user.email.split("@")[0]
         db.session.add(user)
-
+        logout_user()
         db.session.commit()
 
         return redirect(url_for("auth.login"))
