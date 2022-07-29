@@ -66,7 +66,7 @@ class MainEndToEnd(unittest.TestCase):
     def setUp(self):
         self.account_pswd = input("Input password:")
         self.driver = webdriver.Chrome("tests\end_to_end\chromedriver\chromedriver.exe")
-        self.url = "http://127.0.0.1:5000"
+        self.url = "https://fish-file-bath.herokuapp.com/"
         self.delay = 4
 
     def test_main_run_through(self):
