@@ -1677,7 +1677,7 @@ This route is used for showing all the fish associated with a stock
 @bp.route("/stock/<stock>/", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
-def stock(stock_name):
+def stock(stock):
 
     form = OrderForm()
 
@@ -1685,7 +1685,7 @@ def stock(stock_name):
 
         session["order_by"] = form.order.data
 
-        return redirect(url_for("main.stock", stock=stock_name))
+        return redirect(url_for("main.stock", stock=stock))
 
     page = request.args.get("page", 1, type=int)
 
@@ -1693,46 +1693,47 @@ def stock(stock_name):
 
     form.order.data = order
 
-    stock  = Stock.query.filter_by(name = stock_name).first()    
+    stock_entry  = Stock.query.filter_by(name = stock).first()    
+    stock_entry.update_current_total()
 
     if order == "Age ( young -> old )":
         fish = (
-            Fish.query.filter_by(stock_name=stock_name)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead", Fish.birthday != None)
             .order_by(Fish.birthday.desc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Age (old -> young)":
         fish = (
-            Fish.query.filter_by(stock_name=stock_name)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead", Fish.birthday != None)
             .order_by(Fish.birthday.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Fish ID":
         fish = (
-            Fish.query.filter_by(stock_name=stock_name)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead")
             .order_by(Fish.fish_id.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Tank ID":
         fish = (
-            Fish.query.filter_by(stock_name=stock_name)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead")
             .order_by(Fish.tank_id.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Stock":
         fish = (
-            Fish.query.filter_by(stock_name=stock_name)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead")
             .order_by(Fish.stock_name.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Newest Added":
         fish = (
-            Fish.query.filter_by(stock_name=stock_name)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead")
             .order_by(Fish.added.desc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
@@ -1740,18 +1741,17 @@ def stock(stock_name):
     else:
 
         fish = (
-            Fish.query.filter_by(stock_name=stock_name)
-            .filter(Fish.status != "Dead")
+            Fish.query.filter_by(stock_name=stock)
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
    
     next_url = (
-        url_for("main.stock", stock_name=stock_name, page=fish.next_num)
+        url_for("main.stock", stock_name=stock, page=fish.next_num)
         if fish.has_next
         else None
     )
     prev_url = (
-        url_for("main.stock", stock_name=stock_name, page=fish.prev_num)
+        url_for("main.stock", stock_name=stock, page=fish.prev_num)
         if fish.has_prev
         else None
     )
@@ -1764,7 +1764,6 @@ def stock(stock_name):
         pagination=fish,
         form=form,
         title=f"Stock ({stock})",
-        current_total=current_total,
         stock=stock,
     )
 
