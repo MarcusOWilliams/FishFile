@@ -287,6 +287,7 @@ class Fish(db.Model):
     old_arrival = db.Column(db.String(64))
     old_allele = db.Column(db.String(64))
 
+
     def __repr__(self):
         return f"Stock: {self.stock_name}, Tank: {self.tank_id}, ID: {self.fish_id}"
 
@@ -398,7 +399,8 @@ class Stock(db.Model):
     )
     current_total = db.Column(db.Integer)
     year_total = db.Column(db.Integer)
-    
+    fish_alive = db.Column(db.Boolean)
+
     def __repr__(self):
         return self.name
 
@@ -427,6 +429,18 @@ class Stock(db.Model):
         self.year_total = int(self.current_total)
 
         db.session.commit()
+
+    def has_alive_fish(self):
+        for fish in self.fish:
+
+            if fish.status != "Dead":
+                self.fish_alive = True
+                db.session.commit()
+                return True
+
+        self.fish_alive = False
+        db.session.commit()
+        return False
 
 """
 This is the class for the Allele table of the SQL database

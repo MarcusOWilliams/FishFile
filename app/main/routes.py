@@ -1,6 +1,7 @@
 from datetime import datetime
 from os import abort
 import sys
+from turtle import title
 
 
 from wtforms.validators import DataRequired, ValidationError
@@ -643,6 +644,7 @@ def newfish():
         db.session.add(newfish)
         stock.update_current_total()
         stock.increase_yearly_total(newfish.total)
+        stock.has_alive_fish()
         if form.project_license.data != None and form.project_license.data != "":
             license_holder = User.query.filter_by(
                 project_license=form.project_license.data
@@ -851,6 +853,7 @@ def updatefish(id):
             fish.stock = stock
             stock.update_current_total()
             stock.increase_yearly_total(form.total.data)
+            stock.has_alive_fish()
             fish.protocol = form.protocol.data
             fish.birthday = form.birthday.data
             fish.months = fish.getMonths()
@@ -889,6 +892,9 @@ def updatefish(id):
             fish.old_birthday = None
             fish.old_arrival = None
             fish.old_allele = None
+
+            if fish.status == "Dead":
+                fish.total = 0
 
             for name in form.allele.data:
                 allele = Allele(name=name, fish=fish)
@@ -1008,6 +1014,8 @@ def updatefish(id):
             db.session.add(change)
             change_count += 1
             fish.status = form.status.data
+            if fish.status == "Dead":
+                fish.total = 0
 
         if fish.stock != stock:
             change = Change(
@@ -1027,6 +1035,8 @@ def updatefish(id):
 
             fish.stock = stock
             stock.update_current_total()
+            stock.has_alive_fish()
+
 
             if old_stock is not None:
                 old_stock.update_current_total()
@@ -1801,6 +1811,9 @@ def stock_changes(stock, filters="all"):
 
     filter_list = filters.split(" ")
 
+    stock_entry  = Stock.query.filter_by(name = stock).first()    
+    stock_entry.update_current_total()
+
     if filters == "all":
         changes = (
             Change.query.filter(Change.fish.has(stock_name=stock))
@@ -1835,13 +1848,41 @@ def stock_changes(stock, filters="all"):
         form=form,
         title=f"{stock} changes",
         changes=changes.items,
-        stock=stock,
+        stock=stock_entry,
         pagination=changes,
         next_url=next_url,
         prev_url=prev_url,
         filters=filter_list
     )
 
+@bp.route("/all_stocks/", methods=["GET", "POST"])
+@login_required
+@requires_roles("User", "Researcher", "Admin", "Owner")
+def all_stocks():
+    stocks = Stock.query.all()
+    for s in stocks:
+        s.has_alive_fish()
+    page = request.args.get("page", 1, type=int)
+
+    living_stocks = Stock.query.filter_by(fish_alive = True).order_by(Stock.name.desc()).paginate(
+            page, current_app.config["FISH_PER_PAGE"], False
+        )
+
+    for stock in living_stocks.items:
+        stock.update_current_total()
+
+    next_url = (
+        url_for("main.all_stocks", page=living_stocks.next_num)
+        if living_stocks.has_next
+        else None
+    )
+    prev_url = (
+        url_for("main.all_stocks", stock=stock, page=living_stocks.prev_num)
+        if living_stocks.has_prev
+        else None
+    )
+
+    return render_template("all_stocks.html", stocks = living_stocks.items, title="All Stocks", next_url=next_url,prev_url=prev_url, pagination=living_stocks )
 
 """
 This function describes the route for /settings

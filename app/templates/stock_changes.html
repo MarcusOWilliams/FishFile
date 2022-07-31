@@ -45,9 +45,9 @@
                             {% if page %}
                                 {% if page != pagination.page %}
                                     {%if filters == ["all"]%}
-                                        <li class = "page-item"><a class = "page-link" href="{{url_for('main.fishchange',id=fish.id,filters = ' '.join(filters), page=page)}}">{{ page }}</a></li>
+                                        <li class = "page-item"><a class = "page-link" href="{{url_for('main.stock_changes',stock=stock.name,filters = ' '.join(filters), page=page)}}">{{ page }}</a></li>
                                     {%else%}
-                                        <li class = "page-item"><a class = "page-link" href="{{url_for('main.fishchange',id=fish.id, filters = ' '.join(filters), page=page)}}">{{ page }}</a></li>
+                                        <li class = "page-item"><a class = "page-link" href="{{url_for('main.stock_changes',stock=stock.name, filters = ' '.join(filters), page=page)}}">{{ page }}</a></li>
                                     {%endif%}
                                 {% else %}
                                     <li class="page-item active"><a class = "page-link">{{ page }}</a></li>

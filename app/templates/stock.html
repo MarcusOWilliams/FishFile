@@ -3,6 +3,7 @@
 
 {% block content %}
     <h2>Stock: {{stock}}</h2>
+    <p>{{stock.fish_alive}}</p>
     <p>Showing the fish that are currently alive and are part of the stock {{stock}}</p>
     
     <p>Current number of fish in tanks under this stock: <b>{{stock.current_total}}</b></p>
@@ -32,7 +33,7 @@
                     {% for page in pagination.iter_pages(1,2,3,1) %}
                         {% if page %}
                             {% if page != pagination.page %}
-                                    <li class = "page-item"><a class = "page-link" href="{{url_for('main.project_license',license = user.project_license, page=page)}}">{{ page }}</a></li>
+                                    <li class = "page-item"><a class = "page-link" href="{{url_for('main.stock',stock = stock.name, page=page)}}">{{ page }}</a></li>
                             {% else %}
                                 <li class="page-item active"><a class = "page-link">{{ page }}</a></li>
                             {% endif %}
