@@ -2,6 +2,7 @@
 # This folder contains a class for each table in the database
 
 from email.policy import default
+from enum import unique
 from math import remainder
 import os
 import sys
@@ -204,7 +205,7 @@ class Fish(db.Model):
     fish_id = db.Column(db.String(264), index=True)
     tank_id = db.Column(db.String(32), index=True)
     status = db.Column(db.String(32), index=True, default="Alive")
-    stock = db.Column(db.String(32), index=True)
+    stock_name = db.Column(db.String(64), db.ForeignKey("stock.name"))
     source = db.Column(db.String(32))
 
     protocol = db.Column(db.Integer, index=True)
@@ -287,7 +288,7 @@ class Fish(db.Model):
     old_allele = db.Column(db.String(64))
 
     def __repr__(self):
-        return f"Stock: {self.stock}, Tank: {self.tank_id}, ID: {self.fish_id}"
+        return f"Stock: {self.stock_name}, Tank: {self.tank_id}, ID: {self.fish_id}"
 
     def get_ancestors(self, generation, relation=None):
         ancestors = []
@@ -382,7 +383,17 @@ class Fish(db.Model):
             users=[self.project_license_holder.id], category="Age reminder"
         )
 
-
+class Stock(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    fish = db.relationship(
+        "Fish", backref="stock", lazy="dynamic", cascade="all, delete"
+    )
+    current_total = db.Column(db.Integer)
+    year_total = db.Column(db.Integer)
+    
+    def __repr__(self):
+        return self.name
 """
 This is the class for the Allele table of the SQL database
 A fish can have multiple alleles associated with it, each being a new object of this class
@@ -401,7 +412,7 @@ class Allele(db.Model):
     hemizygous = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"Allele: {self.name} - Fish: {self.fish.stock}"
+        return f"Allele: {self.name} - Fish: {self.fish.stock_name}"
 
 
 def get_all_allele_names():

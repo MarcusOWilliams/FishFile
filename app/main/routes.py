@@ -21,6 +21,7 @@ from app.models import (
     get_all_user_licenses,
     requires_roles,
     Photo,
+    Stock
 )
 from flask import (
     flash,
@@ -143,7 +144,7 @@ def search():
         elif key == "stock":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(stock=search_dict[key].upper())
+                .filter_by(stock_name=search_dict[key].upper())
                 .subquery()
             )
         elif key == "status":
@@ -264,7 +265,7 @@ def search():
         all_results = result.all()
         all_fish = result.paginate(page, current_app.config["FISH_PER_PAGE"], False)
     elif order == "Stock":
-        result = Fish.query.select_entity_from(all_fish).order_by(Fish.stock.asc())
+        result = Fish.query.select_entity_from(all_fish).order_by(Fish.stock_name.asc())
         all_results = result.all()
         all_fish = result.paginate(page, current_app.config["FISH_PER_PAGE"], False)
     elif order == "Newest Added":
@@ -596,7 +597,7 @@ def newfish():
         father = (
             Fish.query.filter_by(
                 tank_id=form.father_tank_id.data.upper(),
-                stock=form.father_stock.data.upper(),
+                stock_name=form.father_stock.data.upper(),
             )
             .order_by(Fish.id.desc())
             .first()
@@ -604,18 +605,24 @@ def newfish():
         mother = (
             Fish.query.filter_by(
                 tank_id=form.mother_tank_id.data.upper(),
-                stock=form.mother_stock.data.upper(),
+                stock_name=form.mother_stock.data.upper(),
             )
             .order_by(Fish.id.desc())
             .first()
         )
+
+        stock = Stock.query.filter_by(name=form.stock.data.upper()).first()
+        if stock is None:
+            stock = Stock(name=form.stock.data.upper())
+            db.session.add(stock)
+            db.session.commit()
 
 
         newfish = Fish(
             fish_id=form.fish_id.data,
             tank_id=form.tank_id.data.upper(),
             status=form.status.data,
-            stock=form.stock.data.upper(),
+            stock=stock,
             protocol=form.protocol.data,
             birthday=form.birthday.data,
             date_of_arrival=form.date_of_arrival.data,
@@ -669,7 +676,7 @@ def newfish():
             origin_tank = (
                 Fish.query.filter_by(
                     tank_id=form.origin_tank_id.data.upper(),
-                    stock=form.origin_tank_stock.data.upper(),
+                    stock_name=form.origin_tank_stock.data.upper(),
                 )
                 .order_by(Fish.id.desc())
                 .first()
@@ -789,7 +796,7 @@ def updatefish(id):
         father = (
             Fish.query.filter_by(
                 tank_id=form.father_tank_id.data.upper(),
-                stock=form.father_stock.data.upper(),
+                stock_name=form.father_stock.data.upper(),
             )
             .order_by(Fish.id.desc())
             .first()
@@ -797,7 +804,7 @@ def updatefish(id):
         mother = (
             Fish.query.filter_by(
                 tank_id=form.mother_tank_id.data.upper(),
-                stock=form.mother_stock.data.upper(),
+                stock_name=form.mother_stock.data.upper(),
             )
             .order_by(Fish.id.desc())
             .first()
@@ -818,11 +825,17 @@ def updatefish(id):
         origin_tank = (
             Fish.query.filter_by(
                 tank_id=form.origin_tank_id.data.upper(),
-                stock=form.origin_tank_stock.data.upper(),
+                stock_name=form.origin_tank_stock.data.upper(),
             )
             .order_by(Fish.id.desc())
             .first()
         )
+
+        stock = Stock.query.filter_by(name=form.stock.data.upper()).first()
+        if stock is None:
+            stock = Stock(name=form.stock.data.upper())
+            db.session.add(stock)
+            db.session.commit()
 
         pictures = [file.filename for file in form.photos.data]
 
@@ -834,7 +847,7 @@ def updatefish(id):
             fish.fish_id = form.fish_id.data
             fish.tank_id = form.tank_id.data.upper()
             fish.status = form.status.data
-            fish.stock = form.stock.data.upper()
+            fish.stock = stock
             fish.protocol = form.protocol.data
             fish.birthday = form.birthday.data
             fish.months = fish.getMonths()
@@ -993,21 +1006,21 @@ def updatefish(id):
             change_count += 1
             fish.status = form.status.data
 
-        if fish.stock != form.stock.data.upper():
+        if fish.stock != stock:
             change = Change(
                 user=current_user,
                 fish=fish,
                 action="Updated",
                 contents="stock",
                 field="stock",
-                old=fish.stock,
+                old=fish.stock.name,
                 new=form.stock.data.upper(),
                 notification=notification,
             )
             db.session.add(change)
             change_count += 1
 
-            fish.stock = form.stock.data.upper()
+            fish.stock = stock
 
         if fish.protocol != form.protocol.data:
             change = Change(
@@ -1541,7 +1554,7 @@ def allfish():
         fish = Fish.query.order_by(Fish.tank_id.asc()).all()
 
     elif order == "Stock":
-        fish = Fish.query.order_by(Fish.stock.asc()).all()
+        fish = Fish.query.order_by(Fish.stock_name.asc()).all()
     elif order == "Newest Added":
         fish = Fish.query.order_by(Fish.added.desc()).all()
     else:
@@ -1608,7 +1621,7 @@ def project_license(license):
     elif order == "Stock":
         fish = (
             Fish.query.filter_by(project_license_holder=user)
-            .order_by(Fish.stock.asc())
+            .order_by(Fish.stock_name.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Newest Added":
@@ -1674,42 +1687,42 @@ def stock(stock):
 
     if order == "Age ( young -> old )":
         fish = (
-            Fish.query.filter_by(stock=stock)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead", Fish.birthday != None)
             .order_by(Fish.birthday.desc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Age (old -> young)":
         fish = (
-            Fish.query.filter_by(stock=stock)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead", Fish.birthday != None)
             .order_by(Fish.birthday.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Fish ID":
         fish = (
-            Fish.query.filter_by(stock=stock)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead")
             .order_by(Fish.fish_id.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Tank ID":
         fish = (
-            Fish.query.filter_by(stock=stock)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead")
             .order_by(Fish.tank_id.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Stock":
         fish = (
-            Fish.query.filter_by(stock=stock)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead")
-            .order_by(Fish.stock.asc())
+            .order_by(Fish.stock_name.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Newest Added":
         fish = (
-            Fish.query.filter_by(stock=stock)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead")
             .order_by(Fish.added.desc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
@@ -1717,7 +1730,7 @@ def stock(stock):
     else:
 
         fish = (
-            Fish.query.filter_by(stock=stock)
+            Fish.query.filter_by(stock_name=stock)
             .filter(Fish.status != "Dead")
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
@@ -1726,12 +1739,12 @@ def stock(stock):
         current_total += entry.total
 
     next_url = (
-        url_for("main.stock", stock=stock, page=fish.next_num)
+        url_for("main.stock", stock_name=stock, page=fish.next_num)
         if fish.has_next
         else None
     )
     prev_url = (
-        url_for("main.stock", stock=stock, page=fish.prev_num)
+        url_for("main.stock", stock_name=stock, page=fish.prev_num)
         if fish.has_prev
         else None
     )
@@ -1782,7 +1795,7 @@ def stock_changes(stock, filters="all"):
 
     if filters == "all":
         changes = (
-            Change.query.filter(Change.fish.has(stock=stock))
+            Change.query.filter(Change.fish.has(stock_name=stock))
             .order_by(Change.time.desc())
             .paginate(page, current_app.config["CHANGES_PER_PAGE"], False)
         )
@@ -1792,7 +1805,7 @@ def stock_changes(stock, filters="all"):
                 changes = changes.union(Change.query.filter_by(field=filter))
             else:
                 changes = Change.query.filter_by(field=filter).filter(
-                    Change.fish.has(stock=stock)
+                    Change.fish.has(stock_name=stock)
                 )
 
         changes = changes.order_by(Change.time.desc()).paginate(

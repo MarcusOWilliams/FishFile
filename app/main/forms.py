@@ -89,7 +89,7 @@ class NewFish(FlaskForm):
                 f"To add a father you must supply both tank # and stock # for the father."
             )
         fish = Fish.query.filter_by(
-            tank_id=self.father_tank_id.data.upper(), stock=father_stock.data.upper()
+            tank_id=self.father_tank_id.data.upper(), stock_name=father_stock.data.upper()
         ).first()
         if fish is None:
             raise ValidationError(
@@ -109,7 +109,7 @@ class NewFish(FlaskForm):
                 f"To add a mother you must supply both id and stock # for the mother."
             )
         fish = Fish.query.filter_by(
-            tank_id=self.mother_tank_id.data.upper(), stock=mother_stock.data.upper()
+            tank_id=self.mother_tank_id.data.upper(), stock_name=mother_stock.data.upper()
         ).first()
         if fish is None:
             raise ValidationError(
@@ -129,7 +129,7 @@ class NewFish(FlaskForm):
             )
         fish = Fish.query.filter_by(
             tank_id=self.origin_tank_id.data.upper(),
-            stock=origin_tank_stock.data.upper(),
+            stock_name=origin_tank_stock.data.upper(),
         ).first()
         if fish is None:
             raise ValidationError(

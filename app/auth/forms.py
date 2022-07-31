@@ -27,15 +27,6 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField("Register")
 
     # When you add any methods that match the pattern validate_<field_name>, WTForms takes those as custom validators and invokes them in addition to the stock validators.
-    def validate_username(self, username):
-        user = User.query.filter(User.username.ilike(username.data)).first()
-        if user is not None:
-            raise ValidationError(
-                "This username is already taken, please try another one."
-            )
-        if " " in username.data:
-            raise ValidationError("Your username may not contain spaces.")
-
     def validate_email(self, email):
         user = User.query.filter(User.email.ilike(email.data)).first()
         if user is not None:

@@ -8,7 +8,7 @@
         <h2>Fish</h2>
         <p class = "fishInfoPoint"><span class="pointHeader">Fish ID: </span>{{fish.fish_id}}</p>
         <p class = "fishInfoPoint"><span class="pointHeader">Tank ID: </span>{{fish.tank_id}}</p>
-        <p class = "fishInfoPoint"><span class="pointHeader">Stock#: </span><a href="{{url_for('main.stock', stock=fish.stock)}}">{{fish.stock}}</a></p>
+        <p class = "fishInfoPoint"><span class="pointHeader">Stock#: </span><a href="{{url_for('main.stock', stock=fish.stock)}}">{{fish.stock.name}}</a></p>
         <p class = "fishInfoPoint"><span class="pointHeader">Status: </span>{{fish.status}}</p>
         
         <p class = "fishInfoPoint"><span class="pointHeader">Protocol: </span>{{fish.protocol}}</p>
@@ -220,7 +220,7 @@
 </div>
 <br>
 <textarea style="width:80%;" id="copyText">ID, Tank ID, Stock, Status, Protocol, Birthday, Date of Arrival, Source, Project License, User code, Mutant gene, Transgenes, Cross Type, Father ID, Father Stock, Mother ID, Mother Stock, Males, Females, Unsexed, Carriers/Licensed, Total
-{{fish.fish_id}}, {{fish.tank_id}}, {{fish.stock}}, {{fish.status}}, {{fish.protocol}}, {{fish.birthday}}, {{fish.date_of_arrival}}, {{fish.source}}, {%if fish.project_license_holder != None %}{{fish.project_license_holder.project_license}}{%else%}{{fish.old_license}}{%endif%}, {%if fish.user_code != None %}{{fish.user_code.code}}{%else%}{{fish.old_code}}{%endif%}, {{fish.mutant_gene}}, {{fish.transgenes}}, {{fish.cross_type}}, {{fish.father.fish_id}}, {{fish.father.stock}}, {{fish.mother.fish_id}}, {{fish.mother.stock}}, {{fish.males}}, {{fish.females}}, {{fish.unsexed}}, {{fish.carriers}}, {{fish.total}}
+{{fish.fish_id}}, {{fish.tank_id}}, {{fish.stock.name}}, {{fish.status}}, {{fish.protocol}}, {{fish.birthday}}, {{fish.date_of_arrival}}, {{fish.source}}, {%if fish.project_license_holder != None %}{{fish.project_license_holder.project_license}}{%else%}{{fish.old_license}}{%endif%}, {%if fish.user_code != None %}{{fish.user_code.code}}{%else%}{{fish.old_code}}{%endif%}, {{fish.mutant_gene}}, {{fish.transgenes}}, {{fish.cross_type}}, {{fish.father.fish_id}}, {{fish.father.stock}}, {{fish.mother.fish_id}}, {{fish.mother.stock}}, {{fish.males}}, {{fish.females}}, {{fish.unsexed}}, {{fish.carriers}}, {{fish.total}}
 
         </textarea><br>
 <button id="copybtn" class="btn btn-secondary" data-clipboard-action="copy" data-clipboard-target="#copyText" style="margin-bottom:20px">
