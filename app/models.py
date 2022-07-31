@@ -441,6 +441,38 @@ class Stock(db.Model):
         self.fish_alive = False
         db.session.commit()
         return False
+    def get_count_on_date(self, date):
+        count = 0
+
+
+        dt = datetime.combine(date, datetime.min.time())
+        #for each fish associated with a stock
+        for fish in self.fish:
+
+            #if the fish was added after the date, ignore it
+            if date < fish.added.date():
+                continue
+
+            #get the first change in total after or on the date if there is one
+            change_after = Change.query.filter_by(fish=fish, field = "total").filter(Change.time >= dt).order_by(Change.time.asc()).first()
+
+            #get tha last change in total before the date if there is one
+            change_before = Change.query.filter_by(fish=fish, field = "total").filter(Change.time < dt).order_by(Change.time.desc()).first()
+
+            #if there was a change after the date, take the old value from the closest change to the date
+            if change_after is not None:
+                count += int(change_after.old)
+
+            #if there was only a change before the date, take the new value from the closest change to the date
+            elif change_before is not None:
+                count += int(change_before.new)
+
+            #otherwise the total has never been changed so add the total to the count
+            else:
+                count += fish.total
+
+        return count
+
 
 """
 This is the class for the Allele table of the SQL database

@@ -395,3 +395,7 @@ class EditAlleles(FlaskForm):
             raise ValidationError(
                 "This allele name is not in the list, so can not be removed"
             )
+
+class DateForm(FlaskForm):
+    date = DateField("Select a date:", validators=[DataRequired()])
+    submit = SubmitField("Apply")

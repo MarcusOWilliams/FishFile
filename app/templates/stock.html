@@ -3,17 +3,21 @@
 
 {% block content %}
     <h2>Stock: {{stock}}</h2>
-    <p>{{stock.fish_alive}}</p>
     <p>Showing the fish that are currently alive and are part of the stock {{stock}}</p>
     
     <p>Current number of fish in tanks under this stock: <b>{{stock.current_total}}</b></p>
-    <p>Max total from start of year: <b>{{stock.year_total}} </b><span class="infoPopup" onclick="popupShow('stockTotalInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="stockTotalInfoPopupText"> This is the total number of fish as of the 1st of January plus the original total of any new tanks that have been added since.<br><span style="color: red;">Warning: this may not be accurate if fish have been transferred from the old system</span></span></span></p>
-
-    <p><a href="{{url_for('main.stock_changes', stock = stock, filters='total')}}">View changes in the total number of fish for this stock</a></p>
+    
+    <p>Max total from start of year: <b>{% if stock.year_total != None %} {{stock.year_total}} {%else%} N/A{%endif%}</b><span class="infoPopup" onclick="popupShow('stockTotalInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="stockTotalInfoPopupText"> This is the total number of fish as of the 1st of January plus the original total of any new tanks that have been added since.<br><span style="color: red;">Warning: this may not be accurate if fish have been transferred from the old system</span></span></span></p>
+    <p>Total on custom date: <b> {%if total >= 0%}{{total}} {%else%} N/A {%endif%}</b><span class="infoPopup" onclick="popupShow('customTotalInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="customTotalInfoPopupText"> This is the total number of fish as of the beginning of the custom date selected below.<br><span style="color: red;">Warning: this may not be accurate if fish have been transferred from the old system</span></span></span></p>
+    
     <form action = "", method="post">
         {{form.hidden_tag()}}
-        {{form.order.label}} {{form.order()}} {{form.submit()}}
+        {{form.date.label}} {{form.date(value=date)}}
+        {{form.submit()}}
     </form>
+    <br>
+    <p><a href="{{url_for('main.stock_changes', stock = stock, filters='total')}}">View changes in the total number of fish for this stock</a></p>
+
     <hr>
     {% if fish_list %}
         <div id="fishList">

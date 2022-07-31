@@ -37,6 +37,7 @@ from flask import (
 from flask_login import current_user, login_required
 from app.main.forms import (
     AlleleForm,
+    DateForm,
     EditAlleles,
     EmptyForm,
     OrderForm,
@@ -949,12 +950,14 @@ def updatefish(id):
             )
 
             db.session.add(change)
-            if fish.user_code.settings.change_notifications:
-                notification.user = fish.user_code
-                notification.change_count = 1
-                notification.send_email()
-                db.session.add(notification)
-                db.session.commit()
+            
+            if fish.user_code != None:
+                if fish.user_code.settings.change_notifications:
+                    notification.user = fish.user_code
+                    notification.change_count = 1
+                    notification.send_email()
+                    db.session.add(notification)
+                    db.session.commit()
 
             db.session.commit()
 
@@ -1690,71 +1693,23 @@ This route is used for showing all the fish associated with a stock
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def stock(stock):
 
-    form = OrderForm()
-
-    if form.validate_on_submit():
-
-        session["order_by"] = form.order.data
-
-        return redirect(url_for("main.stock", stock=stock))
-
+    
+    form = DateForm()
+    stock_entry  = Stock.query.filter_by(name = stock).first()    
+    stock_entry.update_current_total()     
+     
     page = request.args.get("page", 1, type=int)
 
-    order = session.get("order_by", "Newest Added")
 
-    form.order.data = order
 
-    stock_entry  = Stock.query.filter_by(name = stock).first()    
-    stock_entry.update_current_total()
 
-    if order == "Age ( young -> old )":
-        fish = (
-            Fish.query.filter_by(stock_name=stock)
-            .filter(Fish.status != "Dead", Fish.birthday != None)
-            .order_by(Fish.birthday.desc())
-            .paginate(page, current_app.config["FISH_PER_PAGE"], False)
-        )
-    elif order == "Age (old -> young)":
-        fish = (
-            Fish.query.filter_by(stock_name=stock)
-            .filter(Fish.status != "Dead", Fish.birthday != None)
-            .order_by(Fish.birthday.asc())
-            .paginate(page, current_app.config["FISH_PER_PAGE"], False)
-        )
-    elif order == "Fish ID":
-        fish = (
-            Fish.query.filter_by(stock_name=stock)
-            .filter(Fish.status != "Dead")
-            .order_by(Fish.fish_id.asc())
-            .paginate(page, current_app.config["FISH_PER_PAGE"], False)
-        )
-    elif order == "Tank ID":
-        fish = (
-            Fish.query.filter_by(stock_name=stock)
-            .filter(Fish.status != "Dead")
-            .order_by(Fish.tank_id.asc())
-            .paginate(page, current_app.config["FISH_PER_PAGE"], False)
-        )
-    elif order == "Stock":
-        fish = (
-            Fish.query.filter_by(stock_name=stock)
-            .filter(Fish.status != "Dead")
-            .order_by(Fish.stock_name.asc())
-            .paginate(page, current_app.config["FISH_PER_PAGE"], False)
-        )
-    elif order == "Newest Added":
-        fish = (
-            Fish.query.filter_by(stock_name=stock)
-            .filter(Fish.status != "Dead")
-            .order_by(Fish.added.desc())
-            .paginate(page, current_app.config["FISH_PER_PAGE"], False)
-        )
-    else:
-
-        fish = (
-            Fish.query.filter_by(stock_name=stock)
-            .paginate(page, current_app.config["FISH_PER_PAGE"], False)
-        )
+    fish = (
+        Fish.query.filter_by(stock_name=stock)
+        .filter(Fish.status != "Dead")
+        .order_by(Fish.added.desc())
+        .paginate(page, current_app.config["FISH_PER_PAGE"], False)
+    )
+   
    
     next_url = (
         url_for("main.stock", stock_name=stock, page=fish.next_num)
@@ -1767,6 +1722,24 @@ def stock(stock):
         else None
     )
 
+    if form.validate_on_submit():
+
+        total = stock_entry.get_count_on_date(form.date.data)
+        date = form.date.data
+        
+        return render_template(
+            "stock.html",
+            fish_list=fish.items,
+            next_url=next_url,
+            prev_url=prev_url,
+            pagination=fish,
+            form=form,
+            title=f"Stock ({stock})",
+            stock=stock_entry,
+            total=total,
+            date=date
+        )
+
     return render_template(
         "stock.html",
         fish_list=fish.items,
@@ -1776,6 +1749,7 @@ def stock(stock):
         form=form,
         title=f"Stock ({stock})",
         stock=stock_entry,
+        total = -1,
     )
 
 
@@ -1858,6 +1832,8 @@ def stock_changes(stock, filters="all"):
 @login_required
 @requires_roles( "Admin", "Owner")
 def all_stocks():
+
+    
     page = request.args.get("page", 1, type=int)
 
     living_stocks = Stock.query.filter_by(fish_alive = True).order_by(Stock.name.desc()).paginate(
