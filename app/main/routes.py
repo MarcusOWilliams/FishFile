@@ -1,7 +1,6 @@
 from datetime import datetime
 from os import abort
 import sys
-from turtle import title
 
 
 from wtforms.validators import DataRequired, ValidationError
