@@ -480,7 +480,6 @@ A fish can have multiple alleles associated with it, each being a new object of 
 This table has relationships to: Fish
 """
 
-
 class Allele(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
