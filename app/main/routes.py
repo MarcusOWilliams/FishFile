@@ -642,6 +642,7 @@ def newfish():
         )
         db.session.add(newfish)
         stock.update_current_total()
+        stock.increase_yearly_total(newfish.total)
         if form.project_license.data != None and form.project_license.data != "":
             license_holder = User.query.filter_by(
                 project_license=form.project_license.data
@@ -849,6 +850,7 @@ def updatefish(id):
             fish.status = form.status.data
             fish.stock = stock
             stock.update_current_total()
+            stock.increase_yearly_total(form.total.data)
             fish.protocol = form.protocol.data
             fish.birthday = form.birthday.data
             fish.months = fish.getMonths()

@@ -1,6 +1,6 @@
 from app import scheduler, db
 import sys
-from app.models import Fish, Notification, Reminder
+from app.models import Fish, Notification, Reminder, Stock
 from datetime import datetime
 from dateutil import relativedelta
 
@@ -48,7 +48,6 @@ def send_age_reminders():
 
             elif fish.getMonths() >= 5 and fish.age_reminder != "5 Months":
                 fish.send_age_reminder(5)
-        print("task done")
 
 
 @scheduler.task("cron", id="update_fish_months", hour="1")
@@ -61,6 +60,14 @@ def update_fish_months():
         for fish in all_fish:
 
             fish.months = fish.getMonths()
-            print(f"{fish} updated")
 
         db.session.commit()
+
+@scheduler.task("cron", id="update_stock_yearly", hour="3")
+def update_stock_yearly(): 
+    today = datetime.today()
+    if int(today.month) == 1 and int(today.day) == 1:
+        with scheduler.app.app_context():
+            stocks = Stock.query.all()
+            for stock in stocks:
+                stock.update_yearly_total()

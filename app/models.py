@@ -383,6 +383,7 @@ class Fish(db.Model):
             users=[self.project_license_holder.id], category="Age reminder"
         )
 
+    
 
 """
 This is the class for the Stock table of the SQL database
@@ -406,10 +407,23 @@ class Stock(db.Model):
         current = 0
         for fish in self.fish:
             current += fish.total
-            
+
         self.current_total = current
         db.session.commit()
 
+    def increase_yearly_total(self, num):
+
+        self.year_total += num
+        db.session.commit()
+    
+    #this method is called on the first day of the year
+    def update_yearly_total(self):
+
+        self.update_current_total()
+
+        self.year_total = int(self.current_total)
+        
+        db.session.commit()
 
 """
 This is the class for the Allele table of the SQL database

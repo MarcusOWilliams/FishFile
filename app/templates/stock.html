@@ -6,7 +6,8 @@
     <p>Showing the fish that are currently alive and are part of the stock {{stock}}</p>
     
     <p>Current number of fish in tanks under this stock: <b>{{stock.current_total}}</b></p>
-    
+    <p>Max total from start of year: <b>{{stock.year_total}} </b><span class="infoPopup" onclick="popupShow('stockTotalInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="stockTotalInfoPopupText"> This is the total number of fish as of the 1st of January plus the original total of any new tanks that have been added since.<br><span style="color: red;">Warning: this may not be accurate if fish have been transferred from the old system</span></span></span></p>
+
     <p><a href="{{url_for('main.stock_changes', stock = stock, filters='total')}}">View changes in the total number of fish for this stock</a></p>
     <form action = "", method="post">
         {{form.hidden_tag()}}
