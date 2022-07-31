@@ -1880,6 +1880,7 @@ def all_stocks():
 
     return render_template("all_stocks.html", stocks = living_stocks.items, title="All Stocks", next_url=next_url,prev_url=prev_url, pagination=living_stocks )
 
+
 """
 This function describes the route for /settings
 Permission required for this route are "User", "Researcher", "Admin", "Owner"
