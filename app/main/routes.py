@@ -1858,9 +1858,6 @@ def stock_changes(stock, filters="all"):
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def all_stocks():
-    stocks = Stock.query.all()
-    for s in stocks:
-        s.has_alive_fish()
     page = request.args.get("page", 1, type=int)
 
     living_stocks = Stock.query.filter_by(fish_alive = True).order_by(Stock.name.desc()).paginate(
