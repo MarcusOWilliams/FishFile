@@ -412,8 +412,11 @@ class Stock(db.Model):
         db.session.commit()
 
     def increase_yearly_total(self, num):
+        if self.year_total is not None:
+            self.year_total += num
+        else:
+            self.year_total = num
 
-        self.year_total += num
         db.session.commit()
     
     #this method is called on the first day of the year
@@ -422,7 +425,7 @@ class Stock(db.Model):
         self.update_current_total()
 
         self.year_total = int(self.current_total)
-        
+
         db.session.commit()
 
 """
