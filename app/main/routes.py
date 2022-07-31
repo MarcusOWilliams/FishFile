@@ -1764,7 +1764,7 @@ def stock(stock):
         pagination=fish,
         form=form,
         title=f"Stock ({stock})",
-        stock=stock,
+        stock=stock_entry,
     )
 
 

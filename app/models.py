@@ -406,7 +406,7 @@ class Stock(db.Model):
         current = 0
         for fish in self.fish:
             current += fish.total
-
+            
         self.current_total = current
         db.session.commit()
 
