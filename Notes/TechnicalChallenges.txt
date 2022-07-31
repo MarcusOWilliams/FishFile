@@ -16,3 +16,6 @@ Making custom codes and license
     Needed to make checks for if there was user codes
     Needed to use javascript for forms and correct validation
     making usre there was only one of each and the user couldn't be confused which
+
+Adding stock total on custom Date
+    Making it work once the system had already been created
