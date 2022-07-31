@@ -1856,7 +1856,7 @@ def stock_changes(stock, filters="all"):
 
 @bp.route("/all_stocks/", methods=["GET", "POST"])
 @login_required
-@requires_roles("User", "Researcher", "Admin", "Owner")
+@requires_roles( "Admin", "Owner")
 def all_stocks():
     page = request.args.get("page", 1, type=int)
 
@@ -2030,7 +2030,7 @@ This route is used for showing a site owner a list of all users
 def user_list():
     users = User.query.order_by(User.id.desc())
 
-    return render_template("Admin/user_list.html", users=users, title="User List")
+    return render_template("admin/user_list.html", users=users, title="User List")
 
 
 """

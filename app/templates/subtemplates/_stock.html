@@ -1,1 +1,18 @@
-<p>{{stock.name}}, total = {{stock.current_total}}</p>
+<table class="table table-striped" style="width: 80%; margin:auto; table-layout:fixed;">
+    <tr >
+        <td>
+            <b>Stock: </b>{{stock.name}}
+        </td>
+        <td>
+            <b>Current total: </b>{{stock.current_total}}
+        </td>
+
+        <td>
+            <b>Yearly total: </b>{{stock.year_total}}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3"><a href="{{url_for('main.stock', stock = stock.name)}}" target="_blank">View Stock...</a></td>
+    </tr>
+</table>
+<br>
