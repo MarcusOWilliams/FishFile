@@ -111,7 +111,7 @@ class MainEndToEnd(unittest.TestCase):
         tank_id = driver.find_element("id", "tank_id")
         tank_id.send_keys("Auto Test")
         stock = driver.find_element("id", "stock")
-        stock.send_keys("Auto Test")
+        stock.send_keys("S0001")
         license = Select(driver.find_element("id", "project_license"))
         license.select_by_visible_text('ABC123456')
         code = Select(driver.find_element("id", "user_code"))
