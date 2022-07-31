@@ -4,9 +4,9 @@
 {% block content %}
     <h2>Stock: {{stock}}</h2>
     <p>Showing the fish that are currently alive and are part of the stock {{stock}}</p>
-    {%if current_total%}
-        <p>Current number of fish in tanks under this stock: <b>{{stock.current_total}}</b></p>
-    {%endif%}
+    
+    <p>Current number of fish in tanks under this stock: <b>{{stock.current_total}}</b></p>
+    
     <p><a href="{{url_for('main.stock_changes', stock = stock, filters='total')}}">View changes in the total number of fish for this stock</a></p>
     <form action = "", method="post">
         {{form.hidden_tag()}}
