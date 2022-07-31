@@ -4,6 +4,6 @@ __pycache__/
 
 Notes/toRun.txt
 
-app\static\files\personal_licenses
+app/static/files
 
-app\static\files\project_licenses
+app/static/uploads
