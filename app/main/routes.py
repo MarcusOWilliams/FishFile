@@ -641,7 +641,7 @@ def newfish():
             mother=mother
         )
         db.session.add(newfish)
-
+        stock.update_current_total()
         if form.project_license.data != None and form.project_license.data != "":
             license_holder = User.query.filter_by(
                 project_license=form.project_license.data
@@ -848,6 +848,7 @@ def updatefish(id):
             fish.tank_id = form.tank_id.data.upper()
             fish.status = form.status.data
             fish.stock = stock
+            stock.update_current_total()
             fish.protocol = form.protocol.data
             fish.birthday = form.birthday.data
             fish.months = fish.getMonths()
@@ -1020,7 +1021,14 @@ def updatefish(id):
             db.session.add(change)
             change_count += 1
 
+            old_stock = fish.stock
+
             fish.stock = stock
+            stock.update_current_total()
+
+            if old_stock is not None:
+                old_stock.update_current_total()
+
 
         if fish.protocol != form.protocol.data:
             change = Change(
@@ -1669,7 +1677,7 @@ This route is used for showing all the fish associated with a stock
 @bp.route("/stock/<stock>/", methods=["GET", "POST"])
 @login_required
 @requires_roles("User", "Researcher", "Admin", "Owner")
-def stock(stock):
+def stock(stock_name):
 
     form = OrderForm()
 
@@ -1677,7 +1685,7 @@ def stock(stock):
 
         session["order_by"] = form.order.data
 
-        return redirect(url_for("main.stock", stock=stock))
+        return redirect(url_for("main.stock", stock=stock_name))
 
     page = request.args.get("page", 1, type=int)
 
@@ -1685,44 +1693,46 @@ def stock(stock):
 
     form.order.data = order
 
+    stock  = Stock.query.filter_by(name = stock_name).first()    
+
     if order == "Age ( young -> old )":
         fish = (
-            Fish.query.filter_by(stock_name=stock)
+            Fish.query.filter_by(stock_name=stock_name)
             .filter(Fish.status != "Dead", Fish.birthday != None)
             .order_by(Fish.birthday.desc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Age (old -> young)":
         fish = (
-            Fish.query.filter_by(stock_name=stock)
+            Fish.query.filter_by(stock_name=stock_name)
             .filter(Fish.status != "Dead", Fish.birthday != None)
             .order_by(Fish.birthday.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Fish ID":
         fish = (
-            Fish.query.filter_by(stock_name=stock)
+            Fish.query.filter_by(stock_name=stock_name)
             .filter(Fish.status != "Dead")
             .order_by(Fish.fish_id.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Tank ID":
         fish = (
-            Fish.query.filter_by(stock_name=stock)
+            Fish.query.filter_by(stock_name=stock_name)
             .filter(Fish.status != "Dead")
             .order_by(Fish.tank_id.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Stock":
         fish = (
-            Fish.query.filter_by(stock_name=stock)
+            Fish.query.filter_by(stock_name=stock_name)
             .filter(Fish.status != "Dead")
             .order_by(Fish.stock_name.asc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Newest Added":
         fish = (
-            Fish.query.filter_by(stock_name=stock)
+            Fish.query.filter_by(stock_name=stock_name)
             .filter(Fish.status != "Dead")
             .order_by(Fish.added.desc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
@@ -1730,21 +1740,18 @@ def stock(stock):
     else:
 
         fish = (
-            Fish.query.filter_by(stock_name=stock)
+            Fish.query.filter_by(stock_name=stock_name)
             .filter(Fish.status != "Dead")
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
-    current_total = 0
-    for entry in fish.items:
-        current_total += entry.total
-
+   
     next_url = (
-        url_for("main.stock", stock_name=stock, page=fish.next_num)
+        url_for("main.stock", stock_name=stock_name, page=fish.next_num)
         if fish.has_next
         else None
     )
     prev_url = (
-        url_for("main.stock", stock_name=stock, page=fish.prev_num)
+        url_for("main.stock", stock_name=stock_name, page=fish.prev_num)
         if fish.has_prev
         else None
     )

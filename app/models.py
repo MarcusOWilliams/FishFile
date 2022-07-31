@@ -383,6 +383,12 @@ class Fish(db.Model):
             users=[self.project_license_holder.id], category="Age reminder"
         )
 
+
+"""
+This is the class for the Stock table of the SQL database
+A stock can have multiple fish associated with it
+This table has relationships to: Fish
+"""
 class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
@@ -394,6 +400,17 @@ class Stock(db.Model):
     
     def __repr__(self):
         return self.name
+
+    def update_current_total(self):
+
+        current = 0
+        for fish in self.fish:
+            current += fish.total
+
+        self.current_total = current
+        db.session.commit()
+
+
 """
 This is the class for the Allele table of the SQL database
 A fish can have multiple alleles associated with it, each being a new object of this class
