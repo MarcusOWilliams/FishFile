@@ -3,3 +3,7 @@ venv/
 __pycache__/
 
 Notes/toRun.txt
+
+app\static\files\personal_licenses
+
+app\static\files\project_licenses
