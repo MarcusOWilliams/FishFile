@@ -266,7 +266,7 @@ def search():
         all_results = result.all()
         all_fish = result.paginate(page, current_app.config["FISH_PER_PAGE"], False)
     elif order == "Stock":
-        result = Fish.query.select_entity_from(all_fish).order_by(Fish.stock_name.asc())
+        result = Fish.query.select_entity_from(all_fish).order_by(Fish.stock_name.desc())
         all_results = result.all()
         all_fish = result.paginate(page, current_app.config["FISH_PER_PAGE"], False)
     elif order == "Newest Added":
@@ -1576,7 +1576,7 @@ def allfish():
         fish = Fish.query.order_by(Fish.tank_id.asc()).all()
 
     elif order == "Stock":
-        fish = Fish.query.order_by(Fish.stock_name.asc()).all()
+        fish = Fish.query.order_by(Fish.stock_name.desc()).all()
     elif order == "Newest Added":
         fish = Fish.query.order_by(Fish.added.desc()).all()
     else:
@@ -1643,7 +1643,7 @@ def project_license(license):
     elif order == "Stock":
         fish = (
             Fish.query.filter_by(project_license_holder=user)
-            .order_by(Fish.stock_name.asc())
+            .order_by(Fish.stock_name.desc())
             .paginate(page, current_app.config["FISH_PER_PAGE"], False)
         )
     elif order == "Newest Added":

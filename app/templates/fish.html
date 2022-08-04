@@ -137,7 +137,7 @@
         {%if fish.reminders.count() >0%}
             <p class = "fishInfoPoint"><span class="pointHeader">Current reminders:</span>
                 {%for reminder in fish.reminders%}
-                    <p class = "fishInfoPoint" style="margin-left:20px;">{%if reminder.message%} Reminder: {{reminder.message}},{%endif%} {%if reminder.date%} Date: {{reminder.date}} {%endif%}</p>
+                    <p class = "fishInfoPoint" style="margin-left:20px;">{%if reminder.message%} Reminder: {{reminder.message}},{%endif%} {%if reminder.date%} Date: {{reminder.date}} {%endif%} User: {{reminder.user}}</p>
                 {%endfor%}
             </p>
         {%else%}

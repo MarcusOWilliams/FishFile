@@ -55,7 +55,7 @@ class User(UserMixin, db.Model):
     )
 
     def __repr__(self):
-        return "<User {} {}>".format(self.first_name, self.last_name)
+        return "{} {}".format(self.first_name, self.last_name)
 
     def delete_personal_document(self):
         if not self.personal_document:
@@ -384,7 +384,6 @@ class Fish(db.Model):
             users=[self.project_license_holder.id], category="Age reminder"
         )
 
-    
 
 """
 This is the class for the Stock table of the SQL database
@@ -707,5 +706,5 @@ class Reminder(db.Model):
     def __repr__(self):
 
         return (
-            f"Reminder - Messgae: {self.message}, Date: {self.date}, Sent: {self.sent}"
+            f"Reminder - User:{self.user} Messgae: {self.message}, Date: {self.date}, Sent: {self.sent}"
         )

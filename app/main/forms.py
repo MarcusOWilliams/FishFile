@@ -271,11 +271,11 @@ class SearchFrom(FlaskForm):
         "Order By:",
         validators=[DataRequired()],
         choices=[
+            "Stock",
             "Newest Added",
             "Oldest Added",
             "Fish ID",
             "Tank ID",
-            "Stock",
             "Age ( young -> old )",
             "Age (old -> young)",
         ],
