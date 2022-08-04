@@ -71,3 +71,11 @@ def update_stock_yearly():
             stocks = Stock.query.all()
             for stock in stocks:
                 stock.update_yearly_total()
+
+@scheduler.task("interval", id="test_function", seconds=45)
+def test_function():
+    with scheduler.app.app_context():
+        print("done")
+        fish = Fish.query.filter_by(stock_name= "S0001").first()
+        fish.protocol = int(fish.protocol) + 1
+        db.session.commit()
