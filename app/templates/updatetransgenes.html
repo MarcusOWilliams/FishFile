@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %} 
+<h2>Updating transgene values for: {{fish}}</h2>
+<form action="{{url_for('main.updatetransgenes', id=fish.id)}}" method="POST">
+    <div id="updateTransgenesBlock">
+        <table class = "geneTable" id="transgeneTable" style="margin: auto; margin-top:20px;">
+            <tr>
+                <th>Name</th>
+                <th>Unidentified</th>
+                <th>Identified</th>
+                <th>Heterozygous</th>
+                <th>Homozygous</th>
+                <th>Hemizygous</th>
+            </tr>
+            {%for gene in transgenes%}
+                <tr>
+                    <th>{{gene.name}}</th>
+                    <td><input type="checkbox" name = '{{gene.name.replace(" ", "")+"Unidentified"}}' {%if gene.unidentified %} checked {%endif%}></td>
+                    <td><input type="checkbox" name = '{{gene.name.replace(" ", "")+"Identified"}}' {%if gene.identified %} checked {%endif%}></td>
+                    <td><input type="checkbox" name = '{{gene.name.replace(" ", "")+"Heterozygous"}}' {%if gene.heterozygous %} checked {%endif%}></td>
+                    <td><input type="checkbox" name = '{{gene.name.replace(" ", "")+"Homozygous"}}' {%if gene.homozygous %} checked {%endif%}></td>
+                    <td><input type="checkbox" name = '{{gene.name.replace(" ", "")+"Hemizygous"}}' {%if gene.hemizygous %} checked {%endif%}></td>
+                </tr>
+            {%endfor%}
+        </table>
+    </div>
+    <input id="submit" type="submit" class="btn btn-secondary" style="margin-top: 10px;", value="Update">
+</form>
+
+
+{%endblock%}

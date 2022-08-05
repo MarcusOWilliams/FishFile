@@ -360,7 +360,12 @@
     background-color: tomato;
 }
 
-#updateAllelsBlock{
+#updateAllelesBlock{
+    margin: auto;
+    text-align: center;
+}
+
+#updateTransgenesBlock{
     margin: auto;
     text-align: center;
 }

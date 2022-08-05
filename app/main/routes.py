@@ -418,8 +418,8 @@ This route is used for displaying a fish entry and its related data
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def fish(id):
     fish = Fish.query.filter_by(id=id).first_or_404()
-    alleles = Allele.query.filter_by(fish=fish).all()
-    transgenes = Transgene.query.filter_by(fish=fish).all()
+    alleles = Allele.query.filter_by(fish=fish).order_by(Allele.name.asc()).all()
+    transgenes = Transgene.query.filter_by(fish=fish).order_by(Transgene.name.asc()).all()
     if fish is None:
         title = "Fish Not Found"
     else:
@@ -530,51 +530,6 @@ def fishhistory(id):
     )
 
 
-"""
-This function describes the route for /fish/id/updatealleles
-Permission required for this route are "Researcher", "Admin", "Owner"
-This route is used for updating the status of the alleles of a given fish entry
-"""
-
-
-@bp.route("/fish/<id>/updatealleles/", methods=["GET", "POST"])
-@login_required
-@requires_roles("Researcher", "Admin", "Owner")
-def updatealleles(id):
-    fish = Fish.query.filter_by(id=id).first_or_404()
-    alleles = Allele.query.filter_by(fish=fish).all()
-
-    if request.method == "POST":
-
-        for allele in alleles:
-
-            allele.unidentified = (
-                request.form.get(f"{allele.name.replace(' ', '')}Unidentified") == "on"
-            )
-
-            allele.identified = (
-                request.form.get(f"{allele.name.replace(' ', '')}Identified") == "on"
-            )
-
-            allele.heterozygous = (
-                request.form.get(f"{allele.name.replace(' ', '')}Heterozygous") == "on"
-            )
-
-            allele.homozygous = (
-                request.form.get(f"{allele.name.replace(' ', '')}Homozygous") == "on"
-            )
-
-            allele.hemizygous = (
-                request.form.get(f"{allele.name.replace(' ', '')}Hemizygous") == "on"
-            )
-
-        db.session.commit()
-
-        return redirect(url_for("main.fish", id=fish.id))
-
-    return render_template(
-        "updatealleles.html", fish=fish, alleles=alleles, title="Update Alleles"
-    )
 
 
 """
@@ -1897,6 +1852,98 @@ def all_stocks():
 
     return render_template("all_stocks.html", stocks = living_stocks.items, title="All Stocks", next_url=next_url,prev_url=prev_url, pagination=living_stocks )
 
+"""
+This function describes the route for /fish/id/updatealleles
+Permission required for this route are "Researcher", "Admin", "Owner"
+This route is used for updating the status of the alleles of a given fish entry
+"""
+
+
+@bp.route("/fish/<id>/updatealleles/", methods=["GET", "POST"])
+@login_required
+@requires_roles("Researcher", "Admin", "Owner")
+def updatealleles(id):
+    fish = Fish.query.filter_by(id=id).first_or_404()
+    alleles = Allele.query.filter_by(fish=fish).order_by(Allele.name.asc()).all()
+
+    if request.method == "POST":
+
+        for allele in alleles:
+
+            allele.unidentified = (
+                request.form.get(f"{allele.name.replace(' ', '')}Unidentified") == "on"
+            )
+
+            allele.identified = (
+                request.form.get(f"{allele.name.replace(' ', '')}Identified") == "on"
+            )
+
+            allele.heterozygous = (
+                request.form.get(f"{allele.name.replace(' ', '')}Heterozygous") == "on"
+            )
+
+            allele.homozygous = (
+                request.form.get(f"{allele.name.replace(' ', '')}Homozygous") == "on"
+            )
+
+            allele.hemizygous = (
+                request.form.get(f"{allele.name.replace(' ', '')}Hemizygous") == "on"
+            )
+
+        db.session.commit()
+
+        return redirect(url_for("main.fish", id=fish.id))
+
+    return render_template(
+        "updatealleles.html", fish=fish, alleles=alleles, title="Update Alleles"
+    )
+
+
+"""
+This function describes the route for /fish/id/updatetransgenes
+Permission required for this route are "Researcher", "Admin", "Owner"
+This route is used for updating the status of the transgenes of a given fish entry
+"""
+
+
+@bp.route("/fish/<id>/updatetransgenes/", methods=["GET", "POST"])
+@login_required
+@requires_roles("Researcher", "Admin", "Owner")
+def updatetransgenes(id):
+    fish = Fish.query.filter_by(id=id).first_or_404()
+    transgenes = Transgene.query.filter_by(fish=fish).order_by(Transgene.name.asc()).all()
+
+    if request.method == "POST":
+
+        for gene in transgenes:
+
+            gene.unidentified = (
+                request.form.get(f"{gene.name.replace(' ', '')}Unidentified") == "on"
+            )
+
+            gene.identified = (
+                request.form.get(f"{gene.name.replace(' ', '')}Identified") == "on"
+            )
+
+            gene.heterozygous = (
+                request.form.get(f"{gene.name.replace(' ', '')}Heterozygous") == "on"
+            )
+
+            gene.homozygous = (
+                request.form.get(f"{gene.name.replace(' ', '')}Homozygous") == "on"
+            )
+
+            gene.hemizygous = (
+                request.form.get(f"{gene.name.replace(' ', '')}Hemizygous") == "on"
+            )
+
+        db.session.commit()
+
+        return redirect(url_for("main.fish", id=fish.id))
+
+    return render_template(
+        "updatetransgenes.html", fish=fish, transgenes=transgenes, title="Update Transgenes"
+    )
 
 """
 This function describes the route for /settings

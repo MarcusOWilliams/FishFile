@@ -77,7 +77,7 @@
                         {%endfor%}
                     </table>
                     {%if current_user.isResearcher()%}
-                        <a id="updateTransgenesLink"href="{{url_for('main.updatealleles', id=fish.id)}}">Update values</a>
+                        <a id="updateTransgenesLink"href="{{url_for('main.updatetransgenes', id=fish.id)}}">Update transgene values</a>
                     {%endif%}
                 </div>
 
@@ -108,7 +108,7 @@
                         {%endfor%}
                     </table>
                     {%if current_user.isResearcher()%}
-                        <a id="updateAllelesLink"href="{{url_for('main.updatealleles', id=fish.id)}}">Update values</a>
+                        <a id="updateAllelesLink"href="{{url_for('main.updatealleles', id=fish.id)}}">Update allele values</a>
                     {%endif%}
                 </div>
 
