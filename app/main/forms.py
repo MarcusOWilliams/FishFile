@@ -218,6 +218,7 @@ class NewFish(FlaskForm):
 
 
 
+
 class FilterChanges(FlaskForm):
     fish_id = BooleanField("Fish ID")
     tank_id = BooleanField("Tank ID")

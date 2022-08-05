@@ -700,15 +700,16 @@ def newfish():
                     reminder.send_reminder()
 
             if license_holder is not None:
-                reminder = Reminder(
-                    user=license_holder,
-                    fish=newfish,
-                    date=form.alert_date.data,
-                    message=form.alert_msg.data,
-                )
-                db.session.add(reminder)
-                if reminder.date <= datetime.today().date():
-                    reminder.send_reminder()
+                if fish_user != license_holder:
+                    reminder = Reminder(
+                        user=license_holder,
+                        fish=newfish,
+                        date=form.alert_date.data,
+                        message=form.alert_msg.data,
+                    )
+                    db.session.add(reminder)
+                    if reminder.date <= datetime.today().date():
+                        reminder.send_reminder()
 
         if fish_user is not None:
             if newfish.user_code.settings.add_notifications:
@@ -921,17 +922,30 @@ def updatefish(id):
                     db.session.add(photo)
 
             if form.alert_date.data or form.alert_msg.data:
-                reminder = Reminder(
-                    user=fish.user_code,
-                    fish=fish,
-                    date=form.alert_date.data,
-                    message=form.alert_msg.data,
-                )
-                db.session.add(reminder)
+                if fish_user is not None:
+                    reminder = Reminder(
+                        user=fish_user,
+                        fish=fish,
+                        date=form.alert_date.data,
+                        message=form.alert_msg.data,
+                    )
+                    db.session.add(reminder)
+                    if reminder.date <= datetime.today().date():
+                        reminder.send_reminder()
 
-                if reminder.date <= datetime.today().date():
-                    reminder.send_reminder()
+                if license_holder is not None:
+                    if fish_user != license_holder:
+                        reminder = Reminder(
+                            user=license_holder,
+                            fish=fish,
+                            date=form.alert_date.data,
+                            message=form.alert_msg.data,
+                        )
+                        db.session.add(reminder)
+                        if reminder.date <= datetime.today().date():
+                            reminder.send_reminder()
 
+            db.session.commit()
             notification = Notification(
                 fish=fish,
                 category="Change",
@@ -1493,15 +1507,16 @@ def updatefish(id):
                     reminder.send_reminder()
 
             if license_holder is not None:
-                reminder = Reminder(
-                    user=license_holder,
-                    fish=fish,
-                    date=form.alert_date.data,
-                    message=form.alert_msg.data,
-                )
-                db.session.add(reminder)
-                if reminder.date <= datetime.today().date():
-                    reminder.send_reminder()
+                if fish_user != license_holder:
+                    reminder = Reminder(
+                        user=license_holder,
+                        fish=fish,
+                        date=form.alert_date.data,
+                        message=form.alert_msg.data,
+                    )
+                    db.session.add(reminder)
+                    if reminder.date <= datetime.today().date():
+                        reminder.send_reminder()
 
             db.session.commit()
 
