@@ -216,7 +216,6 @@ class Fish(db.Model):
     age_reminder = db.Column(db.String(64), default="Not sent")
 
     mutant_gene = db.Column(db.Text())
-    transgenes = db.Column(db.Text())
     cross_type = db.Column(db.String(64))
     comments = db.Column(db.Text())
     added = db.Column(db.DateTime, default=datetime.utcnow)
@@ -272,6 +271,10 @@ class Fish(db.Model):
     alleles = db.relationship(
         "Allele", backref="fish", lazy="dynamic", cascade="all, delete"
     )
+
+    transgenes = db.relationship(
+        "Transgene", backref="fish", lazy="dynamic", cascade="all, delete"
+    )
     photos = db.relationship(
         "Photo", backref="fish", lazy="dynamic", cascade="all, delete"
     )
@@ -280,13 +283,14 @@ class Fish(db.Model):
     system = db.Column(db.String(64), default="New")
     old_code = db.Column(db.String(64))
     old_license = db.Column(db.String(64))
-    old_mID = db.Column(db.String(64))
+    old_mID = db.Column(db.Text())
     old_mStock = db.Column(db.String(64))
-    old_fID = db.Column(db.String(64))
+    old_fID = db.Column(db.Text())
     old_fStock = db.Column(db.String(64))
     old_birthday = db.Column(db.String(64))
     old_arrival = db.Column(db.String(64))
-    old_allele = db.Column(db.String(64))
+    old_allele = db.Column(db.Text())
+    old_transgenes = db.Column(db.Text())
 
 
     def __repr__(self):
@@ -528,6 +532,24 @@ def get_all_allele_names():
     names = set(allele[0] for allele in alleles)
     return names
 
+"""
+This is the class for the Transgene table of the SQL database
+A fish can have multiple transgenes associated with it, each being a new object of this class
+This table has relationships to: Fish
+"""
+
+class Transgene(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fish_id = db.Column(db.Integer, db.ForeignKey("fish.id"))
+    name = db.Column(db.String(128))
+    unidentified = db.Column(db.Boolean, default=True)
+    identified = db.Column(db.Boolean, default=False)
+    homozygous = db.Column(db.Boolean, default=False)
+    heterozygous = db.Column(db.Boolean, default=False)
+    hemizygous = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return f"Allele: {self.name} - Fish: {self.fish.stock_name}"
 
 """
 This is the class for the Photo table of the SQL database

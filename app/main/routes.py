@@ -893,6 +893,7 @@ def updatefish(id):
             fish.old_birthday = None
             fish.old_arrival = None
             fish.old_allele = None
+            fish.old_transgenes = None
 
             if fish.status == "Dead":
                 fish.total = 0
