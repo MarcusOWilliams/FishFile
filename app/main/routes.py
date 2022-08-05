@@ -15,6 +15,7 @@ from app.models import (
     Fish,
     Notification,
     Reminder,
+    Transgene,
     User,
     get_all_allele_names,
     get_all_user_codes,
@@ -223,7 +224,8 @@ def search():
                 search = search.strip()
                 all_fish = (
                     Fish.query.select_entity_from(all_fish)
-                    .filter(Fish.transgenes.contains(search))
+                    .join(Fish.transgenes, aliased=True)
+                    .filter(Transgene.name == search)
                     .subquery()
                 )
 
@@ -417,6 +419,7 @@ This route is used for displaying a fish entry and its related data
 def fish(id):
     fish = Fish.query.filter_by(id=id).first_or_404()
     alleles = Allele.query.filter_by(fish=fish).all()
+    transgenes = Transgene.query.filter_by(fish=fish).all()
     if fish is None:
         title = "Fish Not Found"
     else:
@@ -427,7 +430,7 @@ def fish(id):
         return render_template("oldfish.html", fish=fish, title=title, form=EmptyForm())
 
     return render_template(
-        "fish.html", fish=fish, title=title, alleles=alleles, form=EmptyForm()
+        "fish.html", fish=fish, title=title, alleles=alleles, transgenes=transgenes, form=EmptyForm()
     )
 
 
@@ -628,7 +631,6 @@ def newfish():
             birthday=form.birthday.data,
             date_of_arrival=form.date_of_arrival.data,
             mutant_gene=form.mutant_gene.data,
-            transgenes=form.transgenes.data,
             cross_type=form.cross_type.data,
             comments=form.comments.data,
             links=form.links.data,
@@ -670,6 +672,10 @@ def newfish():
         for name in form.allele.data:
             allele = Allele(name=name, fish=newfish)
             db.session.add(allele)
+
+        for name in form.transgenes.data.split("\n"):
+            transgene = Transgene(name=name.replace("\r", ""), fish=newfish)
+            db.session.add(transgene)
 
         change = Change(user=current_user, fish=newfish, action="Added")
         db.session.add(change)
@@ -792,8 +798,9 @@ def updatefish(id):
     form.project_license.choices = [""] + get_all_user_licenses()
 
     form.allele.choices = sorted(list(get_all_allele_names()))
-
+    
     current_alleles = [allele.name for allele in fish.alleles]
+    current_transgenes = [gene.name for gene in fish.transgenes]
 
     if form.validate_on_submit():
 
@@ -855,12 +862,12 @@ def updatefish(id):
             stock.update_current_total()
             stock.increase_yearly_total(form.total.data)
             stock.has_alive_fish()
+            stock.get_culled_count()
             fish.protocol = form.protocol.data
             fish.birthday = form.birthday.data
             fish.months = fish.getMonths()
             fish.date_of_arrival = form.date_of_arrival.data
             fish.mutant_gene = form.mutant_gene.data
-            fish.transgenes = form.transgenes.data
             fish.cross_type = form.cross_type.data
             fish.comments = form.comments.data
             fish.links = form.links.data
@@ -901,6 +908,10 @@ def updatefish(id):
             for name in form.allele.data:
                 allele = Allele(name=name, fish=fish)
                 db.session.add(allele)
+            
+            for name in form.transgenes.data.split("\n"):
+                transgene = Transgene(name=name.replace("\r", ""), fish=fish)
+                db.session.add(transgene)
 
             for photo in form.photos.data:
                 if photo is None or photo.filename == "":
@@ -1123,22 +1134,7 @@ def updatefish(id):
             fish.mutant_gene = form.mutant_gene.data
             change_count += 1
 
-        if fish.transgenes != form.transgenes.data:
-            change = Change(
-                user=current_user,
-                fish=fish,
-                action="Updated",
-                contents="transgenes",
-                field="transgenes",
-                old=fish.transgenes,
-                new=form.transgenes.data,
-                notification=notification,
-            )
-            db.session.add(change)
-
-            fish.transgenes = form.transgenes.data
-            change_count += 1
-
+        
         if fish.cross_type != form.cross_type.data:
             change = Change(
                 user=current_user,
@@ -1454,6 +1450,35 @@ def updatefish(id):
 
             change_count += 1
 
+        print(sorted(current_transgenes), file=sys.stderr)
+        print(sorted([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]), file=sys.stderr)
+
+        
+        
+        if sorted(current_transgenes) != sorted([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]):
+            print("names updated",file=sys.stderr)
+            change = Change(
+                user=current_user,
+                fish=fish,
+                action="Updated",
+                contents="transgenes",
+                field="transgenes",
+                old=", ".join(current_transgenes),
+                new=", ".join([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]),
+                notification=notification,
+            )
+            db.session.add(change)
+
+            Transgene.query.filter_by(fish=fish).delete()
+
+
+            for name in form.transgenes.data.split("\n"):
+                print(name,file=sys.stderr)
+                transgene = Transgene(name=name.replace("\r", ""), fish=fish)
+                db.session.add(transgene)
+
+            
+
         if pictures != None and pictures != [""]:
             change = Change(
                 user=current_user,
@@ -1537,7 +1562,7 @@ def updatefish(id):
     form.allele.data = current_alleles
     form.links.data = fish.links
     form.mutant_gene.data = fish.mutant_gene
-    form.transgenes.data = fish.transgenes
+    form.transgenes.data = "\n".join(current_transgenes)
 
     return render_template(
         "updatefish.html",

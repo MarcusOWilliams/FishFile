@@ -334,29 +334,29 @@
     min-width:130px;
 }
 
-#alleleBlock{
+.geneBlock{
     margin-left:40px;
 }
-#alleleTable{
+.geneTable{
     text-align: center;
 }
-#alleleTable td{
+.geneTable td{
     border: 1px black solid;
     padding:2px;
 }
-#alleleTable th{
+.geneTable th{
     border-right:1px black solid ;
     padding:5px;
 }
-#alleleTable tr{
+.geneTable tr{
     border-bottom: 1px black solid;
     padding:2px;
 }
-#alleleTable .trueCell{
+.geneTable .trueCell{
     background-color: mediumseagreen;
 }
 
-#alleleTable .falseCell{
+.geneTable .falseCell{
     background-color: tomato;
 }
 

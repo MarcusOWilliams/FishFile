@@ -5,6 +5,7 @@ from email.policy import default
 from enum import unique
 from math import remainder
 import os
+import re
 import sys
 from tracemalloc import start
 from unicodedata import category
@@ -360,6 +361,17 @@ class Fish(db.Model):
             return age_difference.months
         except:
             return 0
+    def get_allele_names_string(self):
+        if self.alleles is None:
+            return " "
+        name_list = [i.name for i in self.alleles]
+        return "; ".join(name_list)
+
+    def get_transgene_names_string(self):
+        if self.transgenes is None:
+            return " "
+        name_list = [i.name for i in self.transgenes]
+        return "; ".join(name_list)
 
     def delete_photo(self, photo_name):
 
@@ -532,6 +544,7 @@ def get_all_allele_names():
     names = set(allele[0] for allele in alleles)
     return names
 
+
 """
 This is the class for the Transgene table of the SQL database
 A fish can have multiple transgenes associated with it, each being a new object of this class
@@ -551,6 +564,7 @@ class Transgene(db.Model):
     def __repr__(self):
         return f"Allele: {self.name} - Fish: {self.fish.stock_name}"
 
+    
 """
 This is the class for the Photo table of the SQL database
 A fish can have multiple photos associated with it, each being a new object of this class
