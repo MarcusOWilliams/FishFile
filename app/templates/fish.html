@@ -112,10 +112,18 @@
     </div>
     <div class="fishInfoBlock">
         <h2>Tank Count</h2>
-        <p class = "fishInfoPoint"><span class="pointHeader">Males: </span>{{fish.males}}</p>
-        <p class = "fishInfoPoint"><span class="pointHeader">Females: </span>{{fish.females}}</p>
-        <p class = "fishInfoPoint"><span class="pointHeader">Unsexed: </span>{{fish.unsexed}}</p>
-        <p class = "fishInfoPoint"><span class="pointHeader">Carriers/Licensed: </span>{{fish.carriers}}</p>
+        {% if fish.males != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Males: </span>{{fish.males}}</p>
+        {%endif%}
+        {% if fish.females != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Females: </span>{{fish.females}}</p>
+        {%endif%}
+        {% if fish.unsexed != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Unsexed: </span>{{fish.unsexed}}</p>
+        {%endif%}
+        {% if fish.carriers != None %}
+            <p class = "fishInfoPoint"><span class="pointHeader">Carriers/Licensed: </span>{{fish.carriers}}</p>
+        {%endif%}
         <p class = "fishInfoPoint"><span class="pointHeader">Total: </span>{{fish.total}}</p>
     </div>
     <div class="fishInfoBlock">
@@ -220,7 +228,7 @@
 </div>
 <br>
 <textarea style="width:80%;" id="copyText">ID, Tank ID, Stock, Status, Protocol, Birthday, Date of Arrival, Source, Project License, User code, Mutant gene, Transgenes, Cross Type, Father ID, Father Stock, Mother ID, Mother Stock, Males, Females, Unsexed, Carriers/Licensed, Total
-{{fish.fish_id}}, {{fish.tank_id}}, {{fish.stock.name}}, {{fish.status}}, {{fish.protocol}}, {{fish.birthday}}, {{fish.date_of_arrival}}, {{fish.source}}, {%if fish.project_license_holder != None %}{{fish.project_license_holder.project_license}}{%else%}{{fish.old_license}}{%endif%}, {%if fish.user_code != None %}{{fish.user_code.code}}{%else%}{{fish.old_code}}{%endif%}, {{fish.mutant_gene}}, {{fish.transgenes}}, {{fish.cross_type}}, {{fish.father.fish_id}}, {{fish.father.stock}}, {{fish.mother.fish_id}}, {{fish.mother.stock}}, {{fish.males}}, {{fish.females}}, {{fish.unsexed}}, {{fish.carriers}}, {{fish.total}}
+{{fish.fish_id}}, {{fish.tank_id}}, {{fish.stock.name}}, {{fish.status}}, {{fish.protocol}}, {{fish.birthday}}, {{fish.date_of_arrival}}, {{fish.source}}, {%if fish.project_license_holder != None %}{{fish.project_license_holder.project_license}}{%else%}{{fish.old_license}}{%endif%}, {%if fish.user_code != None %}{{fish.user_code.code}}{%else%}{{fish.old_code}}{%endif%}, {%if fish.mutant_gene != None %} {{" ".join(fish.mutant_gene.split("\n")).replace("\r", " ")}}{%endif%}, {%if fish.transgenes != None and fish.transgenes != "" %} {{' '.join(fish.transgenes.split("\n")).replace("\r", " ")}} {%endif%}, {{fish.cross_type}}, {{fish.father.fish_id}}, {{fish.father.stock}}, {{fish.mother.fish_id}}, {{fish.mother.stock}}, {{fish.males}}, {{fish.females}}, {{fish.unsexed}}, {{fish.carriers}}, {{fish.total}}
 
         </textarea><br>
 <button id="copybtn" class="btn btn-secondary" data-clipboard-action="copy" data-clipboard-target="#copyText" style="margin-bottom:20px">

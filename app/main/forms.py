@@ -69,10 +69,10 @@ class NewFish(FlaskForm):
     father_stock = StringField("Father's Stock #", validators=[Optional()])
     mother_stock = StringField("Mother's Stock #", validators=[Optional()])
 
-    males = IntegerField("* # Males")
-    females = IntegerField("* # Females")
-    unsexed = IntegerField("* # Unsexed")
-    carriers = IntegerField("* # Carriers/Licensed")
+    males = IntegerField("# Males", validators=[Optional()])
+    females = IntegerField("# Females", validators=[Optional()])
+    unsexed = IntegerField("# Unsexed", validators=[Optional()])
+    carriers = IntegerField("# Carriers/Licensed", validators=[Optional()])
     total = IntegerField("* Total #")
     origin_tank_id = StringField("Origin Tank #", validators=[Optional()])
     origin_tank_stock = StringField("Origin Stock #", validators=[Optional()])
@@ -142,30 +142,6 @@ class NewFish(FlaskForm):
                 f"To add an origin tank you must supply both tank # and stock # for the origin tank."
             )
 
-    def validate_males(self, males):
-        if males.data == None or males.data == "":
-            raise ValidationError("This field is required")
-        if males.data < 0:
-            raise ValidationError("The number of males must not be negative")
-
-    def validate_females(self, females):
-        if females.data == None or females.data == "":
-            raise ValidationError("This field is required")
-        if females.data < 0:
-            raise ValidationError("The number of females must not be negative")
-
-    def validate_unsexed(self, unsexed):
-        if unsexed.data == None or unsexed.data == "":
-            raise ValidationError("This field is required")
-        if unsexed.data < 0:
-            raise ValidationError("The number of unsexed fish must not be negative")
-
-    def validate_carriers(self, carriers):
-        if carriers.data == None or carriers.data == "":
-            raise ValidationError("This field is required")
-        if carriers.data < 0:
-            raise ValidationError("The number of carriers must not be negative")
-
     def validate_total(self, total):
         if total.data == None or total.data == "":
             raise ValidationError("This field is required")
@@ -216,7 +192,10 @@ class NewFish(FlaskForm):
             if self.project_license.data != None and self.project_license.data != "":
                 raise ValidationError("You have selected a project license from the list and entered a custom project license, please clear one of these fields (use the link under the input to change fields).")
 
-
+    def validate_alert_date(self, alert_date):
+        if alert_date.data is not None:
+            if self.user_code.data == None or self.user_code.data == "":
+                raise ValidationError("You must select a user code associated with an account otherwise the reminder will not be sent to anyone")
 
 
 class FilterChanges(FlaskForm):

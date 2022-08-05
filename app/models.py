@@ -6,6 +6,7 @@ from enum import unique
 from math import remainder
 import os
 import sys
+from tracemalloc import start
 from unicodedata import category
 
 from sqlalchemy import delete, false
@@ -399,9 +400,37 @@ class Stock(db.Model):
     current_total = db.Column(db.Integer)
     year_total = db.Column(db.Integer)
     fish_alive = db.Column(db.Boolean)
+    culled = db.Column(db.Integer) 
 
     def __repr__(self):
         return self.name
+
+    def get_culled_count(self):
+        now = datetime.now()
+
+        year = now.date().year
+        year_dt = datetime(year, 1,1)
+        culled = 0
+
+        for fish in self.fish:
+            #to get total at start of year
+                #get tha last change in total before the date if there is one
+                change_before = Change.query.filter_by(fish=fish, field = "total").filter(Change.time < year_dt ).order_by(Change.time.desc()).first()
+
+                #get the first change in total after or on the date if there is one
+                change_after = Change.query.filter_by(fish=fish, field = "total").filter(Change.time >= year_dt ).filter(Change.time <= now).order_by(Change.time.asc()).first()
+                
+                if change_before != None:
+                    start_total = int(change_before.new)
+                elif change_after != None:
+                    start_total = int(change_after.old)
+                else:
+                    start_total = int(fish.total)
+
+                culled += start_total - int(fish.total)
+
+        self.culled = culled
+        return culled
 
     def update_current_total(self):
 

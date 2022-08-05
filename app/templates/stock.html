@@ -7,7 +7,9 @@
     
     <p>Current number of fish in tanks under this stock: <b>{{stock.current_total}}</b></p>
     
+    
     <p>Max total from start of year: <b>{% if stock.year_total != None %} {{stock.year_total}} {%else%} N/A{%endif%}</b><span class="infoPopup" onclick="popupShow('stockTotalInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="stockTotalInfoPopupText"> This is the total number of fish as of the 1st of January plus the original total of any new tanks that have been added since.<br><span style="color: red;">Warning: this may not be accurate if fish have been transferred from the old system</span></span></span></p>
+    <p>Culled since start of year: <b>{{stock.get_culled_count()}}</b><span class="infoPopup" onclick="popupShow('culledTotalInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="culledTotalInfoPopupText"> The total number of fish that have died since the start of the year</span></span></span></p>
     <p>Total on custom date: <b> {%if total >= 0%}{{total}} {%else%} N/A {%endif%}</b><span class="infoPopup" onclick="popupShow('customTotalInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="customTotalInfoPopupText"> This is the total number of fish as of the beginning of the custom date selected below.<br><span style="color: red;">Warning: this may not be accurate if fish have been transferred from the old system</span></span></span></p>
     
     <form action = "", method="post">

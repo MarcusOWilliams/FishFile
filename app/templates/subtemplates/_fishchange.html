@@ -3,7 +3,7 @@
 <table class="fishChange" >
     <tr class="fishChangeRow">
         <td class = "fishChangeDetails"><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> added the fish to the database</td>
-        <td> - {{ moment(change.time).fromNow() }} </td>
+        <td> - {{ change.time.strftime("%H:%M, %m/%d/%Y")}} </td>
     </tr>
 </table>
 
@@ -12,14 +12,14 @@
         <table class="fishChange">
             <tr class="fishChangeRow">
                 <td class = "fishChangeDetails"><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> updated the {{change.contents}} of the tank</td>
-                <td> - {{ moment(change.time).fromNow() }} </td>
+                <td> - {{change.time.strftime("%H:%M, %m/%d/%Y")}} </td>
             </tr>
         </table>
     {%else%}
         <table class="fishChange">
             <tr class="fishChangeRow">
                 <td class = "fishChangeDetails"><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> updated the {{change.contents}} of the tank <b>from {{change.old}} to {{change.new}}</b></td>
-                <td> - {{ moment(change.time).fromNow() }} </td>
+                <td> - {{ change.time.strftime("%H:%M, %m/%d/%Y")}} </td>
             </tr>
             {%  if change.note != None %}
                 <tr>
