@@ -130,6 +130,7 @@ def search():
 
     search_dict = session["search_dict"].copy()
     all_fish = Fish.query.filter(id != None).subquery()
+
     for key in search_dict:
         if key == "fish_id":
             all_fish = (
@@ -627,10 +628,10 @@ def newfish():
         for name in form.allele.data:
             allele = Allele(name=name, fish=newfish)
             db.session.add(allele)
-
-        for name in form.transgenes.data.split("\n"):
-            transgene = Transgene(name=name.replace("\r", ""), fish=newfish)
-            db.session.add(transgene)
+        if form.transgenes.data != None and form.transgenes.data != "":
+            for name in form.transgenes.data.split("\n"):
+                transgene = Transgene(name=name.replace("\r", ""), fish=newfish)
+                db.session.add(transgene)
 
         change = Change(user=current_user, fish=newfish, action="Added")
         db.session.add(change)
@@ -863,10 +864,11 @@ def updatefish(id):
             for name in form.allele.data:
                 allele = Allele(name=name, fish=fish)
                 db.session.add(allele)
-            
-            for name in form.transgenes.data.split("\n"):
-                transgene = Transgene(name=name.replace("\r", ""), fish=fish)
-                db.session.add(transgene)
+
+            if form.transgenes.data != None and form.transgenes.data != "":
+                for name in form.transgenes.data.split("\n"):
+                    transgene = Transgene(name=name.replace("\r", ""), fish=fish)
+                    db.session.add(transgene)
 
             for photo in form.photos.data:
                 if photo is None or photo.filename == "":
@@ -1426,11 +1428,12 @@ def updatefish(id):
 
             Transgene.query.filter_by(fish=fish).delete()
 
+            if form.transgenes.data != None and form.transgenes.data != "":
 
-            for name in form.transgenes.data.split("\n"):
-                print(name,file=sys.stderr)
-                transgene = Transgene(name=name.replace("\r", ""), fish=fish)
-                db.session.add(transgene)
+                for name in form.transgenes.data.split("\n"):
+                    print(name,file=sys.stderr)
+                    transgene = Transgene(name=name.replace("\r", ""), fish=fish)
+                    db.session.add(transgene)
 
             
 
