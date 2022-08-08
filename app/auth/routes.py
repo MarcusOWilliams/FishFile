@@ -57,14 +57,14 @@ def login():
             return redirect(url_for("auth.login"))
 
         login_user(user, remember=form.remember_me.data)
-        # #Whilst the project is being run on free heroku services there is a chance the scheduled tasks will not work, therefore they will all be run when the first user logs on to the website.
-        # last_loggged_in = User.query.order_by(User.last_seen.desc()).first()
-        # if last_loggged_in.last_seen.date() < datetime.today():
-        #     send_age_reminders()
-        #     delete_old_notifications()
-        #     send_reminders()
-        #     update_fish_months()
-        #     update_stock_yearly()
+        #Whilst the project is being run on free heroku services there is a chance the scheduled tasks will not work, therefore they will all be run when the first user logs on to the website.
+        last_loggged_in = User.query.order_by(User.last_seen.desc()).first()
+        if last_loggged_in.last_seen.date() < datetime.today():
+            send_age_reminders()
+            delete_old_notifications()
+            send_reminders()
+            update_fish_months()
+            update_stock_yearly()
 
        # once the user is logged in and verified they are redirected to the page they tried to visit, if they came straight to the login page they are just redirected to the home page
         next_page = request.args.get("next")

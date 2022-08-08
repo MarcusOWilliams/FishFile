@@ -134,6 +134,7 @@
                 <p class = "fishInfoPoint fishSubpoint">{{fish}} <a href="{{url_for('main.fish', id=fish.id)}}" target=”_blank”>(view entry)</a></p>
             {%endfor%}
         {%endif%}
+        <p class="fishInfoPoint moreFishOptionsItem"><span class="pointHeader">Family Tree: </span><a id="historyFishLink"href="{{url_for('main.fishhistory', id = fish.id)}}">View the genetic history of this fish</a></p>
     </div>
     <div class="fishInfoBlock">
         <h2>Tank Count</h2>
@@ -170,7 +171,7 @@
         {%if fish.reminders.count() >0%}
             <p class = "fishInfoPoint"><span class="pointHeader">Current reminders:</span>
                 {%for reminder in fish.reminders%}
-                    <p class = "fishInfoPoint" style="margin-left:20px;">{%if reminder.message%} Reminder: {{reminder.message}},{%endif%} {%if reminder.date%} Date: {{reminder.date}} {%endif%} User: {{reminder.user}}</p>
+                    <p class = "fishInfoPoint" style="margin-left:20px;">{%if reminder.message%} Reminder: {{reminder.message}},{%endif%} {%if reminder.date%} Date: {{reminder.date}}, {%endif%} User: {{reminder.user}}</p>
                 {%endfor%}
             </p>
         {%else%}
@@ -211,7 +212,6 @@
     {%endif%}
     <div class="fishInfoBlock">
         <h2>More Options</h2>
-        <p class="fishInfoPoint moreFishOptionsItem"><a id="historyFishLink"href="{{url_for('main.fishhistory', id = fish.id)}}">View the genetic history of this fish</a></p>
         <p class="fishInfoPoint moreFishOptionsItem"><a id="changesFishLink" href="{{url_for('main.fishchange', id = fish.id, filters= 'all')}}">View the previous changes for this entry</a></p>
         {%if current_user.isOwner()%}
             <p class="fishInfoPoint moreFishOptionsItem"><a id="updateFishLink" href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
