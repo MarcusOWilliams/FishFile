@@ -1,3 +1,4 @@
+from datetime import datetime
 from app import db
 from app.auth import bp
 from app.auth.email import send_email_verification_email, send_password_reset_email
@@ -12,6 +13,7 @@ from app.models import Settings, User
 from flask import flash, redirect, render_template, request, url_for, current_app
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
+from app.tasks import *
 
 
 @bp.route("/login", methods=["GET", "POST"])
@@ -55,6 +57,14 @@ def login():
             return redirect(url_for("auth.login"))
 
         login_user(user, remember=form.remember_me.data)
+        # #Whilst the project is being run on free heroku services there is a chance the scheduled tasks will not work, therefore they will all be run when the first user logs on to the website.
+        # last_loggged_in = User.query.order_by(User.last_seen.desc()).first()
+        # if last_loggged_in.last_seen.date() < datetime.today():
+        #     send_age_reminders()
+        #     delete_old_notifications()
+        #     send_reminders()
+        #     update_fish_months()
+        #     update_stock_yearly()
 
        # once the user is logged in and verified they are redirected to the page they tried to visit, if they came straight to the login page they are just redirected to the home page
         next_page = request.args.get("next")

@@ -27,8 +27,9 @@ def send_reminders():
         for reminder in reminders:
             if reminder.sent:
                 continue
-            if reminder.date <= datetime.today().date():
-                reminder.send_reminder()
+            if reminder.date is not None:
+                if reminder.date <= datetime.today().date():
+                    reminder.send_reminder()
 
 
 @scheduler.task("cron", id="send_age_reminders", hour="2")

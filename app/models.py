@@ -393,13 +393,25 @@ class Fish(db.Model):
 
     def send_age_reminder(self, months):
         message = f"The tank is now {months} months old."
-        reminder = Reminder(user=self.user_code, fish=self, message=message)
-        db.session.add(reminder)
-        self.age_reminder = f"{months} Months"
-        db.session.commit()
-        reminder.send_reminder(
-            users=[self.project_license_holder.id], category="Age reminder"
-        )
+        if self.user_code is not None:
+            reminder = Reminder(user=self.user_code, fish=self, message=message)
+            db.session.add(reminder)
+            self.age_reminder = f"{months} Months"
+            db.session.commit()
+            if self.project_license_holder is not None:
+                reminder.send_reminder(
+                    users=[self.project_license_holder.id], category="Age reminder"
+                )
+            else:
+                reminder.send_reminder(category="Age reminder")
+                
+        elif self.project_license_holder is not None:
+            reminder = Reminder(user=self.project_license_holder, fish=self, message=message)
+            db.session.add(reminder)
+            self.age_reminder = f"{months} Months"
+            db.session.commit()
+            reminder.send_reminder(category="Age reminder")
+
 
 
 """
