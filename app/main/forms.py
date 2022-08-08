@@ -370,7 +370,6 @@ class EditAlleles(FlaskForm):
             raise ValidationError("This allele name is already in the list")
 
     def validate_remove(self, remove):
-        print(get_all_allele_names(), file = sys.stderr)
         if remove.data not in get_all_allele_names():
             raise ValidationError(
                 "This allele name is not in the list, so can not be removed"

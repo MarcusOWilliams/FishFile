@@ -28,7 +28,7 @@ def test_all_routes(client):
         response = client.post(route)
         assert response.status_code != 404
         assert response.status_code not in range(500,505)
-        print(response.status_code)
+
 
     response = client.post("/invalidroute/")
     assert response.status_code == 404

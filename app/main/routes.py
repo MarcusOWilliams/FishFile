@@ -1407,13 +1407,11 @@ def updatefish(id):
 
             change_count += 1
 
-        print(sorted(current_transgenes), file=sys.stderr)
-        print(sorted([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]), file=sys.stderr)
 
         
         
         if sorted(current_transgenes) != sorted([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]):
-            print("names updated",file=sys.stderr)
+        
             change = Change(
                 user=current_user,
                 fish=fish,
@@ -1431,7 +1429,7 @@ def updatefish(id):
             if form.transgenes.data != None and form.transgenes.data != "":
 
                 for name in form.transgenes.data.split("\n"):
-                    print(name,file=sys.stderr)
+
                     transgene = Transgene(name=name.replace("\r", ""), fish=fish)
                     db.session.add(transgene)
 

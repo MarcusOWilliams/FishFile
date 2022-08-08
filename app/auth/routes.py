@@ -56,7 +56,7 @@ def login():
 
         login_user(user, remember=form.remember_me.data)
 
-        # once the user is logged in and verified they are redirected to the page they tried to visit, if they came straight to the login page they are just redirected to the home page
+       # once the user is logged in and verified they are redirected to the page they tried to visit, if they came straight to the login page they are just redirected to the home page
         next_page = request.args.get("next")
         if not next_page or url_parse(next_page).netloc != "":
             next_page = url_for("main.index")

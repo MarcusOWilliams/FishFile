@@ -145,7 +145,7 @@ class MainEndToEnd(unittest.TestCase):
         driver.execute_script('arguments[0].click()', update_link)
         WebDriverWait(driver, self.delay).until(EC.presence_of_element_located((By.ID, "updateFishTable")))
 
-        print(driver.title)
+
 
         fish_id = driver.find_element("id", "fish_id")
         fish_id.send_keys("Updated")
