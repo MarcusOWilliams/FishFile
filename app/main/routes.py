@@ -1422,16 +1422,17 @@ def updatefish(id):
                 new=", ".join([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]),
                 notification=notification,
             )
-            db.session.add(change)
+            if not change.old == change.new:
+                db.session.add(change)
 
-            Transgene.query.filter_by(fish=fish).delete()
+                Transgene.query.filter_by(fish=fish).delete()
 
-            if form.transgenes.data != None and form.transgenes.data != "":
+                if form.transgenes.data != None and form.transgenes.data != "":
 
-                for name in form.transgenes.data.split("\n"):
+                    for name in form.transgenes.data.split("\n"):
 
-                    transgene = Transgene(name=name.replace("\r", ""), fish=fish)
-                    db.session.add(transgene)
+                        transgene = Transgene(name=name.replace("\r", ""), fish=fish)
+                        db.session.add(transgene)
 
             
 
