@@ -4,9 +4,11 @@ from app.models import Fish, Notification, Reminder, Stock
 from datetime import datetime
 from dateutil import relativedelta
 
-
+#This task is scheduled using cron, it is scheduled to execute at 4am
+#The aim of this taks is to remove old notifications, to help clean up the database
 @scheduler.task("cron", id="clear_old_notifs", hour="4")
 def delete_old_notifications():
+    #use the app context to access the database
     with scheduler.app.app_context():
         notifications = Notification.query.all()
         for notif in notifications:
@@ -17,6 +19,7 @@ def delete_old_notifications():
             if notif_age > 100:
                 db.session.delete(notif)
 
+        #commit the changes to the database
         db.session.commit()
 
 
