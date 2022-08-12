@@ -4,7 +4,7 @@
 # to Run the file activate the venv using venv\scripts\activate in the terminal (windows) then type "flask run"
 from app import create_app, db
 from app.models import Allele, Photo, User, Fish, Change, Settings, Notification, Reminder, Stock
-import atexit
+
 
 app = create_app()
 
