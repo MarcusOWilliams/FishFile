@@ -248,7 +248,9 @@
     word-wrap: break-word;
 }
 
-
+#introParagraph{
+    width: 70%; margin:auto;
+}
 
 
 @media only screen and (max-width: 1000px) {
@@ -265,6 +267,9 @@
         width:100%;
     }
     #mainSearchForm{
+        width:100%;
+    }
+    #introParagraph{
         width:100%;
     }
 

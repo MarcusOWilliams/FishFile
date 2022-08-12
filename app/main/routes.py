@@ -1475,7 +1475,7 @@ def updatefish(id):
                     db.session.add(notification)
                     db.session.commit()
 
-            flash("Fish updated", "info")
+            flash("The data for this entry has been updated", "info")
 
         if form.alert_date.data or form.alert_msg.data:
             if fish_user is not None:
