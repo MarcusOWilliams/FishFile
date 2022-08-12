@@ -30,7 +30,7 @@ class Config(object):
     SCHEDULER_API_ENABLED = True
     SCHEDULER_TIMEZONE = 'UTC'
 
-    FISH_PICTURES = os.environ.get('FISH_PICTURE_FOLDER')
-    PERSONAL_LICENSES = os.environ.get('PERSONAL_LICENSES_FOLDER')
-    PROJECT_LICENSES = os.environ.get('PROJECT_LICENSES_FOLDER')
+    FISH_PICTURES = os.path.join(os.getcwd(), os.environ.get('FISH_PICTURE_FOLDER'))
+    PERSONAL_LICENSES = os.path.join(os.getcwd(), os.environ.get('PERSONAL_LICENSES_FOLDER'))
+    PROJECT_LICENSES = os.path.join(os.getcwd(), os.environ.get('PROJECT_LICENSES_FOLDER'))
 
