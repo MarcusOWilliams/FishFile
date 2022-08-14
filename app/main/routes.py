@@ -1410,19 +1410,20 @@ def updatefish(id):
 
         
         
-        if sorted(current_transgenes) != sorted([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]):
-        
-            change = Change(
-                user=current_user,
-                fish=fish,
-                action="Updated",
-                contents="transgenes",
-                field="transgenes",
-                old=", ".join(current_transgenes),
-                new=", ".join([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]),
-                notification=notification,
-            )
-            if not change.old == change.new:
+        if set(current_transgenes) != set([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]):
+            if not (", ".join(current_transgenes) == ", ".join([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")])):
+                change = Change(
+                    user=current_user,
+                    fish=fish,
+                    action="Updated",
+                    contents="transgenes",
+                    field="transgenes",
+                    old=", ".join(current_transgenes),
+                    new=", ".join([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]),
+                    notification=notification,
+                )
+                
+                    
                 db.session.add(change)
 
                 Transgene.query.filter_by(fish=fish).delete()
