@@ -126,7 +126,7 @@ def reset_password_request():
         if user:
             send_password_reset_email(user)
         flash(
-            "If there is an email associated with the an account an email will be sent with instructions on how to reset your password, please check your junk/spam folder!",
+            "If there is an account associated with the email an email will be sent with instructions on how to reset your password, please check your junk/spam folder!",
             "info",
         )
         return redirect(url_for("auth.login"))

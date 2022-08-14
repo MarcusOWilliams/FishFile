@@ -7,7 +7,7 @@ from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_apscheduler import APScheduler
-import atexit
+
 # The database is run using SQLAlchemy
 db = SQLAlchemy()
 
