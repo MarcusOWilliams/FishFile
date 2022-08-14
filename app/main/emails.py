@@ -4,7 +4,7 @@ This includes the notification email
 This module uses methods from app/emails.py to send the email
 """
 from flask import render_template, current_app
-from app.email import send_email
+from app.emails import send_email
 from app.models import *
 
 # This email take a user and a notification sends an email notification to the user

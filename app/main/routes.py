@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired, ValidationError
 
 from app import db
 from app.main import bp
-from app.main import email
+from app.main import emails
 from app.models import (
     Allele,
     Change,

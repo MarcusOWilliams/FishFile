@@ -4,7 +4,7 @@ This includes, email verification and password resets
 This module uses methods from app/emails.py to send the email
 """
 from flask import render_template, current_app
-from app.email import send_email
+from app.emails import send_email
 
 # this takes a user, generates a secure password token and sends an email to them to reset their password
 # The methods for getting and verifying the tokens are in the User class of app/models.py

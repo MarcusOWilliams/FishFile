@@ -1,7 +1,7 @@
 from datetime import datetime
 from app import db
 from app.auth import bp
-from app.auth.email import send_email_verification_email, send_password_reset_email
+from app.auth.emails import send_email_verification_email, send_password_reset_email
 from app.auth.forms import (
     LoginForm,
     RegistrationForm,

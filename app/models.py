@@ -684,7 +684,7 @@ class Notification(db.Model):
         if self.user == None:
             return
         if self.user.settings.emails:
-            from app.main.email import send_notification_email
+            from app.main.emails import send_notification_email
 
             send_notification_email(self.user, self)
 
@@ -707,7 +707,7 @@ class Reminder(db.Model):
     # send notification from reminder, can take more than one user
     def send_reminder(self, users=[], category="Reminder"):
 
-        from app.main.email import send_reminder_email
+        from app.main.emails import send_reminder_email
 
         users.append(self.user.id)
 
