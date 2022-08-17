@@ -47,6 +47,8 @@ def update_fish_months():
 
             fish.months = fish.getMonths()
 
+
+
         db.session.commit()
         print("months updated "+str(datetime.now()))
 

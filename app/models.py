@@ -358,9 +358,11 @@ class Fish(db.Model):
             birthday = self.birthday
             age_difference = relativedelta.relativedelta(today, birthday)
 
-            return age_difference.months
+            return (age_difference.years *12) + age_difference.months
+
         except:
             return 0
+
     def get_allele_names_string(self):
         if self.alleles is None:
             return " "
@@ -396,9 +398,8 @@ class Fish(db.Model):
         if self.user_code is not None:
             reminder = Reminder(user=self.user_code, fish=self, message=message)
             db.session.add(reminder)
-            self.age_reminder = f"{months} Months"
             db.session.commit()
-            if self.project_license_holder is not None:
+            if self.project_license_holder is not None and self.user_code != self.project_license_holder:
                 reminder.send_reminder(
                     users=[self.project_license_holder.id], category="Age reminder"
                 )
@@ -408,11 +409,11 @@ class Fish(db.Model):
         elif self.project_license_holder is not None:
             reminder = Reminder(user=self.project_license_holder, fish=self, message=message)
             db.session.add(reminder)
-            self.age_reminder = f"{months} Months"
             db.session.commit()
             reminder.send_reminder(category="Age reminder")
 
-
+        self.age_reminder = f"{months} Months"
+        db.session.commit()
 
 """
 This is the class for the Stock table of the SQL database
