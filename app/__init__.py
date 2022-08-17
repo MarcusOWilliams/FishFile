@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_moment import Moment
+import pymysql
 
 # The database is run using SQLAlchemy
 db = SQLAlchemy()
