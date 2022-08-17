@@ -6,7 +6,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_moment import Moment
-from flask_apscheduler import APScheduler
+
 
 # The database is run using SQLAlchemy
 db = SQLAlchemy()
@@ -29,7 +29,6 @@ mail = Mail()
 # For nice datetime formatiing using moment.js
 moment = Moment()
 
-scheduler = APScheduler()
 
 def create_app(config_Class=Config):
     # generate the app with the specified configurations
@@ -52,10 +51,6 @@ def create_app(config_Class=Config):
     # Link moment for datetime
     moment.init_app(app)
 
-    #Link configure and start schedular
-    scheduler.init_app(app)
-    from app import tasks
-    scheduler.start()
 
     # link the bluebrints
     from app.main import bp as main_bp
