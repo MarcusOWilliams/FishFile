@@ -733,7 +733,7 @@ class Reminder(db.Model):
 
                         user_done = True
 
-                if (not user_done) and self.fish.project_license_holder is not None:
+                if user_done != True and self.fish.project_license_holder is not None:
                     if user.settings.pl_custom_reminder and  user == self.fish.project_license_holder:
                         notification = Notification(
                             user=user,
@@ -759,8 +759,10 @@ class Reminder(db.Model):
 
                     if user.settings.email_reminders:
                         send_reminder_email(user, self)
+                    
+                    user_done = True
 
-                elif self.fish.project_license_holder is not None:
+                if user_done != True and self.fish.project_license_holder is not None:
                     if user.settings.pl_age_notifications and  user == self.fish.project_license_holder:
                         notification = Notification(
                             user=user,
