@@ -4,7 +4,7 @@
     </tr>
   
     <tr>
-        <td class = "summaryPoint"><strong>Fish ID:</strong> {{fish.fish_id}}</td>
+        <td class = "summaryPoint"><strong>Fish ID:</strong>{%if fish.fish_id|length < 15%} {{fish.fish_id}}{%else%}{{fish.fish_id[:15]}}...{%endif%}</td>
         <td class = "summaryPoint"><strong>Tank ID:</strong> {{fish.tank_id}}</td>
         <td class = "summaryPoint"><strong>Status:</strong> {{fish.status}}</td>
     </tr>
