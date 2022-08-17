@@ -22,7 +22,7 @@
     {{ form.hidden_tag() }}
     <p>
         {{form.email.label()}}<br>
-        {{ form.email(size=32, placeholder='Email') }}
+        {{ form.email(size=32, placeholder='Email', style ="max-width:90%;") }}
     </p>
     <p>
         {% for error in form.email.errors %}
