@@ -77,9 +77,11 @@ def send_age_reminders():
 def update_stock_yearly():
     with app.app_context():
         today = datetime.today()
-        if int(today.month) == 1 and int(today.day) == 1:
+        if int(today.month) == 8 and int(today.day) == 18:
             stocks = Stock.query.all()
             for stock in stocks:
+                if len(list(stock.fish)) < 1:
+                    db.session.delete(stock)
                 stock.update_yearly_total()
 
             print("yearly update "+str(datetime.now()))

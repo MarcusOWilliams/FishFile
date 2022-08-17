@@ -295,7 +295,10 @@ class Fish(db.Model):
 
 
     def __repr__(self):
-        return f"Stock: {self.stock_name}, Tank: {self.tank_id}, ID: {self.fish_id}"
+        if len(self.fish_id)<20:
+            return f"Stock: {self.stock_name}, Tank: {self.tank_id}, ID: {self.fish_id}"
+        return f"Stock: {self.stock_name}, Tank: {self.tank_id}, ID: {self.fish_id[:20]}..."
+        
 
     def get_ancestors(self, generation, relation=None):
         ancestors = []

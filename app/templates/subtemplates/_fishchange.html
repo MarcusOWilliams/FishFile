@@ -2,7 +2,7 @@
 {%if change.action == "Added"%}
 <table class="fishChange" >
     <tr class="fishChangeRow">
-        <td class = "fishChangeDetails"><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> added the fish to the database</td>
+        <td class = "fishChangeDetails"><a href="{{url_for('main.user', username = change.user.username)}}">{{change.user.first_name}} {{change.user.last_name}}</a> added the fish ({{fish}}) to the database</td>
         <td> {{ change.time.strftime("%d/%m/%Y")}} </td>
     </tr>
 </table>
