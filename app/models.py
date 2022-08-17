@@ -548,7 +548,7 @@ class Allele(db.Model):
     hemizygous = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"Allele: {self.name} - Fish: {self.fish.stock_name}"
+        return f"Allele: {self.name}"
 
 
 def get_all_allele_names():
