@@ -744,7 +744,8 @@ def newfish():
         form.links.data = origin_fish.links
         form.mutant_gene.data = origin_fish.mutant_gene
         form.transgenes.data = "\n".join(origin_transgenes)
-        
+        return render_template("duplicatefish.html", form=form, title="New Fish", fish = origin_fish)
+
     return render_template("newfish.html", form=form, title="New Fish", origin_fish = origin_fish)
 
 

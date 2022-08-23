@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{%block scripts %}
+
+
+    <script>
+        function updatetotalCommentBox(){
+            var commentRow = document.getElementById("totalChangeCommentRow")
+            var commentNote = document.getElementById("totalCommentNote")
+                
+            if (window.getComputedStyle(commentRow).visibility === "collapse") {
+                commentRow.style.visibility = "visible"
+                commentRow.style.height = "100%"
+                commentNote.innerHTML = "Hide comment input field"
+            }else{
+                commentRow.style.visibility = "collapse"
+                commentRow.style.height = "0"
+                commentNote.innerHTML = '<span style="margin:auto; height:80%; margin-top:1px", class="btn btn-secondary">Add a note to the change in total</span>'
+            }
+        }
+        
+
+        function updateUserCodeInput(){
+            var selectColumn = document.getElementById("userCodeSelect")
+            var customColumn = document.getElementById("userCodeCustom")
+            var selectInput = document.getElementById("user_code")
+            var customInput  = document.getElementById("custom_code") 
+                
+            if (window.getComputedStyle(selectColumn).display === "none") {
+                selectColumn.style.display = "block"
+                customInput.value = ""
+                customColumn.style.display = "none"
+            }else{
+                selectInput.selectedIndex = 0
+                selectColumn.style.display = "none"
+                customColumn.style.display = "block"
+            }
+        }
+        function updatePLInput(){
+            var selectColumn = document.getElementById("PLSelect")
+            var customColumn = document.getElementById("PLCustom")
+            var selectInput = document.getElementById("project_license")
+            var customInput  = document.getElementById("custom_license") 
+
+                
+            if (window.getComputedStyle(selectColumn).display === "none") {
+                selectColumn.style.display = "block"
+                customInput.value = ""
+                customColumn.style.display = "none"
+            }else{
+                selectInput.selectedIndex = 0
+                selectColumn.style.display = "none"
+                customColumn.style.display = "block"
+            }
+        }
+
+        window.onload = function() {
+            var customCode = document.getElementById("custom_code");
+            var customLicense= document.getElementById("custom_license");
+            if(customCode.value){
+                updateUserCodeInput();
+            }
+
+            if(customLicense.value){
+                updatePLInput()
+            }
+            
+        };
+        
+        
+    </script>
+
+{%endblock%}
+
+{% block content %}
+    <h2>Add fish to the database</h2>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {{form.hidden_tag()}}
+        <table id="updateFishTable" class="fishFormTable">
+            <tr>
+                <td class="fishFormLabel" style="width:18%">
+                    {{form.fish_id.label}} 
+                </td><td class="updateFormInputField" style="width:32%">
+                    {{form.fish_id(placeholder="Fish ID", value = fish.fish_id)}} 
+                </td>
+            
+                <td class="fishFormLabel" style="width:18%">{{form.tank_id.label}}
+                </td><td class="updateFormInputField" style="width:32%">{{form.tank_id(placeholder="Tank ID", value = fish.tank_id)}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.stock.label}} 
+                </td><td class="updateFormInputField">{{form.stock(placeholder="Stock", value = fish.stock.name)}}</td>
+
+                <td>{{form.status.label}} 
+                </td><td class="updateFormInputField">{{form.status(value = fish.status)}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.project_license.label}}
+                </td>
+                <td class="updateFormInputField" id="PLSelect"> {{form.project_license()}}<br><span class="changePLInput" onclick="updatePLInput()">Add Custom License</span></td>
+                <td class="updateFormInputField" id="PLCustom" style="display: none;"> {%if fish.old_license != None and fish.old_license != ""%}{{form.custom_license(value=fish.old_license)}}{%else%}{{form.custom_license()}}{%endif%}<br><span class="changePLInput" onclick="updatePLInput()">Select License From List</span></td>
+
+
+                
+                <td class="fishFormLabel">{{form.user_code.label}}</td>
+
+                <td  class="updateFormInputField" id = "userCodeSelect"> {{form.user_code()}}<br><span class="changeUserCodeInput" onclick="updateUserCodeInput()">Add Custom User Code</span></td>
+                <td class="updateFormInputField" id="userCodeCustom" style="display: none;"> {%if fish.old_code != None and fish.old_code != ""%}{{form.custom_code(value=fish.old_code)}}{%else%}{{form.custom_code()}}{%endif%}<br><span class="changeUserCodeInput" onclick="updateUserCodeInput()">Select User Code From List</span></td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.birthday.label}}
+                </td><td class="updateFormInputField">  {{form.birthday(value=fish.birthday)}}</td>
+
+                <td class="fishFormLabel">{{form.date_of_arrival.label}} 
+                </td><td class="updateFormInputField">{{form.date_of_arrival(value = fish.date_of_arrival)}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.protocol.label}}
+                </td><td class="updateFormInputField"> {{form.protocol(value=fish.protocol, min=0)}}</td>
+
+                <td class="fishFormLabel">{{form.source.label}}
+                </td><td class="updateFormInputField"> {{form.source(value=fish.source)}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.mutant_gene.label}} <div class="infoPopup" onclick="popupShow('mutantgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="mutantgenesInfoPopupText"> If you want to add multiple mutant genes, put each one on a new line</span></div>
+                </td><td class="updateFormInputField"> {{form.mutant_gene(placeholder="Mutant Gene", value = fish.mutant_gene)}}</td>
+
+                <td class="fishFormLabel">{{form.transgenes.label}}<div class="infoPopup" onclick="popupShow('transgenesInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="transgenesInfoPopupText"> If you want to add multiple transgenes, put each one on a new line</span>
+                </td><td class="updateFormInputField"> {{form.transgenes(placeholder="Transgenes", value = fish.transgenes)}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.allele.label}}<div class="infoPopup" onclick="popupShow('alleleInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="alleleInfoPopupText"> To select multiple allele options, hold the Ctrl key whilst selecting them</span></div>
+                    {%if current_user.isOwner()%}<br><a href="{{url_for('main.edit_alleles')}}">Edit Alleles List</a>{%endif%}</td> 
+                <td class="updateFormInputField">{{form.allele(placeholder="Allele", value = fish.allele)}}</td>
+
+                <td class="fishFormLabel">{{form.cross_type.label}}
+                </td><td class="updateFormInputField"> {{form.cross_type(placeholder="Cross Type", value = fish.cross_type)}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.father_tank_id.label}}
+                </td><td class="updateFormInputField"> {{form.father_tank_id(placeholder="Father's tank #", value = fish.father.tank_id)}}</td>
+
+                <td class="fishFormLabel">{{form.father_stock.label}} 
+                </td><td class="updateFormInputField">{{form.father_stock(placeholder="Father's Stock", value= fish.father.stock)}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.mother_tank_id.label}}
+                </td><td class="updateFormInputField"> {{form.mother_tank_id(placeholder="Mother's tank #", value = fish.mother.tank_id)}}</td>
+
+                <td class="fishFormLabel">{{form.mother_stock.label}}
+                </td><td class="updateFormInputField"> {{form.mother_stock(placeholder="Mother's Stock",  value = fish.mother.stock)}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.origin_tank_id.label}}</td>
+                <td class="addFishInputField"> {{form.origin_tank_id(placeholder="Origin Tank #", value=fish.origin.tank_id)}}</td>
+
+                <td class="fishFormLabel">{{form.origin_tank_stock.label}}</td>
+                <td class="addFishInputField"> {{form.origin_tank_stock(placeholder="Origin Stock #", value=fish.origin.stock)}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.males.label}}
+                </td><td class="updateFormInputField"> {{form.males(value = fish.males, min=0, placeholder="Male")}}</td>
+
+                <td class="fishFormLabel">{{form.females.label}}
+                </td><td class="updateFormInputField"> {{form.females(value = fish.females, min=0, placeholder="Female")}}</td>
+            </tr>
+            <tr>
+                <td class="fishFormLabel">{{form.unsexed.label}}
+                </td><td class="updateFormInputField"> {{form.unsexed(value = fish.unsexed, min=0, placeholder="Unsexed")}}</td>
+
+                <td class="fishFormLabel">{{form.carriers.label}}
+                </td><td class="updateFormInputField"> {{form.carriers(value = fish.carriers, min=0, placeholder="Carriers/Licensed")}}</td>
+            </tr>
+            <tr>
+                    
+                <td class="fishFormLabel">{{form.total.label}}</td>
+                <td class="addFishInputField"> {{form.total(value=fish.total, min=0, placeholder="Total")}}<br><div id="totalCommentNote" onclick="updatetotalCommentBox()"><span style="margin:auto; height:80%; margin-top:1px", class="btn btn-secondary">Add a note to the change in total</span></div></td>
+
+                <td class="fishFormLabel">{{form.photos.label}} <div class="infoPopup" onclick="popupShow('photoInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="photoInfoPopupText"> Upload any related images here, they must end in one of the following extensions, .jpeg, .png, .jpg, and be no more than 4MB</span> </td>
+                <td class="addFishInputField"> {{form.photos()}}</td>   
+                    
+            </tr> 
+
+                <tr id ="totalChangeCommentRow" style="visibility: collapse;">
+                    <td style="width:18%" class="fishFormLabel">{{form.total_change_comment.label}} <div class="infoPopup" onclick="popupShow('totalCommentInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="totalCommentInfoPopupText"> If you are changeing the total number of fish and would like to add a note to the change do it here, if you don't update the total to a new number the note won't be saved</span></td>
+                    <td  style="width:32%"class="addFishInputField"> {{form.total_change_comment(placeholder="Add a comment to your change in total number of fish")}}</td>
+                </tr> 
+            <tr>
+                <td class="fishFormLabel">{{form.links.label}} <div class="infoPopup" onclick="popupShow('linksInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="linksInfoPopupText"> Paste links to exernal URLs here, if you want multiple links, put each one on a new line</span></td>
+                <td class="addFishInputField"> {{form.links(placeholder="Additional URLs")}}</td>
+                
+                <td class="fishFormLabel">{{form.comments.label}} </td>
+                <td class="addFishInputField">{{form.comments(placeholder="Comments...")}}</td>  
+                
+            </tr> 
+            <tr>
+                <td class="fishFormLabel"><label for="alert_date">New reminder date</label></td>
+                <td class="addFishInputField">{{form.alert_date(value = fish.alert_date)}}</td>
+
+                <td class="fishFormLabel"><label for="alert_msg">New reminder message</label></td>
+                <td class="addFishInputField">{{form.alert_msg(placeholder="e.g. turnover/split/use", value=fish.alert_msg)}}</td>
+            </tr>
+
+        </table>
+        
+        
+        {% for field, errors in form.errors.items() %}
+                <div class = "formError">{{ form[field].label }}: {{ ', '.join(errors) }}</div>
+        {% endfor %}
+        {{form.submit()}}
+        
+    </form>
+    <p>* Required field</p>
+    
+{%endblock%}
