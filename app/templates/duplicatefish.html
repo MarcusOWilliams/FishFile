@@ -131,7 +131,7 @@
             </tr>
             <tr>
                 <td class="fishFormLabel">{{form.allele.label}}<div class="infoPopup" onclick="popupShow('alleleInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="alleleInfoPopupText"> To select multiple allele options, hold the Ctrl key whilst selecting them</span></div>
-                    {%if current_user.isOwner()%}<br><a href="{{url_for('main.edit_alleles')}}">Edit Alleles List</a>{%endif%}</td> 
+                    {%if current_user.isOwner()%}<br><a href="{{url_for('main.edit_alleles')}}" target="_blank">Edit Alleles List</a>{%endif%}</td> 
                 <td class="updateFormInputField">{{form.allele(placeholder="Allele", value = fish.allele)}}</td>
 
                 <td class="fishFormLabel">{{form.cross_type.label}}
@@ -175,17 +175,12 @@
             <tr>
                     
                 <td class="fishFormLabel">{{form.total.label}}</td>
-                <td class="addFishInputField"> {{form.total(value=fish.total, min=0, placeholder="Total")}}<br><div id="totalCommentNote" onclick="updatetotalCommentBox()"><span style="margin:auto; height:80%; margin-top:1px", class="btn btn-secondary">Add a note to the change in total</span></div></td>
+                <td class="addFishInputField"> {{form.total(value=fish.total, min=0, placeholder="Total")}}</td>
 
                 <td class="fishFormLabel">{{form.photos.label}} <div class="infoPopup" onclick="popupShow('photoInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="photoInfoPopupText"> Upload any related images here, they must end in one of the following extensions, .jpeg, .png, .jpg, and be no more than 4MB</span> </td>
                 <td class="addFishInputField"> {{form.photos()}}</td>   
                     
-            </tr> 
-
-                <tr id ="totalChangeCommentRow" style="visibility: collapse;">
-                    <td style="width:18%" class="fishFormLabel">{{form.total_change_comment.label}} <div class="infoPopup" onclick="popupShow('totalCommentInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="totalCommentInfoPopupText"> If you are changeing the total number of fish and would like to add a note to the change do it here, if you don't update the total to a new number the note won't be saved</span></td>
-                    <td  style="width:32%"class="addFishInputField"> {{form.total_change_comment(placeholder="Add a comment to your change in total number of fish")}}</td>
-                </tr> 
+            </tr>  
             <tr>
                 <td class="fishFormLabel">{{form.links.label}} <div class="infoPopup" onclick="popupShow('linksInfoPopupText')"><i class="bi bi-info-circle-fill"></i><span class="popupText" id="linksInfoPopupText"> Paste links to exernal URLs here, if you want multiple links, put each one on a new line</span></td>
                 <td class="addFishInputField"> {{form.links(placeholder="Additional URLs")}}</td>
