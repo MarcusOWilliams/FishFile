@@ -42,7 +42,7 @@
                     {{form.fish_id.label}} 
                 </td>
                 <td class="addFishInputField" style="width:32%">
-                    {{form.fish_id(placeholder="Fish ID")}} 
+                    {{form.fish_id(placeholder="Fish ID" {%if origin_fish is not None %}, value = origin_fish.fish_id {%endif%} ) }} 
                 </td>
 
                 <td class="fishFormLabel" style="width:18%">{{form.tank_id.label}}

@@ -544,12 +544,17 @@ This function describes the route for /newfish
 Permission required for this route are "Admin", "Owner"
 This route is used for adding new fish to the database
 """
-
-
 @bp.route("/newfish/", methods=["GET", "POST"])
 @login_required
 @requires_roles("Admin", "Owner")
 def newfish():
+    origin_fish_id = session.get("origin_fish_id")
+    if origin_fish_id is not None:
+        origin_fish = Fish.query.filter_by(id = origin_fish_id).first()
+        session.pop("origin_fish_id")
+    else:
+        origin_fish = None
+
     form = NewFish()
 
     form.user_code.choices = [""] + get_all_user_codes()
@@ -722,8 +727,25 @@ def newfish():
         return redirect(url_for("main.fish", id=newfish.id))
 
     form.source.data = "Home"
+    if origin_fish is not None:
+        origin_alleles = [allele.name for allele in origin_fish.alleles]
+        origin_transgenes = [gene.name for gene in origin_fish.transgenes]
+        if origin_fish.project_license_holder != None:
+            form.project_license.data = origin_fish.project_license_holder.project_license
+        if origin_fish.user_code != None:
+            form.user_code.data = origin_fish.user_code.code
+        if origin_fish.status != None:
+            form.status.data = origin_fish.status
+        if origin_fish.source != None:
+            form.source.data = origin_fish.source
 
-    return render_template("newfish.html", form=form, title="New Fish")
+        form.comments.data = origin_fish.comments
+        form.allele.data = origin_alleles
+        form.links.data = origin_fish.links
+        form.mutant_gene.data = origin_fish.mutant_gene
+        form.transgenes.data = "\n".join(origin_transgenes)
+        
+    return render_template("newfish.html", form=form, title="New Fish", origin_fish = origin_fish)
 
 
 """
@@ -2256,6 +2278,21 @@ def deletenotifs():
 
     db.session.commit()
     return redirect(url_for("main.index"))
+
+
+"""
+This function describes the route for /updatesessionfish
+Permission required for this route are "Admin", "Owner"
+This route is used for allowing users to add a new fish with information from an exisitng fish
+"""
+@bp.route("/updatesessionfish/<id>")
+@login_required
+@requires_roles("Admin", "Owner")
+def updatesessionfish(id):
+    session["origin_fish_id"] = id
+
+    return redirect(url_for("main.newfish"))
+
 
 
 # This function is used to update the users Last seen time when they go to a new page

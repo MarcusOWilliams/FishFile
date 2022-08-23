@@ -220,6 +220,10 @@
                 <p class="fishInfoPoint moreFishOptionsItem"><a id="updateFishLink" href="{{url_for('main.updatefish', id = fish.id)}}">Update informtation for this entry</a></p>
             {%endif%}
         {%endif%}
+        
+        {%if current_user.isAdmin()%}
+            <p class="fishInfoPoint moreFishOptionsItem"><a id="duplicateFishLink" href="{{url_for('main.updatesessionfish', id = fish.id)}}">Create a new entry using the data from this tank</a></p>
+        {%endif%}
         <br>
         {% if current_user.isAdmin() %}
             <!-- Button trigger modal -->
