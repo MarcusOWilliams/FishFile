@@ -389,6 +389,12 @@ def user(username):
         if not current_user.isAdmin:
             abort(403)
         user.role = roleForm.role.data
+
+        if user.role== "Blocked":
+            user.settings.emails = False
+            user.settings.email_reminders = False
+            user.pl_email_reminders = False
+
         db.session.commit()
         return redirect(url_for("main.user", username=user.username))
 
