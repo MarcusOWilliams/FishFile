@@ -128,16 +128,23 @@ def search():
 
         return redirect(url_for("main.search"))
 
+    #copy the search terms dictionary from session
     search_dict = session["search_dict"].copy()
+    #start with a subquery containing all fish
     all_fish = Fish.query.filter(id != None).subquery()
 
+    #filter through each key in the dictionary
     for key in search_dict:
+
+        #if the key is fish_id, filter the subquery to just those fish with the desiered fish_id
         if key == "fish_id":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
                 .filter_by(fish_id=search_dict[key])
                 .subquery()
             )
+
+        #if the key is tank_id, filter the subquery to just those fish with the desiered tank_id
         elif key == "tank_id":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
