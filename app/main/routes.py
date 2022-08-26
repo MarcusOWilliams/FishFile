@@ -728,6 +728,19 @@ def newfish():
                 db.session.add(photo)
 
         newfish.months = newfish.getMonths()
+        if newfish.months >= 5:
+            if newfish.months >= 11:
+                if newfish.months >= 17:
+                    if newfish.months >= 23:
+                        newfish.age_reminder = "23 Months"
+                    else:
+                        newfish.age_reminder = "17 Months"
+                else:
+                    newfish.age_reminder = "11 Months"
+            else:
+                newfish.age_reminder = "5 Months"
+
+
 
         db.session.commit()
         flash("The new fish has been added to the database", "info")
