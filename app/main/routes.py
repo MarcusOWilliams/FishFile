@@ -1743,7 +1743,7 @@ def stock(stock):
 
     
     form = DateForm()
-    stock_entry  = Stock.query.filter_by(name = stock).first()    
+    stock_entry  = Stock.query.filter_by(name = stock).first_or_404()    
     stock_entry.update_current_total()     
      
     page = request.args.get("page", 1, type=int)
