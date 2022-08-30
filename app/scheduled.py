@@ -71,6 +71,20 @@ def send_age_reminders():
         print("age reminders sent "+str(datetime.now()))
 
 
+def update_stock_alive():
+    with app.app_context():
+        stocks = Stock.query.all()
+        for stock in stocks:
+            stock.has_alive_fish()
+            if len(list(stock.fish)) < 1:
+                    db.session.delete(stock)
+        db.session.commit()
+
+        print("Alive Stocks Updated "+str(datetime.now()))
+
+            
+
+
 
 
 
@@ -80,8 +94,7 @@ def update_stock_yearly():
         if int(today.month) == 8 and int(today.day) == 18:
             stocks = Stock.query.all()
             for stock in stocks:
-                if len(list(stock.fish)) < 1:
-                    db.session.delete(stock)
+                
                 stock.update_yearly_total()
 
             print("yearly update "+str(datetime.now()))
