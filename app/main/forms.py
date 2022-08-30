@@ -256,7 +256,7 @@ class SearchFrom(FlaskForm):
             "Oldest Added",
             "Fish ID",
             "Tank ID",
-            "Age (young -> old )",
+            "Age (young -> old)",
             "Age (old -> young)",
         ],
     )

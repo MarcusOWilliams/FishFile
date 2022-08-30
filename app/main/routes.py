@@ -249,7 +249,7 @@ def search():
     # set the order of the fish, if not set they are sorted by most recently added
     order = session.get("order_by", "Newest Added")
 
-    if order == "Age ( young -> old )":
+    if order == "Age (young -> old)":
         result = (
             Fish.query.select_entity_from(all_fish)
             .filter(Fish.birthday != None, Fish.status != "Dead")
@@ -1605,7 +1605,7 @@ def allfish():
 
     form.order.data = order
 
-    if order == "Age ( young -> old )":
+    if order == "Age (young -> old)":
         fish = (
             Fish.query.filter(Fish.birthday != None, Fish.status != "Dead")
             .order_by(Fish.birthday.desc())
@@ -1662,7 +1662,7 @@ def project_license(license):
 
     form.order.data = order
 
-    if order == "Age ( young -> old )":
+    if order == "Age (young -> old)":
         fish = (
             Fish.query.filter_by(project_license_holder=user)
             .filter(Fish.birthday != None, Fish.status != "Dead")
