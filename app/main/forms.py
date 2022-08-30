@@ -333,7 +333,7 @@ class OrderForm(FlaskForm):
             "Fish ID",
             "Tank ID",
             "Stock",
-            "Age ( young -> old )",
+            "Age (young -> old)",
             "Age (old -> young)",
             "Newest Added",
             "Oldest Added",
