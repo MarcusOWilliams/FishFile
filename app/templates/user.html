@@ -29,17 +29,17 @@
             <form action="" method="post">
                 {{ roleForm.hidden_tag() }}
                 {{roleForm.role.label}} {{ roleForm.role() }} {{roleForm.submit()}}
-            </form>
-        {%elif not user.isAdmin() %}
+            </form><br>
 
+            <p>This user does not have a verified email<br>
+                <button class="btn btn-secondary">Verify User</button>
+            </p>
+        {%else %}
             <p>Current role: {{user.role}}</p>
             <form action="" method="post">
                 {{ roleForm.hidden_tag() }}
                 {{roleForm.role.label}} {{ roleForm.role() }} {{roleForm.submit()}}
             </form>
-        {%else%}
-            <p>Current role: {{user.role}}</p>
-            <p>You can not change the role of this user
         {% endif %}
     {%endif%}
 
