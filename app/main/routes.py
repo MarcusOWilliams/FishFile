@@ -2315,6 +2315,22 @@ def updatesessionfish(id):
     return redirect(url_for("main.newfish"))
 
 
+"""
+This function describes the route for /verifyotheruser
+Permission required for this route are  "Owner"
+This route is used for allowing the owners to verify the accounts of other users without needing an email
+"""
+@bp.route("/verifyotheruser/<id>", methods=["POST"])
+@login_required
+@requires_roles("Owner")
+def updatesessionfish(id):
+    
+    user = User.query.filter_by(id=id).first_or_404()
+    user.is_verified = True
+    db.session.commit()
+    flash("User has been verified and can now login", "info")
+
+    return redirect(url_for("main.user", id = id))
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request
