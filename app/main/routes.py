@@ -356,7 +356,7 @@ def user(username):
 
     if user is None and current_user.isOwner():
         user = User.query.filter_by(username=username).first()
-        
+
     if user is None:
         return render_template("errors/user_not_found.html", title = "User Not Found")
 
@@ -2333,7 +2333,7 @@ def verifyotheruser(id):
     db.session.commit()
     flash("User has been verified and can now login", "info")
 
-    return redirect(url_for("main.user", id = id))
+    return redirect(url_for("main.user", username = user.username))
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request
