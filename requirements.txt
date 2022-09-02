@@ -1,3 +1,4 @@
+-f /usr/share/pip-wheels
 alembic==1.8.1
 APScheduler==3.9.1
 async-generator==1.10
@@ -36,9 +37,12 @@ Jinja2==3.1.2
 json5==0.9.5
 Mako==1.2.1
 MarkupSafe==2.1.1
+mysql-connector-python==8.0.30
+numpy==1.23.2
 outcome==1.2.0
 packaging==21.3
 pluggy==1.0.0
+protobuf==3.20.1
 psycopg2==2.9.3
 py==1.11.0
 pycodestyle==2.9.0
@@ -69,4 +73,5 @@ validators==0.20.0
 Werkzeug==2.1.2
 wsproto==1.1.0
 WTForms==3.0.1
+XlsxWriter==3.0.3
 zipp==3.8.1
