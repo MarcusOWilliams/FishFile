@@ -34,7 +34,7 @@
                 </form><br>
 
                 <p>This user does not have a verified email<br>
-                    <form action="{{ url_for('main.verifyOtherUser', user = user.id)}}" method="post"><input id="submit" class = "btn btn-secondary" name="submit" type="submit" value="Click Here To Verify User"></form>
+                    <form action="{{ url_for('main.verifyotheruser', id = user.id)}}" method="post"><input id="submit" class = "btn btn-secondary" name="submit" type="submit" value="Click Here To Verify User"></form>
                 </p>
             {%else %}
                 <p>Current role: {{user.role}}</p>

@@ -2323,7 +2323,7 @@ This route is used for allowing the owners to verify the accounts of other users
 @bp.route("/verifyotheruser/<id>", methods=["POST"])
 @login_required
 @requires_roles("Owner")
-def updatesessionfish(id):
+def verifyotheruser(id):
     
     user = User.query.filter_by(id=id).first_or_404()
     user.is_verified = True
