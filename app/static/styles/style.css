@@ -602,3 +602,8 @@
 .filterChangeOption:hover{
     background-color: whitesmoke;
 }
+#userAdminOptions{
+    border: 1px solid lightgrey;
+    border-radius: 15px;
+    background-color: white;
+}

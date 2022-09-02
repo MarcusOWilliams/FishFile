@@ -24,23 +24,26 @@
     {%endif%}
 
     {%if current_user.isAdmin()%}
-        {% if current_user.isOwner() %}
-            <p>Current role: {{user.role}}</p>
-            <form action="" method="post">
-                {{ roleForm.hidden_tag() }}
-                {{roleForm.role.label}} {{ roleForm.role() }} {{roleForm.submit()}}
-            </form><br>
+        <div id="userAdminOptions">
+            <h4>Admin Options</h4>
+            {% if current_user.isOwner() %}
+                <p>Current role: {{user.role}}</p>
+                <form action="" method="post">
+                    {{ roleForm.hidden_tag() }}
+                    {{roleForm.role.label}} {{ roleForm.role() }} {{roleForm.submit()}}
+                </form><br>
 
-            <p>This user does not have a verified email<br>
-                <button class="btn btn-secondary">Verify User</button>
-            </p>
-        {%else %}
-            <p>Current role: {{user.role}}</p>
-            <form action="" method="post">
-                {{ roleForm.hidden_tag() }}
-                {{roleForm.role.label}} {{ roleForm.role() }} {{roleForm.submit()}}
-            </form>
-        {% endif %}
+                <p>This user does not have a verified email<br>
+                    <button class="btn btn-secondary">Click Here To Verify User</button>
+                </p>
+            {%else %}
+                <p>Current role: {{user.role}}</p>
+                <form action="" method="post">
+                    {{ roleForm.hidden_tag() }}
+                    {{roleForm.role.label}} {{ roleForm.role() }} {{roleForm.submit()}}
+                </form>
+            {% endif %}
+        </div>
     {%endif%}
 
     {% if user_fish %}
