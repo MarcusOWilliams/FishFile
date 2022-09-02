@@ -354,6 +354,9 @@ This page contains all of the entries a user is working on and all of the change
 def user(username):
     user = User.query.filter_by(username=username, is_verified=True).first()
 
+    if user is None and current_user.isOwner():
+        user = User.query.filter_by(username=username).first()
+        
     if user is None:
         return render_template("errors/user_not_found.html", title = "User Not Found")
 
