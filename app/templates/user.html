@@ -23,7 +23,7 @@
         <p><a href="{{url_for('main.settings')}}">Account settings</a></p>
     {%endif%}
 
-    {%if current_user.isAdmin() and user != current_user%}
+    {%if current_user.isAdmin()%}
         {% if current_user.isOwner() %}
             <p>Current role: {{user.role}}</p>
             <form action="" method="post">
