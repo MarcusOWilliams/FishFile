@@ -705,7 +705,7 @@ def newfish():
                 )
                 db.session.add(notification)
                 notification.send_email()
-                
+
         if license_holder is not None:
             if (
                 newfish.project_license_holder.settings.pl_add_notifications
@@ -807,7 +807,7 @@ def updatefish(id):
     form.project_license.choices = [""] + get_all_user_licenses()
 
     form.allele.choices = sorted(list(get_all_allele_names()))
-    
+
     current_alleles = [allele.name for allele in fish.alleles]
     current_transgenes = [gene.name for gene in fish.transgenes]
 
@@ -986,7 +986,7 @@ def updatefish(id):
             )
 
             db.session.add(change)
-            
+
             if fish.user_code != None:
                 if fish.user_code.settings.change_notifications:
                     notification.user = fish.user_code
@@ -1144,7 +1144,7 @@ def updatefish(id):
             fish.mutant_gene = form.mutant_gene.data
             change_count += 1
 
-        
+
         if fish.cross_type != form.cross_type.data:
             change = Change(
                 user=current_user,
@@ -1351,7 +1351,7 @@ def updatefish(id):
                 change.old = fish.user_code.code
             elif fish.old_code is not None:
                 change.old = fish.old_code
-            
+
             if fish_user is not None:
                 change.new = fish_user.code
             elif form.custom_code.data != None or form.custom_code.data != "":
@@ -1378,7 +1378,7 @@ def updatefish(id):
                     change.old = fish.user_code.code
                 elif fish.old_code is not None:
                     change.old = fish.old_code
-                
+
                 if fish_user is not None:
                     change.new = fish_user.code
                 elif form.custom_code.data != None or form.custom_code.data != "":
@@ -1402,7 +1402,7 @@ def updatefish(id):
                 change.old = fish.project_license_holder.project_license
             elif fish.old_license is not None:
                 change.old = fish.old_license
-            
+
             if license_holder is not None:
                 change.new = license_holder.project_license
             elif form.custom_license.data != None or form.custom_license.data != "":
@@ -1413,7 +1413,7 @@ def updatefish(id):
             fish.project_license_holder = license_holder
             fish.old_license = None
             change_count += 1
-        
+
         if license_holder is None:
             if fish.old_license != form.custom_license.data:
                 change = Change(
@@ -1428,7 +1428,7 @@ def updatefish(id):
                     change.old = fish.project_license_holder.project_license
                 elif fish.old_license is not None:
                     change.old = fish.old_license
-                
+
                 if license_holder is not None:
                     change.new = license_holder.project_license
                 elif form.custom_license.data != None or form.custom_license.data != "":
@@ -1461,8 +1461,8 @@ def updatefish(id):
             change_count += 1
 
 
-        
-        
+
+
         if set(current_transgenes) != set([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]):
             if not (", ".join(current_transgenes) == ", ".join([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")])):
                 change = Change(
@@ -1475,8 +1475,8 @@ def updatefish(id):
                     new=", ".join([gene.replace("\r", "") for gene in form.transgenes.data.split("\n")]),
                     notification=notification,
                 )
-                
-                    
+
+
                 db.session.add(change)
 
                 Transgene.query.filter_by(fish=fish).delete()
@@ -1488,7 +1488,7 @@ def updatefish(id):
                         transgene = Transgene(name=name.replace("\r", ""), fish=fish)
                         db.session.add(transgene)
 
-            
+
 
         if pictures != None and pictures != [""]:
             change = Change(
@@ -1745,11 +1745,11 @@ This route is used for showing all the fish associated with a stock
 @requires_roles("User", "Researcher", "Admin", "Owner")
 def stock(stock):
 
-    
+
     form = DateForm()
-    stock_entry  = Stock.query.filter_by(name = stock).first_or_404()    
-    stock_entry.update_current_total()     
-     
+    stock_entry  = Stock.query.filter_by(name = stock).first_or_404()
+    stock_entry.update_current_total()
+
     page = request.args.get("page", 1, type=int)
 
 
@@ -1761,8 +1761,8 @@ def stock(stock):
         .order_by(Fish.added.desc())
         .paginate(page, current_app.config["FISH_PER_PAGE"], False)
     )
-   
-   
+
+
     next_url = (
         url_for("main.stock", stock_name=stock, page=fish.next_num)
         if fish.has_next
@@ -1778,7 +1778,7 @@ def stock(stock):
 
         total = stock_entry.get_count_on_date(form.date.data)
         date = form.date.data
-        
+
         return render_template(
             "stock.html",
             fish_list=fish.items,
@@ -1836,7 +1836,7 @@ def stock_changes(stock, filters="all"):
 
     filter_list = filters.split(" ")
 
-    stock_entry  = Stock.query.filter_by(name = stock).first()    
+    stock_entry  = Stock.query.filter_by(name = stock).first()
     stock_entry.update_current_total()
 
     if filters == "all":
@@ -1885,7 +1885,7 @@ def stock_changes(stock, filters="all"):
 @requires_roles( "Admin", "Owner")
 def all_stocks():
 
-    
+
     page = request.args.get("page", 1, type=int)
 
     living_stocks = Stock.query.filter_by(fish_alive = True).order_by(Stock.name.desc()).paginate(
@@ -2328,7 +2328,7 @@ This route is used for allowing the owners to verify the accounts of other users
 @login_required
 @requires_roles("Owner")
 def verifyotheruser(id):
-    
+
     user = User.query.filter_by(id=id).first_or_404()
     user.is_verified = True
     db.session.commit()
@@ -2341,11 +2341,11 @@ This function describes the route for /backupdownloads
 Permission required for this route are  "Owner"
 This route is used for allowing the owners to download the latest automatic backup
 """
-@bp.route("/downloadbackup/", methods=["POST"])
+@bp.route("/downloadbackup/")
 @login_required
 @requires_roles("Owner")
 def downloadbackup():
-    filename = os.listdir("/home/FishFileBath/FishFile/Backups/").sort()[-1]
+    filename = sorted(os.listdir("/home/FishFileBath/FishFile/Backups/"))[-1]
 
     return send_from_directory("/home/FishFileBath/FishFile/Backups/", filename)
 

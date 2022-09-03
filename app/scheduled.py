@@ -226,7 +226,7 @@ def create_monthly_backup():
 
         #close the workseet
         workbook.close()
-        print("Monthly Backup Created"+str(datetime.now()))
+        print("Monthly Backup Created "+str(datetime.now()))
 
 
 
