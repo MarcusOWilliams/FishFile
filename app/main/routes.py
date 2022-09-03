@@ -34,6 +34,7 @@ from flask import (
     session,
     request,
     current_app,
+    send_from_directory
 )
 from flask_login import current_user, login_required
 from app.main.forms import (
@@ -2334,6 +2335,20 @@ def verifyotheruser(id):
     flash("User has been verified and can now login", "info")
 
     return redirect(url_for("main.user", username = user.username))
+
+"""
+This function describes the route for /backupdownloads
+Permission required for this route are  "Owner"
+This route is used for allowing the owners to download the latest automatic backup
+"""
+@bp.route("/downloadbackup/", methods=["POST"])
+@login_required
+@requires_roles("Owner")
+def downloadbackup():
+    filename = os.listdir("/home/FishFileBath/FishFile/Backups/").sort()[-1]
+
+    return send_from_directory("/home/FishFileBath/FishFile/Backups/", filename)
+
 
 # This function is used to update the users Last seen time when they go to a new page
 @bp.before_request
