@@ -35,7 +35,7 @@
     <title>{{config["WEBSITE_NAME"]}}</title>
     {% endif %}
 
-    
+
     {{moment.include_moment()}}
     <script>
       function popupShow(id) {
@@ -46,7 +46,7 @@
     <!-- Notification scripts -->
     {% if current_user.is_authenticated %}
         <script>
-          
+
           function setNotificationCount(n){
             $('#notificationCount').text(n);
             $('#notificationCount').css('visibility', n ? 'visible' : 'hidden');
@@ -60,9 +60,9 @@
               url: "/reset_notifications"
             });
           };
-               
+
         </script>
-        
+
       {% endif %}
     {%block scripts%} {%endblock%}
   </head>
@@ -102,7 +102,7 @@
                 >Home</a
               >
             </li>
-            
+
               {% if current_user.is_anonymous %}
               <a
                 class="nav-link active"
@@ -128,7 +128,7 @@
                     <li><a id="myProfileLink"class="dropdown-item" href="{{url_for('main.user', username = current_user.username)}}">View Profile</a></li>
                     <li><a class="dropdown-item" href="{{ url_for('main.settings') }}">Settings</a></li>
                     <li>
-                      
+
                     </li>
                     <li>
                       <a id="logoutLink" class="dropdown-item" href="{{ url_for('auth.logout') }}"
@@ -136,7 +136,7 @@
                     </li>
                   </ul>
                 </li>
-                
+
                 {%if current_user.isAdmin()%}
                   <li class="nav-item dropdown">
                     <a
@@ -156,6 +156,7 @@
                       {%if current_user.isOwner()%}
                         <li><a class="dropdown-item" href="{{url_for('main.user_list')}}">View all users</a></li>
                         <li><a class="dropdown-item" href="{{url_for('main.edit_alleles')}}">Edit allele list</a></li>
+                        <li><a class="dropdown-item" href="{{url_for('main.downloadbackup')}}">Download latest backup</a></li>
                       {%endif%}
 
                     </ul>
@@ -178,7 +179,7 @@
                   aria-expanded="false"
                   onclick="resetNotificationCount()"
                   >
-                  
+
                   <i class="bi bi-bell-fill"></i>
                     {% set new_notifications = current_user.new_notifications() %}
                     {%if new_notifications > 0 %}
@@ -186,17 +187,17 @@
                           {{ new_notifications }}
                       </span>
                     {%endif%}
-                  
+
                   </a>
                   <ul class="dropdown-menu" id="notificationDropdownList" aria-labelledby="notifsDropdown">
-                    
+
                     {%if current_user.notifications.count() >0%}
                       <p id="notifsHeading" style="padding-left: 5px;"><strong>Notifications:</strong>{% if g.search_form %}<span id="clearNotifs"><button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#deleteNotifsModal">Clear Notifications</button></span>{%endif%}<br></p>
-                      
+
                       {%for notification in current_user.notifications|reverse %}
                         <hr class="dropdown-divider" />
                         <li class="dropdown-item">{%include 'subtemplates/_notification.html'%}</li>
-                      
+
                       {%endfor%}
                     {%else%}
                     <p id="notifsHeading" style="padding-left: 5px;"><strong>Notifications:</strong><br></p>
@@ -206,19 +207,19 @@
                   </ul>
                 </li>
 
-                    
+
                 {% if g.search_form %}
                   <form class="d-flex" role="search" method="get" id="simpleSearchForm"
                           action="{{ url_for('main.simplesearch') }}">
                           {{ g.search_form.search(size=20, class='form-control me-2', type='Search', placeholder=g.search_form.search.label.text) }} {{ g.search_form.submit(id="simpleSearchSubmit", class='btn btn-outline-primary') }}
                   </form>
                 {% endif %}
-                
+
               {%endif%}
         </div>
       </div>
     </nav>
-    {% with messages = get_flashed_messages(with_categories=true) %} 
+    {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
      {% for category, message in messages %}
       {%if category == 'message'%}
@@ -226,19 +227,19 @@
           <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
           {{ message }}
         </div>
-        
+
       {%else%}
         <div class="alert alert-{{category}} alert-dismissible" role="alert">
           <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
           {{ message }}
 
         </div>
-        
+
 
     {%endif%}{% endfor %} {% endif %} {%endwith%}
     <!-- APP CONTENT -->
     <div id="mainContainer">
-      
+
       {% block content %}{% endblock %}
     </div>
     {% if g.search_form %}

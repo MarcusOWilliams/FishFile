@@ -93,7 +93,7 @@ def create_monthly_backup():
 
         #create excel file and worksheet
         backup_path = '/home/FishFileBath/FishFile/Backups/'
-        filename = f"Backup_{str(today.date())}.xlsx"
+        filename = f"FishFile_Backup_{str(today.date())}.xlsx"
         workbook = xlsxwriter.Workbook(backup_path+filename)
         worksheet = workbook.add_worksheet("Backup")
 
