@@ -7,3 +7,5 @@ Notes/toRun.txt
 app/static/files
 
 app/static/uploads
+
+*.env
