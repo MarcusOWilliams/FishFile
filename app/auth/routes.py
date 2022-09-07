@@ -98,10 +98,11 @@ def register():
         db.session.add(settings)
         db.session.commit()
         send_email_verification_email(user)
-        flash(
-                f"To login you must verify your email address, a verification link has been sent to {user.email}, this can take a few minutes, don't forget to check your spam folder!",
-                "info",
-            )
+        # flash(
+        #         f"To login you must verify your email address, a verification link has been sent to {user.email}, this can take a few minutes, don't forget to check your spam folder!",
+        #         "info",
+        #     )
+        flash(f"To login your account must be verified by a system admin, please contact a system admin to get your account verified.","info")
         return redirect(url_for("auth.login"))
 
     return render_template("auth/register.html", title="Register", form=form)
