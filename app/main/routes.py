@@ -197,16 +197,19 @@ def search():
             )
 
         elif key == "user_code":
-            all_fish = (
-                Fish.query.select_entity_from(all_fish)
-                .join(Fish.user_code, aliased=True)
-                .filter(User.code.contains(search_dict[key]))
-                .subquery(),
-                Fish.query.select_entity_from(all_fish)
-                .filter_by(old_code = search_dict[key])
-                .subquery()
-            )
-            
+            if search_dict[key] in get_all_user_codes():
+                all_fish = (
+                    Fish.query.select_entity_from(all_fish)
+                    .join(Fish.user_code, aliased=True)
+                    .filter(User.code.contains(search_dict[key]))
+                    .subquery()
+                )
+            else:
+                all_fish = (
+                    Fish.query.select_entity_from(all_fish)
+                    .filter_by(old_code = search_dict[key])
+                    .subquery()
+                )
 
         elif key == "project_license":
             if search_dict[key] in get_all_user_licenses():
