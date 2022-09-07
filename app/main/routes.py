@@ -197,45 +197,54 @@ def search():
             )
 
         elif key == "user_code":
-            if search_dict[key] in get_all_user_codes():
-                all_fish = (
-                    Fish.query.select_entity_from(all_fish)
-                    .join(Fish.user_code, aliased=True)
-                    .filter(User.code.contains(search_dict[key]))
-                    .subquery()
-                )
-            else:
-                all_fish = (
-                    Fish.query.select_entity_from(all_fish)
-                    .filter_by(old_code = search_dict[key])
-                    .subquery()
-                )
+
+            new = (
+                Fish.query.select_entity_from(all_fish)
+                .join(Fish.user_code, aliased=True)
+                .filter(User.code.contains(search_dict[key]))
+
+            )
+            old = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(Fish.old_code.contains(search_dict[key]))
+
+            )
+            all_fish = new.union(old).subquery()
+
 
         elif key == "project_license":
-            if search_dict[key] in get_all_user_licenses():
-                all_fish = (
-                    Fish.query.select_entity_from(all_fish)
-                    .filter(
-                        Fish.project_license_holder.has(project_license=search_dict[key])
-                    )
-                    .subquery()
+
+            new = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(
+                    Fish.project_license_holder.has(project_license=search_dict[key])
                 )
-            else:
-                all_fish = (
-                    Fish.query.select_entity_from(all_fish)
-                    .filter_by(old_license = search_dict[key])
-                    .subquery()
-                )
+            )
+            old = (
+                Fish.query.select_entity_from(all_fish)
+                .filter_by(old_license = search_dict[key] )
+            )
+
+            all_fish = new.union(old).subquery()
 
         elif key == "allele":
             for search in search_dict[key].split(","):
                 search = search.strip()
-                all_fish = (
+
+                new = (
                     Fish.query.select_entity_from(all_fish)
                     .join(Fish.alleles, aliased=True)
                     .filter(Allele.name == search)
-                    .subquery()
+
                 )
+                old = (
+                    Fish.query.select_entity_from(all_fish)
+                    .filter(Fish.old_allele.contains(search))
+
+                )
+
+                all_fish = new.union(old).subquery()
+
         elif key == "mutant_gene":
             for search in search_dict[key].split(","):
                 search = search.strip()
@@ -244,15 +253,24 @@ def search():
                     .filter(Fish.mutant_gene.contains(search))
                     .subquery()
                 )
+
         elif key == "transgenes":
             for search in search_dict[key].split(","):
                 search = search.strip()
-                all_fish = (
+                new = (
                     Fish.query.select_entity_from(all_fish)
                     .join(Fish.transgenes, aliased=True)
                     .filter(Transgene.name == search)
-                    .subquery()
+
                 )
+
+                old = (
+                    Fish.query.select_entity_from(all_fish)
+                    .filter(Fish.old_transgenes.contains(search))
+
+                )
+
+                all_fish = new.union(old).subquery()
 
         elif key == "total":
             all_fish = (
