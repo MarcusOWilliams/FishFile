@@ -58,6 +58,11 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "{} {}".format(self.first_name, self.last_name)
+        
+    def set_code(self):
+        # create user code on account verification, this avoids unverified accounts having codes which clog up the select options
+        self.code = f"{str(self.first_name[0])}{str(self.last_name[0])} ({str(self.username)})"
+        db.session.commit()
 
     def delete_personal_document(self):
         if not self.personal_document:
