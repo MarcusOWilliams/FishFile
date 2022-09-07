@@ -58,7 +58,7 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "{} {}".format(self.first_name, self.last_name)
-        
+
     def set_code(self):
         # create user code on account verification, this avoids unverified accounts having codes which clog up the select options
         self.code = f"{str(self.first_name[0])}{str(self.last_name[0])} ({str(self.username)})"
@@ -370,7 +370,11 @@ class Fish(db.Model):
 
         except:
             return 0
+    def setMonths(self):
 
+        self.months = self.getMonths()
+        db.session.commit()
+        
     def get_allele_names_string(self):
         if self.alleles is None:
             return " "
