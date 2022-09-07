@@ -141,7 +141,7 @@ def search():
         if key == "fish_id":
             all_fish = (
                 Fish.query.select_entity_from(all_fish)
-                .filter_by(fish_id=search_dict[key])
+                .filter(Fish.fish_id.contains(search_dict[key]))
                 .subquery()
             )
 
@@ -201,16 +201,29 @@ def search():
                 Fish.query.select_entity_from(all_fish)
                 .join(Fish.user_code, aliased=True)
                 .filter(User.code.contains(search_dict[key]))
-                .subquery()
-            )
-        elif key == "project_license":
-            all_fish = (
+                .subquery(),
                 Fish.query.select_entity_from(all_fish)
-                .filter(
-                    Fish.project_license_holder.has(project_license=search_dict[key])
-                )
+                .filter_by(old_code = search_dict[key])
                 .subquery()
             )
+            
+
+        elif key == "project_license":
+            if search_dict[key] in get_all_user_licenses():
+                all_fish = (
+                    Fish.query.select_entity_from(all_fish)
+                    .filter(
+                        Fish.project_license_holder.has(project_license=search_dict[key])
+                    )
+                    .subquery()
+                )
+            else:
+                all_fish = (
+                    Fish.query.select_entity_from(all_fish)
+                    .filter_by(old_license = search_dict[key])
+                    .subquery()
+                )
+
         elif key == "allele":
             for search in search_dict[key].split(","):
                 search = search.strip()
