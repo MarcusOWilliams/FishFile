@@ -279,6 +279,13 @@ def search():
                 .subquery()
             )
 
+        elif key == "total_less":
+            all_fish = (
+                Fish.query.select_entity_from(all_fish)
+                .filter(Fish.total <= search_dict[key])
+                .subquery()
+            )
+
     page = request.args.get("page", 1, type=int)
 
     # set the order of the fish, if not set they are sorted by most recently added
@@ -1956,6 +1963,9 @@ def updatealleles(id):
     fish = Fish.query.filter_by(id=id).first_or_404()
     alleles = Allele.query.filter_by(fish=fish).order_by(Allele.name.asc()).all()
 
+    if not current_user.isAdmin():
+        if current_user != fish.user_code and current_user != fish.project_license_holder:
+            abort()
     if request.method == "POST":
 
         for allele in alleles:
@@ -2197,7 +2207,7 @@ This route is used for allowing an admin to update the list of alleles
 
 @bp.route("/editalleles/", methods=["GET", "POST"])
 @login_required
-@requires_roles("Admin", "Owner")
+@requires_roles("Owner")
 def edit_alleles():
 
     form = EditAlleles()

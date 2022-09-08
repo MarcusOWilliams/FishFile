@@ -246,7 +246,8 @@ class SearchFrom(FlaskForm):
     allele = StringField("Allele", validators=[Optional()])
     mutant_gene = StringField("Mutant Gene", validators=[Optional()])
     transgenes = StringField("Transgene", validators=[Optional()])
-    total = IntegerField("Total # (>=)", validators=[Optional()])
+    total = IntegerField("Min Total # (>=)", validators=[Optional()])
+    total_less = IntegerField("Max Total # (<=)", validators=[Optional()])
     order = SelectField(
         "Order By:",
         validators=[DataRequired()],

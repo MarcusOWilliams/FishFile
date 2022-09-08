@@ -77,7 +77,11 @@
                         {%endfor%}
                     </table>
                     {%if current_user.isResearcher()%}
-                        <a id="updateTransgenesLink"href="{{url_for('main.updatetransgenes', id=fish.id)}}">Update transgene values</a>
+                        {%if current_user.isAdmin()%}
+                            <a id="updateTransgenesLink"href="{{url_for('main.updatetransgenes', id=fish.id)}}">Update transgene values</a>
+                        {% elif current_user == fish.user_code or current_user == fish.project_license_holder%}
+                            <a id="updateTransgenesLink"href="{{url_for('main.updatetransgenes', id=fish.id)}}">Update transgene values</a>
+                        {%endif%}
                     {%endif%}
                 </div>
 
