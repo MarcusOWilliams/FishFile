@@ -201,12 +201,12 @@ def search():
             new = (
                 Fish.query.select_entity_from(all_fish)
                 .join(Fish.user_code, aliased=True)
-                .filter(User.code.contains(search_dict[key]))
+                .filter(set(User.code)).issuperset(set(search_dict[key]))
 
             )
             old = (
                 Fish.query.select_entity_from(all_fish)
-                .filter(Fish.old_code.contains(search_dict[key]))
+                .filter(set(Fish.old_code).issuperset(set(search_dict[key])))
 
             )
             all_fish = new.union(old).subquery()
