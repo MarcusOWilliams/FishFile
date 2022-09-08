@@ -21,6 +21,8 @@ from functools import wraps
 import json
 from dateutil import relativedelta
 
+from app.main.routes import project_license
+
 
 """
 This is the class for the User table  of the SQL database
@@ -423,7 +425,14 @@ class Fish(db.Model):
             db.session.add(reminder)
             db.session.commit()
             reminder.send_reminder(category="Age reminder")
-
+        elif self.old_license is not None:
+            license_user = User.query.filter_by(project_license=self.old_license).first()
+            if license_user is not None:
+                reminder = Reminder(user=license_user, fish=self, message=message)
+                db.session.add(reminder)
+                db.session.commit()
+                reminder.send_reminder(category="Age reminder")
+        
         self.age_reminder = f"{months} Months"
         db.session.commit()
 
