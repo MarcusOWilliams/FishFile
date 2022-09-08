@@ -21,7 +21,6 @@ from functools import wraps
 import json
 from dateutil import relativedelta
 
-from app.main.routes import project_license
 
 
 """
